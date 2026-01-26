@@ -24,3 +24,43 @@ body {
   /* color: var(--foreground); */
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@keyframes scalePulse {
+  0%,
+  100% {
+    transform: scale(0.9);
+  }
+  50% {
+    transform: scale(1);
+  }
+}
+/* 
+@keyframes loadingAnim {
+  0% {
+    transform: scale(0.7) rotate(0deg);
+  }
+  50% {
+    transform: scale(0.7) rotate(360deg);
+  }
+  100% {
+    transform: scale(0.7) rotate(360deg);
+  }
+} */
+
+/* @keyframes comboLoading {
+  0% {
+    transform: scale(0.75) rotate(0deg);
+  }
+
+  35% {
+    transform: scale(1.05) rotate(0deg);
+  }
+
+  70% {
+    transform: scale(0.75) rotate(0deg);
+  }
+
+  100% {
+    transform: scale(0.75) rotate(360deg);
+  }
+} */
