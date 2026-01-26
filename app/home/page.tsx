@@ -15,7 +15,7 @@ import { Drawer } from "./components/Drawer";
 import { minis } from "./utils";
 
 export default function Home() {
-  const [menuVisibility, setMenuVisibility] = useState<boolean>(true);
+  const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [age, setAge] = useState("10");
 
