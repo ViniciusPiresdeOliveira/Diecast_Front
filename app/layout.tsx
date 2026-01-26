@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { ToastContainer } from "react-toastify";
 import { Loading } from "./components/Loading";
 import { LoadingProvider } from "./contexts/LoagindContext";
 import "./globals.css";
@@ -31,6 +32,7 @@ export default function RootLayout({
       >
         <LoadingProvider>
           <Loading />
+          <ToastContainer />
           {children}
         </LoadingProvider>{" "}
       </body>
