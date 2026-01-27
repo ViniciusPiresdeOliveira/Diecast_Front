@@ -10,7 +10,7 @@ export const ModalPhoto = ({
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
 
-  const zoom = 1.5; // nível do zoom
+  const zoom = 1.5;
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } =
@@ -48,8 +48,8 @@ export const ModalPhoto = ({
           <Image
             src={selectedImage}
             alt="Preview"
-            width={700}
-            height={700}
+            width={650}
+            height={650}
             className="max-w-full"
           />
 
