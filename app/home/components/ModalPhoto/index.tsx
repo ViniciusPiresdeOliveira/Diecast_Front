@@ -43,7 +43,7 @@ export const ModalPhoto = ({
         </button>
 
         <div
-          className="relative inline-block"
+          className="relative inline-block hover:cursor-none"
           onMouseEnter={() => setShowMagnifier(true)}
           onMouseLeave={() => setShowMagnifier(false)}
           onMouseMove={handleMouseMove}
@@ -58,7 +58,7 @@ export const ModalPhoto = ({
 
           {!isMobile && showMagnifier && (
             <div
-              className="absolute pointer-events-none border border-white rounded-full"
+              className="absolute  pointer-events-none border border-white rounded-full"
               style={{
                 width: 250,
                 height: 250,

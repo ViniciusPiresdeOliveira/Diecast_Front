@@ -39,7 +39,7 @@ export default function Home() {
         handleVisibility={handleVisibilityMenu}
       />
       <div className="w-full h-full p-5 flex justify-between items-center bg-[#1F3565] border-b-[#F31A13] border-b-3">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 pl-2">
           <Image
             src="/image/logo.jpg"
             alt="Logo"
@@ -49,11 +49,9 @@ export default function Home() {
           />
           <p className="text-white font-semibold">Diecast</p>
         </div>
-        <Menu
-          color="white"
-          className="cursor-pointer"
-          onClick={handleVisibilityMenu}
-        />
+        <button className="p-2 cursor-pointer" onClick={handleVisibilityMenu}>
+          <Menu color="white" />
+        </button>
       </div>
       <div className="max-w-6xl w-full p-5 pr-11 flex justify-end">
         <div className="max-w-60">
