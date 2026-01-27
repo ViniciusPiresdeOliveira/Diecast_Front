@@ -32,7 +32,7 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
             src={mini.image}
             alt={mini.name}
             fill
-            className="object-contain z-10 transition-transform duration-300 group-hover:scale-110"
+            className="object-contain cursor-pointer z-10 transition-transform duration-300 group-hover:scale-110"
             onClick={() => {
               handleSelectedImage(mini.image as string);
             }}
@@ -42,16 +42,16 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
         )}
       </div>
       <div className="flex flex-col gap-1">
-        <p className="text-md">
+        <p className="text-lg">
           <span className="text-zinc-800 font-semibold">Nome:</span>{" "}
           <span className="font-medium text-zinc-600">{mini.name}</span>
         </p>
 
-        <p className="text-md text-zinc-800 font-semibold">
+        <p className="text-lg text-zinc-800 font-semibold">
           Ano: <span className="text-zinc-600 font-light">{mini.ano}</span>
         </p>
 
-        <p className="text-md text-blue-700 font-semibold ">
+        <p className="text-lg text-blue-700 font-semibold ">
           R$ {mini.preco.toFixed(2)}
         </p>
       </div>

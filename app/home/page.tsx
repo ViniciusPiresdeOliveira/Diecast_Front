@@ -12,6 +12,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { Card } from "./components/Card";
 import { Drawer } from "./components/Drawer";
+import { ModalPhoto } from "./components/ModalPhoto";
 import { minis } from "./utils";
 
 export default function Home() {
@@ -19,7 +20,7 @@ export default function Home() {
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [age, setAge] = useState("10");
 
-  const handleSelectedImage = (image: string) => {
+  const handleSelectedImage = (image: string | null) => {
     setSelectedImage(image);
   };
 
@@ -85,30 +86,10 @@ export default function Home() {
           ))}
         </div>
         {selectedImage && (
-          <div
-            className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center transition-all duration-300 ease-out"
-            onClick={() => setSelectedImage(null)}
-          >
-            <div
-              className="relative max-w-4xl w-full max-h-[90vh] p-4"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <button
-                className="absolute top-4 right-9 text-white text-3xl hover:text-red-400 z-50"
-                onClick={() => setSelectedImage(null)}
-              >
-                ✕
-              </button>
-
-              <div className="overflow-auto max-h-[85vh]">
-                <img
-                  src={selectedImage}
-                  alt="Preview"
-                  className="mx-auto max-w-full cursor-zoom-in transition-transform duration-300 hover:scale-110"
-                />
-              </div>
-            </div>
-          </div>
+          <ModalPhoto
+            selectedImage={selectedImage}
+            handleSelectedImage={handleSelectedImage}
+          />
         )}
       </div>
       <Pagination count={10} />
