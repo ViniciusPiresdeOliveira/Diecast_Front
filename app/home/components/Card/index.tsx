@@ -8,9 +8,8 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
   return (
     <div
       className="
-                        group
                         bg-zinc-100 text-zinc-100
-                        p-4 rounded-xl
+                        py-4 px-1 rounded-xl
                         w-full sm:w-[48%] lg:w-[31%]
                         flex gap-4 items-center
                         border border-blue-300
@@ -19,6 +18,7 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
                         hover:bg-[#e6ecf2]
                         hover:shadow-md hover:shadow-black/30
                         hover:border-blue-700
+                        shrink-0
                       "
     >
       <div
@@ -41,7 +41,7 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
           <ImageOff className="w-12 h-12 text-blue-300 group-hover:text-blue-700 transition-colors" />
         )}
       </div>
-      <div className="flex flex-col gap-1">
+      <div className="flex-1 flex-col gap-1">
         <p className="text-lg">
           <span className="text-zinc-800 font-semibold">Nome:</span>{" "}
           <span className="font-medium text-zinc-600">{mini.name}</span>

@@ -1,3 +1,4 @@
+import { useTypeDevice } from "@/app/contexts/TypeDevice";
 import Image from "next/image";
 import { useState } from "react";
 import { ModalPhotoProps } from "./types";
@@ -9,6 +10,8 @@ export const ModalPhoto = ({
   const [showMagnifier, setShowMagnifier] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
+  const { isMobile } = useTypeDevice();
+  console.log("isMobile", isMobile);
 
   const zoom = 1.5;
 
@@ -53,7 +56,7 @@ export const ModalPhoto = ({
             className="max-w-full"
           />
 
-          {showMagnifier && (
+          {!isMobile && showMagnifier && (
             <div
               className="absolute pointer-events-none border border-white rounded-full"
               style={{
