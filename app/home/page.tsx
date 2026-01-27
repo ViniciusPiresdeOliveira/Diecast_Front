@@ -1,12 +1,5 @@
 "use client";
-import {
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Pagination,
-  Select,
-  SelectChangeEvent,
-} from "@mui/material";
+import { Pagination, Select } from "antd";
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -24,8 +17,8 @@ export default function Home() {
     setSelectedImage(image);
   };
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value as string);
+  const handleChange = (value: string) => {
+    setAge(value);
   };
 
   const handleVisibilityMenu = () => {
@@ -54,23 +47,21 @@ export default function Home() {
         </button>
       </div>
       <div className="max-w-6xl w-full p-5 pr-11 flex justify-end">
-        <div className="max-w-60">
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Mini</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={age}
-              label="Age"
-              onChange={handleChange}
-            >
-              <MenuItem value={10}>10</MenuItem>
-              <MenuItem value={20}>20</MenuItem>
-              <MenuItem value={30}>30</MenuItem>
-              <MenuItem value={40}>40</MenuItem>
-              <MenuItem value={50}>50</MenuItem>
-            </Select>
-          </FormControl>
+        <div className="max-w-16 w-full">
+          <label className="text-sm font-medium text-gray-700 ">Minis</label>
+          <Select
+            value={age}
+            onChange={handleChange}
+            placeholder="Selecione"
+            className="w-full"
+            options={[
+              { value: "10", label: "10" },
+              { value: "20", label: "20" },
+              { value: "30", label: "30" },
+              { value: "40", label: "40" },
+              { value: "50", label: "50" },
+            ]}
+          />
         </div>
       </div>
       <div className="min-h-screen flex justify-center">
@@ -90,7 +81,7 @@ export default function Home() {
           />
         )}
       </div>
-      <Pagination count={10} />
+      <Pagination className="max-w-2" total={100} pageSize={10} />
     </div>
   );
 }
