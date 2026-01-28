@@ -46,7 +46,7 @@ export default function Home() {
           <Menu color="white" />
         </button>
       </div>
-      <div className="max-w-6xl w-full p-5 pr-11 flex justify-end">
+      <div className="max-w-7xl w-full p-5 pr-11 flex justify-end">
         <div className="max-w-16 w-full">
           <label className="text-sm font-medium text-gray-700 ">Minis</label>
           <Select
@@ -65,7 +65,7 @@ export default function Home() {
         </div>
       </div>
       <div className="min-h-screen flex justify-center">
-        <div className="max-w-6xl w-full p-4 flex flex-wrap gap-4 justify-center">
+        <div className="max-w-7xl w-full p-4 flex flex-wrap gap-4 justify-center">
           {minis.map((mini, index) => (
             <Card
               key={index}
@@ -81,7 +81,7 @@ export default function Home() {
           />
         )}
       </div>
-      <Pagination className="max-w-2" total={100} pageSize={10} />
+      <Pagination total={100} pageSize={10} />
     </div>
   );
 }

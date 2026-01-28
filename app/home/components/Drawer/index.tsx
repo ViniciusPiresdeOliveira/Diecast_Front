@@ -1,3 +1,4 @@
+import { X } from "lucide-react";
 import { DrawerProps } from "./types";
 
 export const Drawer = ({ isVisible, handleVisibility }: DrawerProps) => {
@@ -13,13 +14,11 @@ export const Drawer = ({ isVisible, handleVisibility }: DrawerProps) => {
     }
   `}
     >
-      {/* Overlay */}
       <div
         className="absolute inset-0 bg-black/50"
         onClick={handleVisibility}
       />
 
-      {/* Sidebar */}
       <aside
         className={`
       absolute right-0 top-0
@@ -32,14 +31,15 @@ export const Drawer = ({ isVisible, handleVisibility }: DrawerProps) => {
       ${isVisible ? "translate-x-0" : "translate-x-full"}
     `}
       >
-        <button
-          className="absolute top-4 right-4 text-2xl hover:text-red-400 cursor-pointer"
-          onClick={handleVisibility}
-        >
-          ✕
-        </button>
-
-        <h2 className="text-lg font-semibold mb-6">Menu</h2>
+        <div className="flex justify-between items-end mb-6">
+          <h2 className="text-lg font-bold ">Menu</h2>
+          <button
+            className=" hover:text-red-400 cursor-pointer"
+            onClick={handleVisibility}
+          >
+            <X width={30} height={30} />
+          </button>
+        </div>
 
         <ul className="flex flex-col gap-4">
           <li className="cursor-pointer hover:text-blue-300">Início</li>
