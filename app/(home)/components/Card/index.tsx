@@ -29,7 +29,7 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
         className="
       group bg-zinc-100 text-zinc-100
       py-4 px-1 rounded-xl
-      sm:w-[90%] lg:w-[47%] xl:w-[30%]
+      w-full lg:w-[47%] xl:w-[30%]
       flex items-center
       border border-blue-300
       transition-all duration-300 ease-out
@@ -80,14 +80,15 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
             </p>
           </button>
           <button
-            className="absolute right-3 bottom-0 z-20 cursor-pointer
+            className="absolute p-5 -right-2 -bottom-5
+ z-20 cursor-pointer
              transition-transform duration-200 ease-in-out
              hover:scale-115"
             onClick={handleRedirectToWhatsApp}
           >
             <Image
               color="#eefr"
-              src="/ww.svg"
+              src="/whatsapp.svg"
               alt="WhatsApp"
               width={20}
               height={20}
