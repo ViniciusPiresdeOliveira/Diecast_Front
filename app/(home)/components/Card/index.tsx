@@ -20,7 +20,7 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
         className="
       group bg-zinc-100 text-zinc-100
       py-4 px-1 rounded-xl
-      w-full md:w-[48%] xl:w-[31%]
+      w-full lg:w-[47%] xl:w-[30%]
       flex items-center
       border border-blue-300
       transition-all duration-300 ease-out
@@ -33,7 +33,7 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
       >
         <div
           className={
-            "w-40 h-40 rounded-md overflow-hidden z-10 " +
+            "w-40 h-40 shrink-0 rounded-md overflow-hidden z-10 " +
             (mini.image ? stylesMiniWithCar : stylesMiniWithoutCar)
           }
         >
@@ -53,9 +53,9 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
         </div>
         <button
           onClick={handleVisibleFormMini}
-          className="flex-1 flex flex-col gap-1 h-full justify-evenly items-start cursor-pointer text-left"
+          className="flex-1 min-w-0 flex flex-col gap-1 h-full justify-evenly items-start cursor-pointer text-left"
         >
-          <p className="grid grid-cols-[65px_1fr] text-lg w-full">
+          <p className="font-medium text-zinc-600 break-words">
             <span className="text-zinc-800 font-bold">Nome:</span>{" "}
             <span className="font-medium text-zinc-600">{mini.name}</span>
           </p>

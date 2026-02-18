@@ -1,10 +1,12 @@
 "use client";
 import { Pagination, Select } from "antd";
+
 import { Menu } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
 import { Card } from "./components/Card";
 import { Drawer } from "./components/Drawer";
+import { Filter } from "./components/Filter";
 import { ModalPhoto } from "./components/ModalPhoto";
 import { minis } from "./utils";
 
@@ -32,7 +34,7 @@ export default function Home() {
         handleVisibility={handleVisibilityMenu}
       />
       <div className="w-full h-full p-5 flex justify-between items-center bg-[#1F3565] border-b-[#F31A13] border-b-3">
-        <div className="flex items-center gap-2 pl-2">
+        <div className="flex items-center gap-2 pl-2 ">
           <Image
             src="/image/logo.jpg"
             alt="Logo"
@@ -42,7 +44,10 @@ export default function Home() {
           />
           <p className="text-white font-semibold">Diecast</p>
         </div>
-        <button className="p-2 cursor-pointer" onClick={handleVisibilityMenu}>
+        <button
+          className="p-2 cursor-pointer min-sm:hidden"
+          onClick={handleVisibilityMenu}
+        >
           <Menu color="white" />
         </button>
       </div>
@@ -64,7 +69,9 @@ export default function Home() {
           />
         </div>
       </div>
-      <div className="min-h-screen flex justify-center">
+      <div className="flex justify-center">
+        <Filter />
+
         <div className="max-w-7xl w-full p-4 flex flex-wrap gap-4 justify-center">
           {minis.map((mini, index) => (
             <Card
