@@ -1,5 +1,5 @@
 "use client";
-import { useLoading } from "@/app/contexts/LoagindContext";
+import { useLoading } from "@/app/hooks/useLoading";
 import Image from "next/image";
 
 export const Loading = () => {

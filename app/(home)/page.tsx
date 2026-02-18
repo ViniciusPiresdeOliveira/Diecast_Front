@@ -70,7 +70,11 @@ export default function Home() {
         </div>
       </div>
       <div className="flex justify-center">
-        <Filter />
+        <div className="max-sm:hidden border-blue-600 h-1/2 border mt-4 overflow-y-auto ml-4 p-4 w-64 rounded-lg">
+          <h2 className="text-lg font-semibold mb-4">Filtros</h2>
+
+          <Filter />
+        </div>
 
         <div className="max-w-7xl w-full p-4 flex flex-wrap gap-4 justify-center">
           {minis.map((mini, index) => (

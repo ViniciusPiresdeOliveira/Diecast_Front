@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useState } from "react";
+import { createContext, ReactNode, useState } from "react";
 
 interface TypeDeviceContextData {
   isMobile: boolean;
@@ -8,9 +8,9 @@ interface TypeDeviceContextData {
   setDesktop: () => void;
 }
 
-const TypeDeviceContext = createContext<TypeDeviceContextData | undefined>(
-  undefined,
-);
+export const TypeDeviceContext = createContext<
+  TypeDeviceContextData | undefined
+>(undefined);
 
 interface TypeDeviceProviderProps {
   children: ReactNode;
@@ -37,16 +37,4 @@ export function TypeDeviceProvider({
       {children}
     </TypeDeviceContext.Provider>
   );
-}
-
-export function useTypeDevice() {
-  const context = useContext(TypeDeviceContext);
-
-  if (!context) {
-    throw new Error(
-      "useTypeDevice deve ser usado dentro de TypeDeviceProvider",
-    );
-  }
-
-  return context;
 }

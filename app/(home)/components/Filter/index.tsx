@@ -1,23 +1,28 @@
+import { useFilter } from "@/app/hooks/useFilter";
 import { Button, Divider, Input, InputNumber } from "antd";
-import { useState } from "react";
 
 export const Filter = () => {
-  const [filterName, setFilterName] = useState("");
-  const [filterYear, setFilterYear] = useState<number | null>(null);
-  const [minPrice, setMinPrice] = useState<number | null>(null);
-  const [maxPrice, setMaxPrice] = useState<number | null>(null);
+  const {
+    maxPrice,
+    minPrice,
+    filterName,
+    filterYear,
+    clearFilters,
+    handleMinPrice,
+    handleMaxPrice,
+    handleFilterName,
+    handleFilterYear,
+  } = useFilter();
 
   return (
-    <div className="border-blue-600 h-1/2 border mt-4 overflow-y-auto ml-4 p-4 w-64 rounded-lg max-sm:hidden">
-      <h2 className="text-lg font-semibold mb-4">Filtros</h2>
-
+    <>
       {/* Nome */}
       <div className="mb-4 flex flex-col">
         <label className="text-sm font-medium">Nome</label>
         <Input
           placeholder="Ex: Ferrari"
           value={filterName}
-          onChange={(e) => setFilterName(e.target.value)}
+          onChange={(e) => handleFilterName(e.target.value)}
         />
       </div>
 
@@ -29,7 +34,7 @@ export const Filter = () => {
           min={0}
           placeholder="Selecione o ano"
           value={filterYear ?? undefined}
-          onChange={(value) => setFilterYear(value)}
+          onChange={(value) => handleFilterYear(value)}
         />
       </div>
 
@@ -42,7 +47,7 @@ export const Filter = () => {
           type="number"
           placeholder="R$ mínimo"
           value={minPrice ?? undefined}
-          onChange={(value) => setMinPrice(value)}
+          onChange={(value) => handleMinPrice(value)}
         />
       </div>
 
@@ -53,36 +58,17 @@ export const Filter = () => {
           min={0}
           placeholder="R$ máximo"
           value={maxPrice ?? undefined}
-          onChange={(value) => setMaxPrice(value)}
+          onChange={(value) => handleMaxPrice(value)}
         />
       </div>
 
       <Divider />
-      <Button
-        type="primary"
-        block
-        onClick={() => {
-          setFilterName("");
-          setFilterYear(null);
-          setMinPrice(null);
-          setMaxPrice(null);
-        }}
-      >
+      <Button type="primary" block onClick={clearFilters}>
         Filtrar
       </Button>
-      <Button
-        className="mt-2"
-        type="link"
-        block
-        onClick={() => {
-          setFilterName("");
-          setFilterYear(null);
-          setMinPrice(null);
-          setMaxPrice(null);
-        }}
-      >
+      <Button className="mt-2" type="link" block onClick={clearFilters}>
         Limpar filtros
       </Button>
-    </div>
+    </>
   );
 };

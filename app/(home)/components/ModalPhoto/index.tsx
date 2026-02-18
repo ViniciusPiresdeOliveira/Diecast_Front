@@ -1,4 +1,4 @@
-import { useTypeDevice } from "@/app/contexts/TypeDevice";
+import { useTypeDevice } from "@/app/hooks/useTypeDevice";
 import Image from "next/image";
 import { useState } from "react";
 import { ModalPhotoProps } from "./types";
