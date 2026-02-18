@@ -1,62 +1,87 @@
+import { Label } from "@/app/components/Label";
 import { useFilter } from "@/app/hooks/useFilter";
-import { Button, Divider, Input, InputNumber } from "antd";
+import { prefixExample } from "@/app/utils";
+import { Button, Divider, Input, InputNumber, Select } from "antd";
 
 export const Filter = () => {
   const {
     maxPrice,
+    amount,
     minPrice,
-    filterName,
-    filterYear,
+    name,
+    year,
+    mark,
     clearFilters,
     handleMinPrice,
     handleMaxPrice,
-    handleFilterName,
-    handleFilterYear,
+    handleName,
+    handleYear,
+    handleMark,
+    handleAmount,
   } = useFilter();
 
   return (
     <>
-      {/* Nome */}
       <div className="mb-4 flex flex-col">
-        <label className="text-sm font-medium">Nome</label>
+        <Label text="Minis" />
+        <Select
+          value={amount}
+          onChange={handleAmount}
+          placeholder="Selecione"
+          className="w-full"
+          options={[
+            { value: "10", label: "10" },
+            { value: "20", label: "20" },
+            { value: "30", label: "30" },
+            { value: "40", label: "40" },
+            { value: "50", label: "50" },
+          ]}
+        />
+      </div>
+      <div className="mb-4 flex flex-col">
+        <Label text="Marca" />
         <Input
-          placeholder="Ex: Ferrari"
-          value={filterName}
-          onChange={(e) => handleFilterName(e.target.value)}
+          placeholder={prefixExample + "HotWheels"}
+          value={mark}
+          onChange={(e) => handleMark(e.target.value)}
+        />
+      </div>
+      <div className="mb-4 flex flex-col">
+        <Label text="Nome" />
+        <Input
+          placeholder={prefixExample + "Ferrari"}
+          value={name}
+          onChange={(e) => handleName(e.target.value)}
         />
       </div>
 
-      {/* Ano */}
       <div className="mb-4 flex flex-col w-full">
-        <label className="text-sm font-medium mb-1">Ano</label>
+        <Label text="Ano" />
         <InputNumber
           style={{ width: "100%" }}
           min={0}
-          placeholder="Selecione o ano"
-          value={filterYear ?? undefined}
-          onChange={(value) => handleFilterYear(value)}
+          placeholder={prefixExample + new Date().getFullYear()}
+          value={year ?? undefined}
+          onChange={(value) => handleYear(value)}
         />
       </div>
 
-      {/* Preço */}
       <div className="mb-4 flex flex-col">
-        <label className="text-sm font-medium">Preço mínimo</label>
+        <Label text="Preço mínimo" />
         <InputNumber
           style={{ width: "100%" }}
           min={0}
           type="number"
-          placeholder="R$ mínimo"
           value={minPrice ?? undefined}
           onChange={(value) => handleMinPrice(value)}
         />
       </div>
 
       <div className="mb-4 flex flex-col">
-        <label className="text-sm font-medium">Preço máximo</label>
+        <Label text="Preço máximo" />
         <InputNumber
           style={{ width: "100%" }}
           min={0}
-          placeholder="R$ máximo"
           value={maxPrice ?? undefined}
           onChange={(value) => handleMaxPrice(value)}
         />

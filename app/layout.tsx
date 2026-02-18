@@ -6,7 +6,7 @@ import { FilterProvider } from "./contexts/FilterContext";
 import { LoadingProvider } from "./contexts/LoagindContext";
 import { TypeDeviceProvider } from "./contexts/TypeDevice";
 import "./globals.css";
-import { isMobileDevice } from "./utils";
+import { isMobileDevice } from "./hooks/useIsMobileDevice";
 
 const poppins = Poppins({
   subsets: ["latin"],

@@ -3,13 +3,17 @@
 import { createContext, ReactNode, useState } from "react";
 
 type FilterContextType = {
-  filterName: string;
-  filterYear: number | null;
+  amount: string;
+  mark: string;
+  name: string;
+  year: number | null;
   minPrice: number | null;
   maxPrice: number | null;
 
-  handleFilterName: (value: string) => void;
-  handleFilterYear: (value: number | null) => void;
+  handleAmount: (value: string) => void;
+  handleMark: (value: string) => void;
+  handleName: (value: string) => void;
+  handleYear: (value: number | null) => void;
   handleMinPrice: (value: number | null) => void;
   handleMaxPrice: (value: number | null) => void;
 
@@ -21,18 +25,28 @@ export const FilterContext = createContext<FilterContextType | undefined>(
 );
 
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
-  const [filterName, setFilterName] = useState("");
-  const [filterYear, setFilterYear] = useState<number | null>(null);
+  const [amount, setMount] = useState("10");
+  const [name, setName] = useState("");
+  const [mark, setMark] = useState("");
+  const [year, setYear] = useState<number | null>(null);
   const [minPrice, setMinPrice] = useState<number | null>(null);
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
   // 🔥 Handlers semânticos
-  const handleFilterName = (value: string) => {
-    setFilterName(value);
+  const handleAmount = (value: string) => {
+    setMount(value);
   };
 
-  const handleFilterYear = (value: number | null) => {
-    setFilterYear(value);
+  const handleMark = (value: string) => {
+    setMark(value);
+  };
+
+  const handleName = (value: string) => {
+    setName(value);
+  };
+
+  const handleYear = (value: number | null) => {
+    setYear(value);
   };
 
   const handleMinPrice = (value: number | null) => {
@@ -44,8 +58,9 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const clearFilters = () => {
-    setFilterName("");
-    setFilterYear(null);
+    setMark("");
+    setName("");
+    setYear(null);
     setMinPrice(null);
     setMaxPrice(null);
   };
@@ -53,14 +68,18 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
   return (
     <FilterContext.Provider
       value={{
-        filterName,
-        filterYear,
+        amount,
+        mark,
+        name,
+        year,
         minPrice,
         maxPrice,
-        handleFilterName,
-        handleFilterYear,
+        handleMark,
+        handleName,
+        handleYear,
         handleMinPrice,
         handleMaxPrice,
+        handleAmount,
         clearFilters,
       }}
     >

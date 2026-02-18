@@ -1,5 +1,5 @@
 "use client";
-import { Pagination, Select } from "antd";
+import { Pagination } from "antd";
 
 import { Menu } from "lucide-react";
 import Image from "next/image";
@@ -13,14 +13,9 @@ import { minis } from "./utils";
 export default function Home() {
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const [age, setAge] = useState("10");
 
   const handleSelectedImage = (image: string | null) => {
     setSelectedImage(image);
-  };
-
-  const handleChange = (value: string) => {
-    setAge(value);
   };
 
   const handleVisibilityMenu = () => {
@@ -33,7 +28,7 @@ export default function Home() {
         isVisible={menuVisibility}
         handleVisibility={handleVisibilityMenu}
       />
-      <div className="w-full h-full p-5 flex justify-between items-center bg-[#1F3565] border-b-[#F31A13] border-b-3">
+      <div className="w-full h-full p-5 flex justify-between items-center bg-blue-primary border-b-red-primary border-b-3">
         <div className="flex items-center gap-2 pl-2 ">
           <Image
             src="/image/logo.jpg"
@@ -51,25 +46,7 @@ export default function Home() {
           <Menu color="white" />
         </button>
       </div>
-      <div className="max-w-7xl w-full p-5 pr-11 flex justify-end">
-        <div className="max-w-16 w-full">
-          <label className="text-sm font-medium text-gray-700 ">Minis</label>
-          <Select
-            value={age}
-            onChange={handleChange}
-            placeholder="Selecione"
-            className="w-full"
-            options={[
-              { value: "10", label: "10" },
-              { value: "20", label: "20" },
-              { value: "30", label: "30" },
-              { value: "40", label: "40" },
-              { value: "50", label: "50" },
-            ]}
-          />
-        </div>
-      </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center pt-16">
         <div className="max-sm:hidden border-blue-600 h-1/2 border mt-4 overflow-y-auto ml-4 p-4 w-64 rounded-lg">
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
 

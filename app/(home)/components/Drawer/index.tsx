@@ -24,7 +24,7 @@ export const Drawer = ({ isVisible, handleVisibility }: DrawerProps) => {
         className={`
       absolute right-0 top-0
       h-full w-72
-      bg-[#1F3565]
+      bg-blue-primary
       text-white
       p-6
       shadow-xl

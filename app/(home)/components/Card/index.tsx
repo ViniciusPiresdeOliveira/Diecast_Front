@@ -14,18 +14,27 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
     setVisibleModalFormMini((e) => !e);
   };
 
+  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+
+  const handleRedirectToWhatsApp = () => {
+    window.open(
+      `https://wa.me/${number}?text=Olá, tenho interesse na miniatura ${mini.name} ${mini.ano}, da ${mini.marca}`,
+      "_blank",
+    );
+  };
+
   return (
     <>
       <div
         className="
       group bg-zinc-100 text-zinc-100
       py-4 px-1 rounded-xl
-      w-full lg:w-[47%] xl:w-[30%]
+      sm:w-[90%] lg:w-[47%] xl:w-[30%]
       flex items-center
       border border-blue-300
       transition-all duration-300 ease-out
       hover:-translate-y-1
-      hover:bg-[#e6ecf2]
+      hover:bg-gray-200
       hover:shadow-md hover:shadow-black/30
       hover:border-blue-700
       shrink-0
@@ -51,24 +60,40 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
             <ImageOff className="w-12 h-12 text-blue-300 group-hover:text-blue-700 transition-colors" />
           )}
         </div>
-        <button
-          onClick={handleVisibleFormMini}
-          className="flex-1 min-w-0 flex flex-col gap-1 h-full justify-evenly items-start cursor-pointer text-left"
-        >
-          <p className="font-medium text-zinc-600 break-words">
-            <span className="text-zinc-800 font-bold">Nome:</span>{" "}
-            <span className="font-medium text-zinc-600">{mini.name}</span>
-          </p>
+        <div className="relative w-full h-full">
+          <button
+            onClick={handleVisibleFormMini}
+            className="flex-1 min-w-0 flex flex-col gap-1 h-full justify-evenly items-start cursor-pointer text-left "
+          >
+            <p className="font-medium text-zinc-600 break-words">
+              <span className="text-zinc-800 font-bold">Nome:</span>{" "}
+              <span className="font-medium text-zinc-600">{mini.name}</span>
+            </p>
 
-          <p className="grid grid-cols-[45px_1fr] text-lg w-full">
-            <span className="text-zinc-800 font-bold">Ano:</span>
-            <span className="text-zinc-600 font-medium">{mini.ano}</span>
-          </p>
+            <p className="grid grid-cols-[45px_1fr] text-lg w-full">
+              <span className="text-zinc-800 font-bold">Ano:</span>
+              <span className="text-zinc-600 font-medium">{mini.ano}</span>
+            </p>
 
-          <p className="text-lg text-blue-700 font-bold">
-            R$ {mini.preco.toFixed(2)}
-          </p>
-        </button>
+            <p className="text-lg text-blue-700 font-bold">
+              R$ {mini.preco.toFixed(2)}
+            </p>
+          </button>
+          <button
+            className="absolute right-3 bottom-0 z-20 cursor-pointer
+             transition-transform duration-200 ease-in-out
+             hover:scale-115"
+            onClick={handleRedirectToWhatsApp}
+          >
+            <Image
+              color="#eefr"
+              src="/ww.svg"
+              alt="WhatsApp"
+              width={20}
+              height={20}
+            />
+          </button>
+        </div>
       </div>
       {visibleModalFormMini && (
         <ModalFormMini
