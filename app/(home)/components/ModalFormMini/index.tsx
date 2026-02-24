@@ -29,11 +29,6 @@ export const ModalFormMini = ({
       open={isModalOpen}
       onOk={handleOk}
       onCancel={handleCancel}
-    >
-      <p>{mini.name}</p>
-      <p>{mini.ano}</p>
-      <p>{mini.preco}</p>
-      <p>{mini.marca}</p>
-    </Modal>
+    ></Modal>
   );
 };

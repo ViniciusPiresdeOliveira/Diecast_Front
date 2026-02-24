@@ -1,21 +1,28 @@
 "use client";
 import { Pagination } from "antd";
 
-import { Menu } from "lucide-react";
-import Image from "next/image";
+import { CirclePlus } from "lucide-react";
 import { useState } from "react";
 import { Card } from "./components/Card";
 import { Drawer } from "./components/Drawer";
 import { Filter } from "./components/Filter";
+import { Header } from "./components/Header";
+import { ModalFormMini } from "./components/ModalFormMini";
 import { ModalPhoto } from "./components/ModalPhoto";
+import { Miniatura } from "./types";
 import { minis } from "./utils";
 
 export default function Home() {
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [selectedMini, setSelectedMini] = useState<Miniatura | null>(null);
+  const [visibleModalFormMini, setVisibleModalFormMini] = useState(false);
 
-  const handleSelectedImage = (image: string | null) => {
-    setSelectedImage(image);
+  const handleVisibleFormMini = () => {
+    setVisibleModalFormMini((e) => !e);
+  };
+
+  const handleSelectedMini = (mini: Miniatura | null) => {
+    setSelectedMini(mini);
   };
 
   const handleVisibilityMenu = () => {
@@ -28,25 +35,14 @@ export default function Home() {
         isVisible={menuVisibility}
         handleVisibility={handleVisibilityMenu}
       />
-      <div className="w-full h-full p-5 flex justify-between items-center bg-blue-primary border-b-red-primary border-b-3">
-        <div className="flex items-center gap-2 pl-2 ">
-          <Image
-            src="/image/logo.jpg"
-            alt="Logo"
-            width={50}
-            height={50}
-            className="rounded-full object-contain"
-          />
-          <p className="text-white font-semibold">Diecast</p>
-        </div>
+      <Header handleVisibilityMenu={handleVisibilityMenu} />
+      <div className="flex justify-center pt-16 relative">
         <button
-          className="p-2 cursor-pointer min-sm:hidden"
-          onClick={handleVisibilityMenu}
+          onClick={handleVisibleFormMini}
+          className="flex justify-end absolute  right-1/30 p-3.5 top-3 cursor-pointer "
         >
-          <Menu color="white" />
+          <CirclePlus color="#1f3565" width={36} height={36} />
         </button>
-      </div>
-      <div className="flex justify-center pt-16">
         <div className="max-sm:hidden border-blue-600 h-1/2 border mt-4 overflow-y-auto ml-4 p-4 w-64 rounded-lg">
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
 
@@ -58,16 +54,22 @@ export default function Home() {
             <Card
               key={index}
               mini={mini}
-              handleSelectedImage={handleSelectedImage}
+              handleSelectedMini={handleSelectedMini}
             />
           ))}
         </div>
-        {selectedImage && (
+        {selectedMini && (
           <ModalPhoto
-            selectedImage={selectedImage}
-            handleSelectedImage={handleSelectedImage}
+            selectedMini={selectedMini}
+            handleSelectedMini={handleSelectedMini}
           />
         )}
+        <ModalFormMini
+          title="Cadastrar Miniatura"
+          mini={null}
+          visible={visibleModalFormMini}
+          handleVisibleFormMini={handleVisibleFormMini}
+        />
       </div>
       <Pagination total={100} pageSize={10} />
     </div>

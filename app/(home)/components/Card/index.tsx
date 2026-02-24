@@ -4,7 +4,7 @@ import { useState } from "react";
 import { ModalFormMini } from "../ModalFormMini";
 import { CardProps } from "./types";
 
-export const Card = ({ mini, handleSelectedImage }: CardProps) => {
+export const Card = ({ mini, handleSelectedMini }: CardProps) => {
   const stylesMiniWithCar = "relative";
   const stylesMiniWithoutCar = "flex items-center justify-center";
 
@@ -25,10 +25,10 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
 
   return (
     <>
-      <div
+      <button
         className="
       group bg-zinc-100 text-zinc-100
-      py-4 px-1 rounded-xl
+      px-1 rounded-xl
       w-full lg:w-[47%] xl:w-[30%]
       flex items-center
       border border-blue-300
@@ -38,6 +38,7 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
       hover:shadow-md hover:shadow-black/30
       hover:border-blue-700
       shrink-0
+      min-h-[195px]
       "
       >
         <div
@@ -53,18 +54,18 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
               fill
               className="object-contain cursor-pointer z-10 transition-transform duration-300 group-hover:scale-110"
               onClick={() => {
-                handleSelectedImage(mini.image as string);
+                handleSelectedMini(mini);
               }}
             />
           ) : (
             <ImageOff className="w-12 h-12 text-blue-300 group-hover:text-blue-700 transition-colors" />
           )}
         </div>
-        <div className="relative w-full h-full">
-          <button
-            onClick={handleVisibleFormMini}
-            className="flex-1 min-w-0 flex flex-col gap-1 h-full justify-evenly items-start cursor-pointer text-left "
-          >
+        <button
+          onClick={handleVisibleFormMini}
+          className="relative w-full h-full"
+        >
+          <div className="flex-1 min-w-0 flex flex-col gap-0 h-full justify-evenly items-start cursor-pointer text-left ">
             <p className="font-medium text-zinc-600 break-words">
               <span className="text-zinc-800 font-bold">Nome:</span>{" "}
               <span className="font-medium text-zinc-600">{mini.name}</span>
@@ -78,9 +79,9 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
             <p className="text-lg text-blue-700 font-bold">
               R$ {mini.preco.toFixed(2)}
             </p>
-          </button>
+          </div>
           <button
-            className="absolute p-5 -right-2 -bottom-5
+            className="absolute p-5 -right-2 -bottom-1
  z-20 cursor-pointer
              transition-transform duration-200 ease-in-out
              hover:scale-115"
@@ -94,16 +95,14 @@ export const Card = ({ mini, handleSelectedImage }: CardProps) => {
               height={20}
             />
           </button>
-        </div>
-      </div>
-      {visibleModalFormMini && (
-        <ModalFormMini
-          title="Editar Miniatura"
-          visible={visibleModalFormMini}
-          mini={mini}
-          handleVisibleFormMini={handleVisibleFormMini}
-        />
-      )}
+        </button>
+      </button>
+      <ModalFormMini
+        title="Editar Miniatura"
+        visible={visibleModalFormMini}
+        mini={mini}
+        handleVisibleFormMini={handleVisibleFormMini}
+      />
     </>
   );
 };

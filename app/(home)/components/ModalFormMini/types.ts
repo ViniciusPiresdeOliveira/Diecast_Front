@@ -2,7 +2,7 @@ import { Miniatura } from "../../types";
 
 export interface ModalFormMiniProps {
   visible: boolean;
-  mini: Miniatura;
+  mini: Miniatura | null;
   title: string;
   handleVisibleFormMini: () => void;
 }

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { ModalPhotoProps } from "./types";
 
 export const ModalPhoto = ({
-  selectedImage,
-  handleSelectedImage,
+  selectedMini,
+  handleSelectedMini,
 }: ModalPhotoProps) => {
   const [showMagnifier, setShowMagnifier] = useState(false);
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
@@ -29,7 +29,7 @@ export const ModalPhoto = ({
   return (
     <button
       className="fixed inset-0 z-50 bg-black/70 flex items-center justify-center"
-      onClick={() => handleSelectedImage(null)}
+      onClick={() => handleSelectedMini(null)}
     >
       <button
         className="relative max-w-4xl w-full max-h-[95vh] p-4"
@@ -37,7 +37,7 @@ export const ModalPhoto = ({
       >
         <button
           className="cursor-pointer absolute top-4 right-14 text-white text-3xl hover:text-red-400 z-50"
-          onClick={() => handleSelectedImage(null)}
+          onClick={() => handleSelectedMini(null)}
         >
           ✕
         </button>
@@ -49,7 +49,7 @@ export const ModalPhoto = ({
           onMouseMove={handleMouseMove}
         >
           <Image
-            src={selectedImage}
+            src={selectedMini?.image ?? ""}
             alt="Preview"
             width={650}
             height={650}
@@ -64,7 +64,7 @@ export const ModalPhoto = ({
                 height: 250,
                 top: cursorPos.y - 90,
                 left: cursorPos.x - 90,
-                backgroundImage: `url(${selectedImage})`,
+                backgroundImage: `url(${selectedMini?.image ?? ""})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: `${imgSize.width * zoom}px ${
                   imgSize.height * zoom
