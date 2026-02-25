@@ -65,7 +65,7 @@ export default function Home() {
           />
         )}
         <ModalFormMini
-          title="Cadastrar Miniatura"
+          type="add"
           mini={null}
           visible={visibleModalFormMini}
           handleVisibleFormMini={handleVisibleFormMini}

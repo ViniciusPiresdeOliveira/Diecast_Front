@@ -17,6 +17,9 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
   const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 
   const handleRedirectToWhatsApp = () => {
+    // tirar quando o icone de whatsapp só tiver para cliente
+    handleVisibleFormMini();
+    //
     window.open(
       `https://wa.me/${number}?text=Olá, tenho interesse na miniatura ${mini.name} ${mini.ano}, da ${mini.marca}`,
       "_blank",
@@ -98,7 +101,7 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
         </button>
       </button>
       <ModalFormMini
-        title="Editar Miniatura"
+        type="edit"
         visible={visibleModalFormMini}
         mini={mini}
         handleVisibleFormMini={handleVisibleFormMini}
