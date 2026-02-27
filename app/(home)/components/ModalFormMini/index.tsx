@@ -1,8 +1,9 @@
 import { Label } from "@/app/components/Label";
 import { MessageError } from "@/app/components/MessageError";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Input, InputNumber, Modal, Select, Upload } from "antd";
+import { Image, Input, InputNumber, Modal, Select, Upload } from "antd";
 import { Option } from "antd/es/mentions";
+import { UploadIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { ModalFormMiniProps } from "./types";
@@ -16,6 +17,8 @@ export const ModalFormMini = ({
   type,
 }: ModalFormMiniProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [previewImage, setPreviewImage] = useState("");
 
   const {
     control,
@@ -39,7 +42,6 @@ export const ModalFormMini = ({
     handleVisibleFormMini();
     reset();
   };
-
   useEffect(() => {
     setIsModalOpen(visible);
 
@@ -208,18 +210,34 @@ export const ModalFormMini = ({
                 <Label text="Imagem" />
 
                 <Upload
-                  // status={errors.image ? "error" : ""}
                   fileList={field.value}
-                  beforeUpload={() => false} // impede upload automático
-                  onChange={({ fileList }) => {
-                    field.onChange(fileList);
+                  beforeUpload={() => false}
+                  onChange={({ fileList }) => field.onChange(fileList)}
+                  onPreview={async (file) => {
+                    if (!file.url && !file.preview) {
+                      file.preview = URL.createObjectURL(
+                        file.originFileObj as File,
+                      );
+                    }
+
+                    setPreviewImage(file.url || (file.preview as string));
+                    setPreviewOpen(true);
                   }}
-                  style={{ width: "100%" }}
                   maxCount={1}
-                  listType="picture"
+                  listType={"picture-card"}
+                  style={{ marginTop: "3px" }}
                 >
-                  <Button>Upload</Button>
+                  {field.value?.length ? null : <UploadIcon />}
                 </Upload>
+
+                <Image
+                  wrapperStyle={{ display: "none" }}
+                  preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                  }}
+                  src={previewImage}
+                />
 
                 {errors.image && (
                   <MessageError message={errors.image.message as string} />
