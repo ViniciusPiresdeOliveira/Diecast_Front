@@ -1,7 +1,7 @@
 import { Label } from "@/app/components/Label";
 import { MessageError } from "@/app/components/MessageError";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Input, InputNumber, Modal, Select } from "antd";
+import { Button, Input, InputNumber, Modal, Select, Upload } from "antd";
 import { Option } from "antd/es/mentions";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
@@ -64,8 +64,8 @@ export const ModalFormMini = ({
       cancelText="Cancelar"
       width={"90%"}
     >
-      <div className="flex justify-between">
-        <div className="w-[47%]">
+      <div className="md:flex -sm:flex-col justify-between">
+        <div className="md:w-[47%] -sm:w-full">
           <Controller
             name="name"
             control={control}
@@ -74,7 +74,7 @@ export const ModalFormMini = ({
                 <Label text="Nome" />
                 <Input
                   {...field}
-                  placeholder="Nome"
+                  // placeholder="Nome"
                   status={errors.name ? "error" : ""}
                 />
                 {errors.name && (
@@ -93,7 +93,7 @@ export const ModalFormMini = ({
                 <Select
                   {...field}
                   style={{ width: "100%" }}
-                  placeholder="Marca"
+                  // placeholder="Marca"
                   onChange={field.onChange}
                   status={errors.salePrice ? "error" : ""}
                 >
@@ -118,7 +118,7 @@ export const ModalFormMini = ({
                   {...field}
                   style={{ width: "100%" }}
                   status={errors.year ? "error" : ""}
-                  placeholder="Ano"
+                  // placeholder="Ano"
                   min={0}
                   type="number"
                 />
@@ -140,7 +140,7 @@ export const ModalFormMini = ({
                   {...field}
                   mode="multiple"
                   style={{ width: "100%" }}
-                  placeholder="Tipos"
+                  // placeholder="Tipos"
                   onChange={field.onChange}
                   status={errors.types ? "error" : ""}
                 >
@@ -164,7 +164,7 @@ export const ModalFormMini = ({
                 <Select
                   {...field}
                   style={{ width: "100%" }}
-                  placeholder="Tipos"
+                  // placeholder="Tipos"
                   onChange={field.onChange}
                   status={errors.line ? "error" : ""}
                 >
@@ -183,13 +183,13 @@ export const ModalFormMini = ({
             name="status"
             control={control}
             render={({ field }) => (
-              <div className="flex-col">
+              <div className={classNameContainerInputs}>
                 <Label text="Status" />
 
                 <Select
                   {...field}
                   style={{ width: "100%" }}
-                  placeholder="Status"
+                  // placeholder="Status"
                   onChange={field.onChange}
                   status={errors.status ? "error" : ""}
                 >
@@ -199,8 +199,36 @@ export const ModalFormMini = ({
               </div>
             )}
           />
+
+          <Controller
+            name="image"
+            control={control}
+            render={({ field }) => (
+              <div className={classNameContainerInputs + "mt-3"}>
+                <Label text="Imagem" />
+
+                <Upload
+                  // status={errors.image ? "error" : ""}
+                  fileList={field.value}
+                  beforeUpload={() => false} // impede upload automático
+                  onChange={({ fileList }) => {
+                    field.onChange(fileList);
+                  }}
+                  style={{ width: "100%" }}
+                  maxCount={1}
+                  listType="picture"
+                >
+                  <Button>Upload</Button>
+                </Upload>
+
+                {errors.image && (
+                  <MessageError message={errors.image.message as string} />
+                )}
+              </div>
+            )}
+          />
         </div>
-        <div className="w-[47%]">
+        <div className="md:w-[47%] -sm:w-full">
           <Controller
             name="scale"
             control={control}
@@ -210,7 +238,7 @@ export const ModalFormMini = ({
                 <Select
                   {...field}
                   style={{ width: "100%" }}
-                  placeholder="Escala"
+                  // placeholder="Escala"
                   onChange={field.onChange}
                   status={errors.scale ? "error" : ""}
                 >
@@ -233,7 +261,7 @@ export const ModalFormMini = ({
                   {...field}
                   style={{ width: "100%" }}
                   status={errors.costPrice ? "error" : ""}
-                  placeholder="Preço de Venda"
+                  // placeholder="Preço de Custo"
                   min={0}
                   type="number"
                 />
@@ -253,7 +281,7 @@ export const ModalFormMini = ({
                   {...field}
                   style={{ width: "100%" }}
                   status={errors.salePrice ? "error" : ""}
-                  placeholder="Preço de Venda"
+                  // placeholder="Preço de Venda"
                   min={0}
                   type="number"
                 />
@@ -273,7 +301,7 @@ export const ModalFormMini = ({
                   {...field}
                   style={{ width: "100%" }}
                   status={errors.stock ? "error" : ""}
-                  placeholder="Quantidade no Estoque"
+                  // placeholder="Quantidade no Estoque"
                   min={0}
                   type="number"
                 />
@@ -295,7 +323,7 @@ export const ModalFormMini = ({
                   {...field}
                   style={{ width: "100%" }}
                   status={errors.weight ? "error" : ""}
-                  placeholder="Peso"
+                  // placeholder="Peso"
                   min={0}
                   type="number"
                 />
@@ -317,7 +345,7 @@ export const ModalFormMini = ({
                   {...field}
                   style={{ width: "100%" }}
                   status={errors.volume ? "error" : ""}
-                  placeholder="Volume"
+                  // placeholder="Volume"
                   min={0}
                   type="number"
                 />

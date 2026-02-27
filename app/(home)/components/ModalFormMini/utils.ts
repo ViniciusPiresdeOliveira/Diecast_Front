@@ -1,3 +1,5 @@
+import { UploadFile } from "antd";
+
 export const defaultValuesForm = {
   name: "",
   brand: "",
@@ -11,4 +13,5 @@ export const defaultValuesForm = {
   weight: undefined,
   volume: undefined,
   status: true,
+  image: [] as UploadFile[],
 };

@@ -1,3 +1,4 @@
+import { UploadFile } from "antd";
 import * as yup from "yup";
 
 export const miniSchema = yup.object({
@@ -30,6 +31,11 @@ export const miniSchema = yup.object({
   weight: yup.number().nullable(),
   volume: yup.number().nullable(),
   status: yup.boolean().required(),
+  image: yup
+    .array()
+    .of(yup.mixed<UploadFile>().required())
+    .min(1, "Imagem é obrigatória")
+    .required(),
 });
 
 export type MiniFormValues = yup.InferType<typeof miniSchema>;
