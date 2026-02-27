@@ -1,7 +1,8 @@
 import { Label } from "@/app/components/Label";
 import { MessageError } from "@/app/components/MessageError";
+import { useTypeDevice } from "@/app/hooks/useTypeDevice";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Image, Input, InputNumber, Modal, Select, Upload } from "antd";
+import { Button, Image, Input, InputNumber, Modal, Select, Upload } from "antd";
 import { Option } from "antd/es/mentions";
 import { UploadIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -19,7 +20,7 @@ export const ModalFormMini = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-
+  const { isMobile } = useTypeDevice();
   const {
     control,
     handleSubmit,
@@ -224,20 +225,32 @@ export const ModalFormMini = ({
                     setPreviewOpen(true);
                   }}
                   maxCount={1}
-                  listType={"picture-card"}
-                  style={{ marginTop: "3px" }}
+                  listType={
+                    field.value?.length && !isMobile ? "picture-card" : "text"
+                  }
+                  showUploadList={{
+                    showPreviewIcon: true,
+                    showRemoveIcon: true,
+                  }}
+                  style={{ marginTop: "3px", width: "100%" }}
                 >
-                  {field.value?.length ? null : <UploadIcon />}
+                  {field.value?.length ? null : (
+                    <Button style={{ width: "100%" }}>
+                      <UploadIcon width={14} /> Upload
+                    </Button>
+                  )}
                 </Upload>
 
-                <Image
-                  wrapperStyle={{ display: "none" }}
-                  preview={{
-                    visible: previewOpen,
-                    onVisibleChange: (visible) => setPreviewOpen(visible),
-                  }}
-                  src={previewImage}
-                />
+                {!isMobile && (
+                  <Image
+                    wrapperStyle={{ display: "none" }}
+                    preview={{
+                      visible: previewOpen,
+                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                    }}
+                    src={previewImage}
+                  />
+                )}
 
                 {errors.image && (
                   <MessageError message={errors.image.message as string} />
