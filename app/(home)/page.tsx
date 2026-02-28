@@ -4,9 +4,7 @@ import { Pagination } from "antd";
 import { CirclePlus } from "lucide-react";
 import { useState } from "react";
 import { Card } from "./components/Card";
-import { Drawer } from "./components/Drawer";
 import { Filter } from "./components/Filter";
-import { Header } from "./components/Header";
 import { ModalFormMini } from "./components/ModalFormMini";
 import { ModalPhoto } from "./components/ModalPhoto";
 import { Miniatura } from "./types";
@@ -31,11 +29,11 @@ export default function Home() {
 
   return (
     <div className="flex flex-col items-center pb-5 w-full">
-      <Drawer
+      {/* <Drawer
         isVisible={menuVisibility}
         handleVisibility={handleVisibilityMenu}
       />
-      <Header handleVisibilityMenu={handleVisibilityMenu} />
+      <Header handleVisibilityMenu={handleVisibilityMenu} /> */}
       <div className="flex justify-center pt-16 relative">
         <button
           onClick={handleVisibleFormMini}

@@ -1,30 +1,24 @@
 import { ImageOff } from "lucide-react";
 import Image from "next/image";
-import { useState } from "react";
-import { ModalFormMini } from "../ModalFormMini";
+import { useRouter } from "next/navigation";
 import { CardProps } from "./types";
 
 export const Card = ({ mini, handleSelectedMini }: CardProps) => {
   const stylesMiniWithCar = "relative";
   const stylesMiniWithoutCar = "flex items-center justify-center";
+  const router = useRouter();
 
-  const [visibleModalFormMini, setVisibleModalFormMini] = useState(false);
+  // const [visibleModalFormMini, setVisibleModalFormMini] = useState(false);
 
-  const handleVisibleFormMini = () => {
-    setVisibleModalFormMini((e) => !e);
+  // const handleVisibleFormMini = () => {
+  //   setVisibleModalFormMini((e) => !e);
+  // };
+
+  const handleNavigateToMiniById = () => {
+    router.push(`/mini/${mini.id}`);
   };
 
-  const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
-
-  const handleRedirectToWhatsApp = () => {
-    // tirar quando o icone de whatsapp só tiver para cliente
-    handleVisibleFormMini();
-    //
-    window.open(
-      `https://wa.me/${number}?text=Olá, tenho interesse na miniatura ${mini.name} ${mini.ano}, da ${mini.marca}`,
-      "_blank",
-    );
-  };
+  const link = globalThis.location.href;
 
   return (
     <>
@@ -65,7 +59,8 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
           )}
         </div>
         <button
-          onClick={handleVisibleFormMini}
+          // onClick={handleVisibleFormMini} somente para admin
+          onClick={handleNavigateToMiniById}
           className="relative w-full h-full"
         >
           <div className="flex-1 min-w-0 flex flex-col gap-0 h-full justify-evenly items-start cursor-pointer text-left ">
@@ -83,12 +78,12 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
               R$ {mini.preco.toFixed(2)}
             </p>
           </div>
-          <button
+          {/* <button
             className="absolute p-5 -right-2 -bottom-1
  z-20 cursor-pointer
              transition-transform duration-200 ease-in-out
              hover:scale-115"
-            onClick={handleRedirectToWhatsApp}
+            onClick={() => handleRedirectToWhatsApp(mini, link)}
           >
             <Image
               color="#eefr"
@@ -97,15 +92,15 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
               width={20}
               height={20}
             />
-          </button>
+          </button> */}
         </button>
       </button>
-      <ModalFormMini
+      {/* <ModalFormMini
         type="edit"
         visible={visibleModalFormMini}
         mini={mini}
         handleVisibleFormMini={handleVisibleFormMini}
-      />
+      /> */}
     </>
   );
 };

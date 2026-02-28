@@ -1,4 +1,5 @@
 export interface Miniatura {
+  id: number;
   name: string;
   ano: number;
   preco: number;

@@ -32,6 +32,28 @@ body {
     transform: scale(1);
   }
 }
+:where(.css-dev-only-do-not-override-1d8anct).ant-image .ant-image-cover:hover,
+:where(.css-dev-only-do-not-override-1d8anct).ant-image
+  .ant-image-cover::before,
+:where(.css-dev-only-do-not-override-1d8anct).ant-image .ant-image-cover::after,
+:where(.css-dev-only-do-not-override-1d8anct).ant-image .ant-image-cover {
+  background: transparent !important;
+}
+
+:where(.css-dev-only-do-not-override-1d8anct).ant-carousel .slick-prev::after {
+  color: #f31a13 !important;
+  transform: rotate(-45deg) scale(1.6) !important;
+}
+
+:where(.css-dev-only-do-not-override-1d8anct).ant-carousel .slick-next::after {
+  color: #f31a13 !important;
+  transform: rotate(130deg) scale(1.6) !important;
+}
+
+:where(.css-dev-only-do-not-override-1d8anct).ant-carousel .slick-dots li {
+  background-color: #1f3565;
+  /* opacity: 0.5; */
+}
 /* 
 @keyframes loadingAnim {
   0% {
