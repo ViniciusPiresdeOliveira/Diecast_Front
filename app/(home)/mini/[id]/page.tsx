@@ -1,5 +1,8 @@
 "use client";
-import { Carousel, Image as ImageANTD } from "antd";
+import { ImageNotFound } from "@/app/components/ImageNotFound";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/react-splide/css";
+import { Image as ImageANTD } from "antd";
 import Image from "next/image";
 import { notFound, useParams, useRouter } from "next/navigation";
 import { Miniatura } from "../../types";
@@ -17,12 +20,12 @@ export default function MiniDetail() {
     notFound();
   }
 
-  const link = globalThis.location.href;
+  // const link = globalThis.location.href;
 
   return (
     <div className="p-8">
       <div className="flex justify-center gap-8">
-        <div className="w-full max-w-[500px]">
+        <div className="w-[80%] max-w-[400px]">
           <ImageANTD
             src={mini.image}
             alt={mini.name}
@@ -31,71 +34,79 @@ export default function MiniDetail() {
             className="object-contain cursor-pointer z-10 transition-transform duration-300 group-hover:scale-110"
           />
         </div>
-        <div>
+        <div className=" max-w-[500px]">
           <h1 className="text-2xl font-bold mb-4">
             {mini.marca} {mini.name} - {mini.ano}
           </h1>
 
           <p className="text-4xl font-bold">R${mini.preco}</p>
-          <button
-            className="
-          z-20 cursor-pointer
-                      transition-transform duration-200 ease-in-out
-                      hover:scale-115"
-            onClick={() => handleRedirectToWhatsApp(mini, link)}
-          >
-            <Image
-              color="#eefr"
-              src="/whatsapp.svg"
-              alt="WhatsApp"
-              width={20}
-              height={20}
-            />
-          </button>
+          <div className="mt-4">
+            <p className="text-start md:text-left text-gray-600 mb-2">
+              Interessado nesta miniatura? Entre em contato pelo WhatsApp e
+              garanta sua reserva!
+            </p>
+            <button
+              className="z-20 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105 flex items-center gap-2"
+              onClick={() => handleRedirectToWhatsApp(mini, "link")}
+            >
+              <Image
+                color="#eefr"
+                src="/whatsapp.svg"
+                alt="WhatsApp"
+                width={20}
+                height={20}
+              />
+              Falar no WhatsApp
+            </button>
+          </div>
         </div>
       </div>
-      <div className="mt-16 md:w-[60%] md:ml-[20%] -md:w-[85%]">
+      <div className="mt-16 w-full max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-center">Outras minis</h2>
 
-        <Carousel
-          autoplay
-          centerMode
-          // slidesToShow={3}
-          arrows
-          responsive={[
-            {
-              breakpoint: 5000, // abaixo de 1024px
-              settings: {
-                slidesToShow: 3,
+        <Splide
+          options={{
+            type: "loop",
+            perPage: 4,
+            perMove: 1,
+            gap: "20px",
+            arrows: true,
+            pagination: true,
+            autoplay: true,
+            interval: 2500,
+            speed: 850,
+            breakpoints: {
+              1024: {
+                perPage: 3,
+              },
+              640: {
+                perPage: 2,
+              },
+              435: {
+                perPage: 1,
               },
             },
-            {
-              breakpoint: 1560, // abaixo de 1024px
-              settings: {
-                slidesToShow: 2,
-              },
-            },
-            {
-              breakpoint: 550, // abaixo de 768px
-              settings: {
-                slidesToShow: 1,
-              },
-            },
-          ]}
+          }}
         >
           {minis
             .filter((item) => item.id !== mini.id)
             .map((item) => (
-              <div key={item.id} className="px-3 pb-8">
-                <div className="rounded-xl w-[174px] h-[402px] shadow-md p-4 flex flex-col items-center gap-3 transition-all duration-300 border border-blue-300 hover:border-blue-700">
-                  <ImageANTD
-                    src={item.image}
-                    alt={item.name}
-                    preview={false}
-                    width={200}
-                    height={200}
-                    className="object-contain"
-                  />
+              <SplideSlide key={item.id}>
+                <div className="mb-9 rounded-xl w-[175px] h-[400px] shadow-md p-4 flex flex-col items-center gap-3 transition-all duration-300 border border-blue-300 hover:border-blue-700 mx-auto">
+                  {item.image ? (
+                    <ImageANTD
+                      src={item.image}
+                      alt={item.name}
+                      width={200}
+                      height={200}
+                      className="object-contain"
+                    />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center group transition-colors">
+                      <ImageNotFound className="object-contain" />
+                    </div>
+                  )}
+
                   <div className="flex flex-col justify-around items-center h-full">
                     <h3 className="font-semibold text-center">
                       {item.marca} {item.name}
@@ -111,9 +122,9 @@ export default function MiniDetail() {
                     </button>
                   </div>
                 </div>
-              </div>
+              </SplideSlide>
             ))}
-        </Carousel>
+        </Splide>
       </div>
     </div>
   );

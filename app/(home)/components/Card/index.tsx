@@ -1,4 +1,4 @@
-import { ImageOff } from "lucide-react";
+import { ImageNotFound } from "@/app/components/ImageNotFound";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { CardProps } from "./types";
@@ -18,7 +18,7 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
     router.push(`/mini/${mini.id}`);
   };
 
-  const link = globalThis.location.href;
+  // const link = globalThis.location.href;
 
   return (
     <>
@@ -55,7 +55,7 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
               }}
             />
           ) : (
-            <ImageOff className="w-12 h-12 text-blue-300 group-hover:text-blue-700 transition-colors" />
+            <ImageNotFound />
           )}
         </div>
         <button
