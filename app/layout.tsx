@@ -2,10 +2,11 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import { Loading } from "./components/Loading";
+import { FilterProvider } from "./contexts/FilterContext";
 import { LoadingProvider } from "./contexts/LoagindContext";
 import { TypeDeviceProvider } from "./contexts/TypeDevice";
 import "./globals.css";
-import { isMobileDevice } from "./utils";
+import { isMobileDevice } from "./hooks/useIsMobileDevice";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -27,12 +28,12 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${poppins.variable} antialiased`}>
+      <body className={`${poppins.variable} antialiased min-h-full`}>
         <LoadingProvider>
           <Loading />
           <ToastContainer />
           <TypeDeviceProvider initialIsMobile={isMobile}>
-            {children}
+            <FilterProvider>{children}</FilterProvider>
           </TypeDeviceProvider>
         </LoadingProvider>{" "}
       </body>

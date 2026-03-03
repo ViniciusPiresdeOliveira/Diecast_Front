@@ -1,4 +1,6 @@
+import { Miniatura } from "../../types";
+
 export interface ModalPhotoProps {
-  selectedImage: string;
-  handleSelectedImage: (url: string | null) => void;
+  selectedMini: Miniatura | null;
+  handleSelectedMini: (mini: Miniatura | null) => void;
 }

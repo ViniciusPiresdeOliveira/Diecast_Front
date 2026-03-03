@@ -9,12 +9,18 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
+    "@splidejs/react-splide": "^0.7.12",
     "antd": "^6.2.2",
+    "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
     "next": "16.1.4",
     "react": "19.2.3",
     "react-dom": "19.2.3",
-    "react-toastify": "^11.0.5"
+    "react-hook-form": "^7.71.2",
+    "react-toastify": "^11.0.5",
+    "tailwind-merge": "^3.5.0",
+    "yup": "^1.7.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.18",
