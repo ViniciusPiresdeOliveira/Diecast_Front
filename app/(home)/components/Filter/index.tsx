@@ -2,6 +2,7 @@ import { Label } from "@/app/components/Label";
 import { useFilter } from "@/app/hooks/useFilter";
 import { prefixExample } from "@/app/utils";
 import { Button, Divider, Input, InputNumber, Select } from "antd";
+import { brandOptions } from "./utils";
 
 export const Filter = () => {
   const {
@@ -23,7 +24,7 @@ export const Filter = () => {
   return (
     <>
       <div className="mb-4 flex flex-col">
-        <Label text="Minis" />
+        <Label className="max-sm:text-white" text="Minis" />
         <Select
           value={amount}
           onChange={handleAmount}
@@ -39,15 +40,17 @@ export const Filter = () => {
         />
       </div>
       <div className="mb-4 flex flex-col">
-        <Label text="Marca" />
-        <Input
-          placeholder={prefixExample + "HotWheels"}
+        <Label className="max-sm:text-white" text="Marca" />
+        <Select
+          style={{ width: "100%" }}
           value={mark}
-          onChange={(e) => handleMark(e.target.value)}
+          onChange={(e) => handleMark(e)}
+          options={brandOptions}
+          // placeholder="Marca"
         />
       </div>
       <div className="mb-4 flex flex-col">
-        <Label text="Nome" />
+        <Label className="max-sm:text-white" text="Nome" />
         <Input
           placeholder={prefixExample + "Ferrari"}
           value={name}
@@ -56,7 +59,7 @@ export const Filter = () => {
       </div>
 
       <div className="mb-4 flex flex-col w-full">
-        <Label text="Ano" />
+        <Label className="max-sm:text-white" text="Ano" />
         <InputNumber
           style={{ width: "100%" }}
           min={0}
@@ -67,7 +70,7 @@ export const Filter = () => {
       </div>
 
       <div className="mb-4 flex flex-col">
-        <Label text="Preço mínimo" />
+        <Label className="max-sm:text-white" text="Preço mínimo" />
         <InputNumber
           style={{ width: "100%" }}
           min={0}
@@ -78,10 +81,11 @@ export const Filter = () => {
       </div>
 
       <div className="mb-4 flex flex-col">
-        <Label text="Preço máximo" />
+        <Label className="max-sm:text-white" text="Preço máximo" />
         <InputNumber
           style={{ width: "100%" }}
           min={0}
+          type="number"
           value={maxPrice ?? undefined}
           onChange={(value) => handleMaxPrice(value)}
         />

@@ -22,7 +22,7 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
 
   return (
     <>
-      <button
+      <div
         className="
       group bg-zinc-100 text-zinc-100
       px-1 rounded-xl
@@ -94,7 +94,7 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
             />
           </button> */}
         </button>
-      </button>
+      </div>
       {/* <ModalFormMini
         type="edit"
         visible={visibleModalFormMini}
