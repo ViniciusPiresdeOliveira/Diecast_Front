@@ -500,10 +500,11 @@ export const handleRedirectToWhatsApp = (mini: Miniatura, link: string) => {
   // tirar quando o icone de whatsapp só tiver para cliente
   // handleVisibleFormMini();
   //
-  window.open(
-    `https://wa.me/${number}?text=Olá, tenho interesse na miniatura ${mini.name} ${mini.ano}, da ${mini.marca} - ${link}`,
-    "_blank",
-  );
+  const message = `Olá, tenho interesse na miniatura ${mini.name} ${mini.ano}, da ${mini.marca} - ${link}`;
+
+  const encodedMessage = encodeURIComponent(message);
+
+  window.open(`https://wa.me/${number}?text=${encodedMessage}`, "_blank");
 };
 
 export const handleDownloadCatalog = () => {
