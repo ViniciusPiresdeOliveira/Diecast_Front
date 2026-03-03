@@ -4,7 +4,7 @@ export const optionsCarousel = {
   perMove: 1,
   gap: "20px",
   arrows: true,
-  pagination: true,
+  pagination: false,
   autoplay: true,
   interval: 2500,
   speed: 850,
