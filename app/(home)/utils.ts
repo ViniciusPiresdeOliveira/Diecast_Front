@@ -494,17 +494,25 @@ export const minis: Miniatura[] = [
   },
 ];
 
-export const handleRedirectToWhatsApp = (mini: Miniatura, link: string) => {
+export const handleRedirectToWhatsApp = (
+  mini: Miniatura,
+  link: string,
+  isMobile: boolean,
+) => {
   const number = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 
   // tirar quando o icone de whatsapp só tiver para cliente
   // handleVisibleFormMini();
   //
   const message = `Olá, tenho interesse na miniatura ${mini.name} ${mini.ano}, da ${mini.marca} - ${link}`;
-
   const encodedMessage = encodeURIComponent(message);
 
-  window.open(`https://wa.me/${number}?text=${encodedMessage}`, "_blank");
+  if (isMobile) {
+    const url = `https://api.whatsapp.com/send?phone=${number}&text=${encodedMessage}`;
+    window.location.href = url;
+  } else {
+    window.open(`https://wa.me/${number}?text=${encodedMessage}`, "_blank");
+  }
 };
 
 export const handleDownloadCatalog = () => {

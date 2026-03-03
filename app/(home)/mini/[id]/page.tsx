@@ -1,6 +1,7 @@
 "use client";
 import { ImageNotFound } from "@/app/components/ImageNotFound";
 import { useCurrentUrl } from "@/app/hooks/useCurrentUrl";
+import { useTypeDevice } from "@/app/hooks/useTypeDevice";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import { Image as ImageANTD } from "antd";
@@ -14,6 +15,7 @@ import { optionsCarousel } from "./utils";
 export default function MiniDetail() {
   const params = useParams();
   const link = useCurrentUrl();
+  const { isMobile } = useTypeDevice();
 
   const id = Number(params.id);
 
@@ -54,7 +56,7 @@ export default function MiniDetail() {
             </p>
             <button
               className="z-20 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105 flex items-center gap-2"
-              onClick={() => handleRedirectToWhatsApp(mini, link)}
+              onClick={() => handleRedirectToWhatsApp(mini, link, isMobile)}
             >
               <Image
                 color="#eefr"
