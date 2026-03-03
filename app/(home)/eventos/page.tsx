@@ -46,12 +46,10 @@ export default function Eventos() {
                 <p className="text-gray-500">{evento.data}</p>
               </div>
 
-              {/* Descrição */}
               <p className="text-gray-700 text-lg leading-relaxed mb-8 text-center max-w-3xl mx-auto">
                 {evento.descricao}
               </p>
 
-              {/* Carrossel grande */}
               <Splide
                 options={{
                   type: "loop",

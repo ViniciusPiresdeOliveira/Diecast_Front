@@ -25,7 +25,7 @@ export default function MiniDetail() {
 
   return (
     <div className="p-8">
-      <div className="flex justify-center gap-8">
+      <div className="flex flex-col items-center md:flex-row md:justify-center md:items-start gap-8">
         <div className="w-[80%] max-w-[400px]">
           {mini.image ? (
             <ImageANTD
@@ -41,7 +41,7 @@ export default function MiniDetail() {
             </div>
           )}
         </div>
-        <div className=" max-w-[500px]">
+        <div className="max-w-[400px] md:max-w-[500px] ">
           <h1 className="text-2xl font-bold mb-4">
             {mini.marca} {mini.name} - {mini.ano}
           </h1>
