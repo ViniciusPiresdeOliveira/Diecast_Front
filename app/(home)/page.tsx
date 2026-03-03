@@ -1,14 +1,14 @@
 "use client";
 import { Pagination } from "antd";
 
-import { CirclePlus } from "lucide-react";
+import { CirclePlus, Download } from "lucide-react";
 import { useState } from "react";
 import { Card } from "./components/Card";
 import { Filter } from "./components/Filter";
 import { ModalFormMini } from "./components/ModalFormMini";
 import { ModalPhoto } from "./components/ModalPhoto";
 import { Miniatura } from "./types";
-import { minis } from "./utils";
+import { handleDownloadCatalog, minis } from "./utils";
 
 export default function Home() {
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
@@ -35,12 +35,21 @@ export default function Home() {
       />
       <Header handleVisibilityMenu={handleVisibilityMenu} /> */}
       <div className="flex justify-center pt-16 relative">
-        <button
-          onClick={handleVisibleFormMini}
-          className="flex justify-end absolute  right-1/30 p-3.5 top-3 cursor-pointer "
-        >
-          <CirclePlus color="#1f3565" width={36} height={36} />
-        </button>
+        <div className="flex justify-end absolute  right-1/30 p-3.5 top-3 cursor-pointer ">
+          <Download
+            color="#1f3565"
+            width={36}
+            height={36}
+            onClick={handleDownloadCatalog}
+          />
+          <CirclePlus
+            color="#1f3565"
+            width={36}
+            height={36}
+            className="ml-5"
+            onClick={handleVisibleFormMini}
+          />
+        </div>
         <div className="max-sm:hidden border-blue-600 h-1/2 border mt-4 overflow-y-auto ml-4 p-4 w-64 rounded-lg">
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
 
