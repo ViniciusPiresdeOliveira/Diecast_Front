@@ -28,7 +28,7 @@ export default async function RootLayout({
 
   return (
     <html lang="en">
-      <body className={`${poppins.variable} antialiased`}>
+      <body className={`${poppins.variable} antialiased min-h-full`}>
         <LoadingProvider>
           <Loading />
           <ToastContainer />

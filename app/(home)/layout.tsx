@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { Footer } from "../components/Footer";
+import { Header } from "../components/Header";
 import { Drawer } from "./components/Drawer";
-import { Header } from "./components/Header";
 
 export default function HomeLayout({
   children,
@@ -23,8 +24,8 @@ export default function HomeLayout({
       />
 
       <Header handleVisibilityMenu={handleVisibilityMenu} />
-
-      <main className="pt-16 flex-1">{children}</main>
+      <main className="pt-5 flex-1">{children}</main>
+      <Footer />
     </div>
   );
 }

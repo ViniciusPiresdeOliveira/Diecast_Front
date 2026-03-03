@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import { Miniatura } from "./types";
 
 export const minis: Miniatura[] = [
@@ -503,4 +504,8 @@ export const handleRedirectToWhatsApp = (mini: Miniatura, link: string) => {
     `https://wa.me/${number}?text=Olá, tenho interesse na miniatura ${mini.name} ${mini.ano}, da ${mini.marca} - ${link}`,
     "_blank",
   );
+};
+
+export const handleDownloadCatalog = () => {
+  toast.success("Download do catálogo iniciado 🚀");
 };
