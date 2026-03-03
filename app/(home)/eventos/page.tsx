@@ -33,7 +33,7 @@ const eventos: Evento[] = [
 
 export default function Eventos() {
   return (
-    <div className="w-full min-h-screen bg-gray-50 py-12 px-4">
+    <div className="w-full min-h-screen py-12 px-4">
       <div className="max-w-5xl mx-auto">
         <h1 className="text-4xl font-bold text-center mb-14">Nossos Eventos</h1>
 
