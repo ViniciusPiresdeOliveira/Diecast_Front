@@ -507,12 +507,12 @@ export const handleRedirectToWhatsApp = (
   const message = `Olá, tenho interesse na miniatura ${mini.name} ${mini.ano}, da ${mini.marca} - ${link}`;
   const encodedMessage = encodeURIComponent(message);
 
-  if (isMobile) {
-    const url = `https://api.whatsapp.com/send?phone=${number}&text=${encodedMessage}`;
-    window.location.href = url;
-  } else {
-    window.open(`https://wa.me/${number}?text=${encodedMessage}`, "_blank");
-  }
+  // if (isMobile) {
+  //   const url = `https://api.whatsapp.com/send?phone=${number}&text=${encodedMessage}`;
+  //   window.location.href = url;
+  // } else {
+  window.open(`https://wa.me/${number}?text=${encodedMessage}`, "_blank");
+  // }
 };
 
 export const handleDownloadCatalog = () => {
