@@ -2,7 +2,16 @@ import { Label } from "@/app/components/Label";
 import { MessageError } from "@/app/components/MessageError";
 import { useTypeDevice } from "@/app/hooks/useTypeDevice";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, Image, Input, InputNumber, Modal, Select, Upload } from "antd";
+import {
+  Button,
+  Divider,
+  Image,
+  Input,
+  InputNumber,
+  Modal,
+  Select,
+  Upload,
+} from "antd";
 import { Option } from "antd/es/mentions";
 import { UploadIcon } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -67,6 +76,7 @@ export const ModalFormMini = ({
       cancelText="Cancelar"
       width={"90%"}
     >
+      <Divider />
       <div className="md:flex -sm:flex-col justify-between">
         <div className="md:w-[47%] -sm:w-full">
           <Controller
@@ -74,7 +84,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Nome" />
+                <Label text="Nome" required />
                 <Input
                   {...field}
                   // placeholder="Nome"
@@ -92,7 +102,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Marca" />
+                <Label text="Marca" required iconAdd />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
@@ -116,7 +126,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Ano" />
+                <Label text="Ano" required />
                 <InputNumber
                   {...field}
                   style={{ width: "100%" }}
@@ -138,7 +148,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Tipos" />
+                <Label text="Tipos" required iconAdd />
                 <Select
                   {...field}
                   mode="multiple"
@@ -163,7 +173,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Linha" />
+                <Label text="Linha" required iconAdd />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
@@ -187,7 +197,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Status" />
+                <Label text="Status" required iconAdd />
 
                 <Select
                   {...field}
@@ -208,7 +218,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs + "mt-3"}>
-                <Label text="Imagem" />
+                <Label text="Imagem" required />
 
                 <Upload
                   fileList={field.value}
@@ -245,8 +255,8 @@ export const ModalFormMini = ({
                   <Image
                     wrapperStyle={{ display: "none" }}
                     preview={{
-                      visible: previewOpen,
-                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                      open: previewOpen,
+                      onOpenChange: (visible) => setPreviewOpen(visible),
                     }}
                     src={previewImage}
                   />
@@ -265,7 +275,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Escala" />
+                <Label text="Escala" required iconAdd />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
@@ -287,7 +297,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Preço de Custo" />
+                <Label text="Preço de Custo" required />
                 <InputNumber
                   {...field}
                   style={{ width: "100%" }}
@@ -307,7 +317,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Preço de Venda" />
+                <Label text="Preço de Venda" required />
                 <InputNumber
                   {...field}
                   style={{ width: "100%" }}
@@ -327,7 +337,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Quantidade no Estoque" />
+                <Label text="Quantidade no Estoque" required />
                 <InputNumber
                   {...field}
                   style={{ width: "100%" }}
@@ -349,7 +359,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Peso" />
+                <Label text="Peso" required />
                 <InputNumber
                   {...field}
                   style={{ width: "100%" }}
@@ -371,7 +381,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Volume" />
+                <Label text="Volume" required />
                 <InputNumber
                   {...field}
                   style={{ width: "100%" }}
