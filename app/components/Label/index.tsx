@@ -28,7 +28,7 @@ export const Label = ({ text, className, required, iconAdd }: LabelProps) => {
     >
       <span className="flex items-center">
         {text}
-        {required && <span className="text-red-500 ml-[2px]">*</span>}
+        {required && <span className="text-red-500 ml-0.5">*</span>}
       </span>
 
       {iconAdd && (
@@ -41,15 +41,17 @@ export const Label = ({ text, className, required, iconAdd }: LabelProps) => {
               <CirclePlusIcon color="#25d366" size={14} />
             </button>
           </Tooltip>
-          <ModalAddItens
-            isVisible={modalFormVisible}
-            handleVisibility={handleVisibilityModalForm}
-            title={text}
-            data={[]}
-            onCreate={() => alert("onCreate")}
-            onUpdate={() => alert("onUpdate")}
-            onDelete={() => alert("onDelete")}
-          />
+          {modalFormVisible && (
+            <ModalAddItens
+              isVisible={modalFormVisible}
+              handleVisibility={handleVisibilityModalForm}
+              title={text}
+              data={[]}
+              onCreate={() => alert("onCreate")}
+              onUpdate={() => alert("onUpdate")}
+              onDelete={() => alert("onDelete")}
+            />
+          )}
         </>
       )}
     </label>

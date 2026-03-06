@@ -92,6 +92,7 @@ export const Filter = () => {
       </div>
 
       <Divider />
+
       <Button type="primary" block onClick={clearFilters}>
         Filtrar
       </Button>

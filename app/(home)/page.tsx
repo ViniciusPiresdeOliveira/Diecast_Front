@@ -50,9 +50,9 @@ export default function Home() {
             onClick={handleVisibleFormMini}
           />
         </div>
-        <div className="max-sm:hidden border-blue-600 h-1/2 border mt-4 overflow-y-auto ml-4 p-4 w-64 rounded-lg">
+        <div className="max-sm:hidden border-blue-600 border mt-4 ml-4 p-4 w-64 rounded-lg sticky top-[35px] max-h-[65vh] overflow-y-auto">
+          {" "}
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
-
           <Filter />
         </div>
 
