@@ -2,7 +2,7 @@
 import { Pagination } from "antd";
 
 import { CirclePlus, Download } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card } from "./components/Card";
 import { Filter } from "./components/Filter";
 import { ModalFormMini } from "./components/ModalFormMini";
@@ -14,6 +14,8 @@ export default function Home() {
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
   const [selectedMini, setSelectedMini] = useState<Miniatura | null>(null);
   const [visibleModalFormMini, setVisibleModalFormMini] = useState(false);
+  const sentinelRef = useRef<HTMLDivElement | null>(null);
+  const [isSticky, setIsSticky] = useState(false);
 
   const handleVisibleFormMini = () => {
     setVisibleModalFormMini((e) => !e);
@@ -26,6 +28,26 @@ export default function Home() {
   const handleVisibilityMenu = () => {
     setMenuVisibility((e) => !e);
   };
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsSticky(!entry.isIntersecting);
+      },
+      {
+        threshold: 0,
+        rootMargin: "-35px 0px 0px 0px",
+      },
+    );
+
+    if (sentinelRef.current) {
+      observer.observe(sentinelRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  console.log("isSticky", isSticky);
 
   return (
     <div className="flex flex-col items-center pb-5 w-full">
@@ -50,12 +72,15 @@ export default function Home() {
             onClick={handleVisibleFormMini}
           />
         </div>
-        <div className="max-sm:hidden border-blue-600 border mt-4 ml-4 p-4 w-64 rounded-lg sticky top-[35px] max-h-[65vh] overflow-y-auto">
+        <div ref={sentinelRef} className="h-[1px]" />{" "}
+        <div
+          className={`max-sm:hidden border-blue-600 w-64 border mt-4 ml-4 p-4 rounded-lg sticky top-[25px] overflow-y-auto transition-all duration-500
+  ${isSticky ? " max-h-[95vh]" : " max-h-[75vh]"}`}
+        >
           {" "}
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
           <Filter />
         </div>
-
         <div className="max-w-7xl w-full p-4 flex flex-wrap gap-4 justify-center">
           {minis.map((mini, index) => (
             <Card

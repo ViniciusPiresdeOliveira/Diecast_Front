@@ -2,7 +2,7 @@ import { Label } from "@/app/components/Label";
 import { useFilter } from "@/app/hooks/useFilter";
 import { prefixExample } from "@/app/utils";
 import { Button, Divider, Input, InputNumber, Select } from "antd";
-import { brandOptions } from "./utils";
+import { Option } from "antd/es/mentions";
 
 export const Filter = () => {
   const {
@@ -12,19 +12,26 @@ export const Filter = () => {
     name,
     year,
     mark,
+    line,
+    type,
+    status,
     clearFilters,
     handleMinPrice,
+    handleStatus,
     handleMaxPrice,
     handleName,
     handleYear,
     handleMark,
     handleAmount,
+    handleType,
+    handleLine,
   } = useFilter();
+  console.log("mark", mark);
 
   return (
     <>
       <div className="mb-4 flex flex-col">
-        <Label className="max-sm:text-white" text="Minis" />
+        <Label className="max-sm:text-white" text="Minis por página" />
         <Select
           value={amount}
           onChange={handleAmount}
@@ -40,16 +47,6 @@ export const Filter = () => {
         />
       </div>
       <div className="mb-4 flex flex-col">
-        <Label className="max-sm:text-white" text="Marca" />
-        <Select
-          style={{ width: "100%" }}
-          value={mark}
-          onChange={(e) => handleMark(e)}
-          options={brandOptions}
-          // placeholder="Marca"
-        />
-      </div>
-      <div className="mb-4 flex flex-col">
         <Label className="max-sm:text-white" text="Nome" />
         <Input
           placeholder={prefixExample + "Ferrari"}
@@ -57,7 +54,19 @@ export const Filter = () => {
           onChange={(e) => handleName(e.target.value)}
         />
       </div>
-
+      <div className="mb-4 flex flex-col">
+        <Label className="max-sm:text-white" text="Marcas" />
+        <Select
+          mode="multiple"
+          style={{ width: "100%" }}
+          onChange={(e) => handleMark(e)}
+          value={mark}
+        >
+          <Option value="Hot Wheels">Hot Wheels</Option>
+          <Option value="matchbox">Matchbox</Option>
+          <Option value="gtmini">GT Mini</Option>
+        </Select>
+      </div>
       <div className="mb-4 flex flex-col w-full">
         <Label className="max-sm:text-white" text="Ano" />
         <InputNumber
@@ -67,6 +76,62 @@ export const Filter = () => {
           value={year ?? undefined}
           onChange={(value) => handleYear(value)}
         />
+      </div>
+      <div className="mb-4 flex flex-col">
+        <Label className="max-sm:text-white" text="Tipos" />
+        <Select
+          mode="multiple"
+          style={{ width: "100%" }}
+          // placeholder="Tipos"
+          onChange={(e) => handleType(e)}
+          value={type}
+        >
+          <Option value="jdm">JDM</Option>
+          <Option value="supercar">Supercar</Option>
+          <Option value="muscle">Muscle</Option>
+          <Option value="classic">Clássico</Option>
+        </Select>
+      </div>
+      <div className="mb-4 flex flex-col">
+        <Label className="max-sm:text-white" text="Linhas" />
+        <Select
+          mode="multiple"
+          style={{ width: "100%" }}
+          // placeholder="Tipos"
+          onChange={(e) => handleLine(e)}
+          value={line}
+        >
+          <Option value="thunt">T-Hunt</Option>
+          <Option value="superthunt">Super T-Hunt</Option>
+          <Option value="mainline">Mainline</Option>
+        </Select>
+      </div>
+      <div className="mb-4 flex flex-col">
+        <Label text="Status" />
+
+        <Select
+          mode="multiple"
+          style={{ width: "100%" }}
+          // placeholder="Status"
+          onChange={(e) => handleStatus(e)}
+          value={status}
+        >
+          <Option value="Loose">Loose</Option>
+          <Option value="Blister">Blister</Option>
+        </Select>
+      </div>
+      <div className="mb-4 flex flex-col">
+        <Label text="Escala" />
+        <Select
+          mode="multiple"
+          style={{ width: "100%" }}
+          // placeholder="Escala"
+          onChange={(e) => handleStatus(e)}
+          value={status}
+        >
+          <Option value="thunt">1/24</Option>
+          <Option value="superthunt">1/64</Option>
+        </Select>
       </div>
 
       <div className="mb-4 flex flex-col">

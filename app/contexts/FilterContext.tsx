@@ -1,17 +1,31 @@
 "use client";
 
-import { createContext, ReactNode, useState } from "react";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useMemo,
+  useState,
+} from "react";
 
 type FilterContextType = {
   amount: string;
-  mark: string;
+  type: string[] | null;
+  mark: string[] | null;
+  line: string[] | null;
+  status: string[] | null;
+  scale: string[] | null;
   name: string;
   year: number | null;
   minPrice: number | null;
   maxPrice: number | null;
 
   handleAmount: (value: string) => void;
-  handleMark: (value: string) => void;
+  handleMark: (value: string[]) => void;
+  handleType: (value: string[]) => void;
+  handleStatus: (value: string[]) => void;
+  handleScale: (value: string[]) => void;
+  handleLine: (value: string[]) => void;
   handleName: (value: string) => void;
   handleYear: (value: number | null) => void;
   handleMinPrice: (value: number | null) => void;
@@ -27,63 +41,115 @@ export const FilterContext = createContext<FilterContextType | undefined>(
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
   const [amount, setMount] = useState("10");
   const [name, setName] = useState("");
-  const [mark, setMark] = useState("");
+  const [mark, setMark] = useState<string[] | null>(null);
+  const [status, setStatus] = useState<string[] | null>(null);
+  const [scale, setScale] = useState<string[] | null>(null);
+  const [line, setLine] = useState<string[] | null>(null);
+  const [type, setType] = useState<string[] | null>(null);
   const [year, setYear] = useState<number | null>(null);
   const [minPrice, setMinPrice] = useState<number | null>(null);
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
-  // 🔥 Handlers semânticos
-  const handleAmount = (value: string) => {
+  const handleAmount = useCallback((value: string) => {
     setMount(value);
-  };
+  }, []);
 
-  const handleMark = (value: string) => {
+  const handleStatus = useCallback((value: string[]) => {
+    setStatus(value);
+  }, []);
+
+  const handleScale = useCallback((value: string[]) => {
+    setScale(value);
+  }, []);
+
+  const handleType = useCallback((value: string[]) => {
+    setType(value);
+  }, []);
+
+  const handleLine = useCallback((value: string[]) => {
+    setLine(value);
+  }, []);
+
+  const handleMark = useCallback((value: string[]) => {
     setMark(value);
-  };
+  }, []);
 
-  const handleName = (value: string) => {
+  const handleName = useCallback((value: string) => {
     setName(value);
-  };
+  }, []);
 
-  const handleYear = (value: number | null) => {
+  const handleYear = useCallback((value: number | null) => {
     setYear(value);
-  };
+  }, []);
 
-  const handleMinPrice = (value: number | null) => {
+  const handleMinPrice = useCallback((value: number | null) => {
     setMinPrice(value);
-  };
+  }, []);
 
-  const handleMaxPrice = (value: number | null) => {
+  const handleMaxPrice = useCallback((value: number | null) => {
     setMaxPrice(value);
-  };
+  }, []);
 
-  const clearFilters = () => {
-    setMark("");
+  const clearFilters = useCallback(() => {
+    setMark([""]);
     setName("");
+    setType([""]);
+    setLine([""]);
     setYear(null);
     setMinPrice(null);
     setMaxPrice(null);
-  };
+  }, []);
+
+  const values = useMemo(
+    () => ({
+      amount,
+      mark,
+      type,
+      name,
+      year,
+      minPrice,
+      maxPrice,
+      line,
+      status,
+      scale,
+      handleMark,
+      handleLine,
+      handleName,
+      handleType,
+      handleYear,
+      handleMinPrice,
+      handleMaxPrice,
+      handleAmount,
+      handleStatus,
+      handleScale,
+      clearFilters,
+    }),
+    [
+      amount,
+      mark,
+      type,
+      name,
+      year,
+      minPrice,
+      maxPrice,
+      line,
+      status,
+      scale,
+      handleMark,
+      handleLine,
+      handleName,
+      handleType,
+      handleYear,
+      handleMinPrice,
+      handleMaxPrice,
+      handleAmount,
+      handleStatus,
+      handleScale,
+      clearFilters,
+    ],
+  );
 
   return (
-    <FilterContext.Provider
-      value={{
-        amount,
-        mark,
-        name,
-        year,
-        minPrice,
-        maxPrice,
-        handleMark,
-        handleName,
-        handleYear,
-        handleMinPrice,
-        handleMaxPrice,
-        handleAmount,
-        clearFilters,
-      }}
-    >
-      {children}
-    </FilterContext.Provider>
+    <FilterContext.Provider value={values}>{children}</FilterContext.Provider>
   );
 };

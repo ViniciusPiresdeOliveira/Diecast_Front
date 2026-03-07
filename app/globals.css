@@ -52,8 +52,24 @@ body {
 
 :where(.css-dev-only-do-not-override-1d8anct).ant-carousel .slick-dots li {
   background-color: #1f3565;
-  /* opacity: 0.5; */
 }
+
+/* Scrollbar inteira */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Fundo da barra */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Parte que move */
+::-webkit-scrollbar-thumb {
+  background: #c9c9c9; /* cinza */
+  border-radius: 9999px;
+}
+
 /* 
 @keyframes loadingAnim {
   0% {
