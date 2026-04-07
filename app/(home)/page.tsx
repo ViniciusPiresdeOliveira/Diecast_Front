@@ -3,6 +3,9 @@ import { Pagination } from "antd";
 
 import { CirclePlus, Download } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { getFilterMiniatura } from "../api/miniatura";
+import { useFilter } from "../hooks/useFilter";
+import { useLoading } from "../hooks/useLoading";
 import { Card } from "./components/Card";
 import { Filter } from "./components/Filter";
 import { ModalFormMini } from "./components/ModalFormMini";
@@ -47,8 +50,51 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  console.log("isSticky", isSticky);
+  const {
+    maxPrice,
+    amount,
+    scale,
+    minPrice,
+    name,
+    year,
+    mark,
+    line,
+    type,
+    status,
+  } = useFilter();
+  const { showLoading, hideLoading } = useLoading();
 
+  const filterPayload = {
+    nome: name || null,
+    marcaId: mark || null,
+    ano: year || null,
+    tipoId: type || null,
+    linhaId: line || null,
+    status: status || null,
+    escala: scale || null,
+    precoMin: minPrice || null,
+    precoMax: maxPrice ?? null,
+    page: 0,
+    size: Number(amount),
+  };
+
+  const fetchGetFilterMiniaturas = async () => {
+    showLoading();
+    try {
+      const response = await getFilterMiniatura(filterPayload);
+      console.log("responseeee 1", response);
+    } catch (error) {
+      console.log("responseeee 2", error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  useEffect(() => {
+    fetchGetFilterMiniaturas();
+  }, []);
+
+  console.log("filtros:", filterPayload);
   return (
     <div className="flex flex-col items-center pb-5 w-full">
       {/* <Drawer
@@ -56,8 +102,8 @@ export default function Home() {
         handleVisibility={handleVisibilityMenu}
       />
       <Header handleVisibilityMenu={handleVisibilityMenu} /> */}
-      <div className="flex justify-center pt-16 relative">
-        <div className="flex justify-end absolute  right-1/30 p-3.5 top-3 cursor-pointer ">
+      <div className="flex justify-center pt-12 relative">
+        <div className="flex justify-end absolute  right-1/30 p-3.5 top-0 cursor-pointer ">
           <Download
             color="#1f3565"
             width={36}
@@ -74,12 +120,12 @@ export default function Home() {
         </div>
         <div ref={sentinelRef} className="h-[1px]" />{" "}
         <div
-          className={`max-sm:hidden border-blue-600 w-64 border mt-4 ml-4 p-4 rounded-lg sticky top-[25px] overflow-y-auto transition-all duration-500
+          className={`max-sm:hidden border-blue-600 h-full max-h-[1000px] w-64 border mt-4 ml-4 p-4 rounded-lg sticky top-[25px] overflow-y-auto transition-all duration-500
   ${isSticky ? " max-h-[95vh]" : " max-h-[75vh]"}`}
         >
           {" "}
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
-          <Filter />
+          <Filter handleFilterMiniaturas={fetchGetFilterMiniaturas} />
         </div>
         <div className="max-w-7xl w-full p-4 flex flex-wrap gap-4 justify-center">
           {minis.map((mini, index) => (

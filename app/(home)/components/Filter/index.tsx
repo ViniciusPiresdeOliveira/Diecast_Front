@@ -3,8 +3,9 @@ import { useFilter } from "@/app/hooks/useFilter";
 import { prefixExample } from "@/app/utils";
 import { Button, Divider, Input, InputNumber, Select } from "antd";
 import { Option } from "antd/es/mentions";
+import { FilterProps } from "./types";
 
-export const Filter = () => {
+export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
   const {
     maxPrice,
     amount,
@@ -26,7 +27,6 @@ export const Filter = () => {
     handleType,
     handleLine,
   } = useFilter();
-  console.log("mark", mark);
 
   return (
     <>
@@ -158,7 +158,7 @@ export const Filter = () => {
 
       <Divider />
 
-      <Button type="primary" block onClick={clearFilters}>
+      <Button type="primary" block onClick={handleFilterMiniaturas}>
         Filtrar
       </Button>
       <Button className="mt-2" type="link" block onClick={clearFilters}>
