@@ -1,6 +1,7 @@
 import { useTypeDevice } from "@/app/hooks/useTypeDevice";
 import Image from "next/image";
 import { useState } from "react";
+import { formatImage } from "../../utils";
 import { ModalPhotoProps } from "./types";
 
 export const ModalPhoto = ({
@@ -11,7 +12,6 @@ export const ModalPhoto = ({
   const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [imgSize, setImgSize] = useState({ width: 0, height: 0 });
   const { isMobile } = useTypeDevice();
-  console.log("isMobile", isMobile);
 
   const zoom = 1.5;
 
@@ -49,7 +49,7 @@ export const ModalPhoto = ({
           onMouseMove={handleMouseMove}
         >
           <Image
-            src={selectedMini?.image ?? ""}
+            src={formatImage(selectedMini?.imagem) ?? ""}
             alt="Preview"
             width={650}
             height={650}
@@ -64,7 +64,7 @@ export const ModalPhoto = ({
                 height: 250,
                 top: cursorPos.y - 90,
                 left: cursorPos.x - 90,
-                backgroundImage: `url(${selectedMini?.image ?? ""})`,
+                backgroundImage: `url(${formatImage(selectedMini?.imagem) ?? ""})`,
                 backgroundRepeat: "no-repeat",
                 backgroundSize: `${imgSize.width * zoom}px ${
                   imgSize.height * zoom

@@ -1,6 +1,12 @@
 import { toast } from "react-toastify";
 import { Miniatura } from "./types";
 
+export const formatImage = (img?: string) => {
+  if (!img) return undefined;
+
+  return img.startsWith("data:") ? img : `data:image/jpeg;base64,${img}`;
+};
+
 export const minis: Miniatura[] = [
   {
     id: 1,

@@ -1,6 +1,7 @@
 import { ImageNotFound } from "@/app/components/ImageNotFound";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { formatImage } from "../../utils";
 import { CardProps } from "./types";
 
 export const Card = ({ mini, handleSelectedMini }: CardProps) => {
@@ -41,13 +42,13 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
         <div
           className={
             "w-40 h-40 shrink-0 rounded-md overflow-hidden z-10 " +
-            (mini.image ? stylesMiniWithCar : stylesMiniWithoutCar)
+            (mini.imagem ? stylesMiniWithCar : stylesMiniWithoutCar)
           }
         >
-          {mini.image ? (
+          {mini.imagem ? (
             <Image
-              src={mini.image}
-              alt={mini.name}
+              src={formatImage(mini.imagem)!}
+              alt={mini.nome}
               fill
               className="object-contain cursor-pointer z-10 transition-transform duration-300 group-hover:scale-110"
               onClick={() => {
@@ -66,7 +67,7 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
           <div className="flex-1 min-w-0 flex flex-col gap-0 h-full justify-evenly items-start cursor-pointer text-left ">
             <p className="font-medium text-zinc-600 break-words">
               <span className="text-zinc-800 font-bold">Nome:</span>{" "}
-              <span className="font-medium text-zinc-600">{mini.name}</span>
+              <span className="font-medium text-zinc-600">{mini.nome}</span>
             </p>
 
             <p className="grid grid-cols-[45px_1fr] text-lg w-full">
@@ -75,7 +76,7 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
             </p>
 
             <p className="text-lg text-blue-700 font-bold">
-              R$ {mini.preco.toFixed(2)}
+              R$ {mini?.valor?.toFixed(2) ?? 0}
             </p>
           </div>
           {/* <button

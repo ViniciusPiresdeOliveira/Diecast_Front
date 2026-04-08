@@ -2,7 +2,6 @@ import { Label } from "@/app/components/Label";
 import { useFilter } from "@/app/hooks/useFilter";
 import { prefixExample } from "@/app/utils";
 import { Button, Divider, Input, InputNumber, Select } from "antd";
-import { Option } from "antd/es/mentions";
 import { FilterProps } from "./types";
 
 export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
@@ -59,13 +58,13 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
         <Select
           mode="multiple"
           style={{ width: "100%" }}
-          onChange={(e) => handleMark(e)}
+          onChange={handleMark}
           value={mark}
-        >
-          <Option value="Hot Wheels">Hot Wheels</Option>
-          <Option value="matchbox">Matchbox</Option>
-          <Option value="gtmini">GT Mini</Option>
-        </Select>
+          options={[
+            { label: "Hot Wheels", value: "Hot Wheels" },
+            { label: "Matchbox", value: "Matchbox" },
+          ]}
+        />
       </div>
       <div className="mb-4 flex flex-col w-full">
         <Label className="max-sm:text-white" text="Ano" />
@@ -85,12 +84,13 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           // placeholder="Tipos"
           onChange={(e) => handleType(e)}
           value={type}
-        >
-          <Option value="jdm">JDM</Option>
-          <Option value="supercar">Supercar</Option>
-          <Option value="muscle">Muscle</Option>
-          <Option value="classic">Clássico</Option>
-        </Select>
+          options={[
+            { label: "jdm", value: "JDM" },
+            { label: "supercar", value: "Supercar" },
+            { label: "muscle", value: "Muscle" },
+            { label: "classic", value: "Clássico" },
+          ]}
+        />
       </div>
       <div className="mb-4 flex flex-col">
         <Label className="max-sm:text-white" text="Linhas" />
@@ -100,11 +100,12 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           // placeholder="Tipos"
           onChange={(e) => handleLine(e)}
           value={line}
-        >
-          <Option value="thunt">T-Hunt</Option>
-          <Option value="superthunt">Super T-Hunt</Option>
-          <Option value="mainline">Mainline</Option>
-        </Select>
+          options={[
+            { label: "thunt", value: "T-Hunt" },
+            { label: "superthunt", value: "Super T-Hunt" },
+            { label: "mainline", value: "Mainline" },
+          ]}
+        />
       </div>
       <div className="mb-4 flex flex-col">
         <Label text="Status" />
@@ -115,10 +116,11 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           // placeholder="Status"
           onChange={(e) => handleStatus(e)}
           value={status}
-        >
-          <Option value="Loose">Loose</Option>
-          <Option value="Blister">Blister</Option>
-        </Select>
+          options={[
+            { label: "Loose", value: "Loose" },
+            { label: "Blister", value: "Blister" },
+          ]}
+        />
       </div>
       <div className="mb-4 flex flex-col">
         <Label text="Escala" />
@@ -128,10 +130,11 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           // placeholder="Escala"
           onChange={(e) => handleStatus(e)}
           value={status}
-        >
-          <Option value="thunt">1/24</Option>
-          <Option value="superthunt">1/64</Option>
-        </Select>
+          options={[
+            { label: "1/24", value: "1/24" },
+            { label: "1/64", value: "1/64" },
+          ]}
+        />
       </div>
 
       <div className="mb-4 flex flex-col">
