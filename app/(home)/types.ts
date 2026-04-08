@@ -34,3 +34,11 @@ export interface Miniatura {
   linha?: LinhaMiniatura;
   valor?: number; // BigDecimal → number
 }
+
+export interface PaginationInfo {
+  pageNumber: number;
+  pageNumberInitial: number;
+  totalPages: number;
+  totalElements: number;
+  elementsPerPage: number;
+}

@@ -11,8 +11,8 @@ import { Card } from "./components/Card";
 import { Filter } from "./components/Filter";
 import { ModalFormMini } from "./components/ModalFormMini";
 import { ModalPhoto } from "./components/ModalPhoto";
-import { Miniatura } from "./types";
-import { handleDownloadCatalog } from "./utils";
+import { Miniatura, PaginationInfo } from "./types";
+import { handleDownloadCatalog, PaginationDefault } from "./utils";
 
 export default function Home() {
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
@@ -21,6 +21,8 @@ export default function Home() {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
   const [isSticky, setIsSticky] = useState(false);
   const [listMini, setListMini] = useState<Miniatura[]>([]);
+  const [pagination, setPagination] =
+    useState<PaginationInfo>(PaginationDefault);
 
   const handleVisibleFormMini = () => {
     setVisibleModalFormMini((e) => !e);
@@ -63,34 +65,63 @@ export default function Home() {
     line,
     type,
     status,
+    handleAmount,
   } = useFilter();
   const { showLoading, hideLoading } = useLoading();
 
-  const filterPayload: FilterMiniatura = {
-    nome: name || null,
-    marcaId: mark || null,
-    ano: year || null,
-    tipoId: type || null,
-    linhaId: line || null,
-    status: status || null,
-    escala: scale || null,
-    precoMin: minPrice || null,
-    precoMax: maxPrice ?? null,
-    page: 0,
-    size: Number(amount),
-  };
-
   const fetchGetFilterMiniaturas = async () => {
     showLoading();
+    const filterPayload: FilterMiniatura = {
+      nome: name || null,
+      marcaId: mark || null,
+      ano: year || null,
+      tipoId: type || null,
+      linhaId: line || null,
+      status: status || null,
+      escala: scale || null,
+      precoMin: minPrice || null,
+      precoMax: maxPrice ?? null,
+      page:
+        amount !== pagination.elementsPerPage
+          ? 0
+          : Math.max(0, pagination.pageNumber - 1),
+      size: amount,
+    };
     try {
       const { data } = await getFilterMiniatura(filterPayload);
       setListMini(data.content);
+      setPagination({
+        pageNumber: data.pageable.pageNumber + 1,
+        pageNumberInitial: data.pageable.pageNumber + 1,
+        totalPages: data.totalPages,
+        totalElements: data.totalElements,
+        elementsPerPage: data.numberOfElements,
+      });
     } catch (error) {
       console.log("responseeee 2", error);
     } finally {
       hideLoading();
     }
   };
+
+  // useEffect(() => {
+  //   console.log("pagionada", pagination.pageNumber);
+  //   setPagination((prev) => ({
+  //     ...prev,
+  //     pageNumber: 0, // antd começa em 1
+  //   }));
+  // }, [amount]);
+
+  useEffect(() => {
+    // console.log("pagionada", pagination.pageNumber);
+    // setPagination((prev) => ({
+    //   ...prev,
+    //   pageNumber: 0, // antd começa em 1
+    // }));
+    if (pagination.pageNumberInitial !== pagination.pageNumber) {
+      fetchGetFilterMiniaturas();
+    }
+  }, [pagination.pageNumber]);
 
   useEffect(() => {
     fetchGetFilterMiniaturas();
@@ -104,7 +135,7 @@ export default function Home() {
       />
       <Header handleVisibilityMenu={handleVisibilityMenu} /> */}
       <div className="flex justify-center pt-12 relative">
-        <div className="flex justify-start absolute left-6/29 p-3.5 top-0 cursor-pointer ">
+        <div className="flex justify-end absolute right-1/30 p-3.5 top-0 cursor-pointer ">
           <Download
             color="#1f3565"
             width={36}
@@ -122,7 +153,7 @@ export default function Home() {
         <div ref={sentinelRef} className="h-[1px]" />{" "}
         <div
           className={`max-sm:hidden left-0  border-blue-600 h-full w-64 border ml-4 p-4 rounded-lg sticky top-[25px] overflow-y-auto transition-all duration-500
-  ${isSticky ? " max-h-[95vh]" : " max-h-[790px] mt-[-32px]"}`}
+  ${isSticky ? " max-h-[95vh]" : " max-h-[850px] mt-[-35px]"}`}
         >
           {" "}
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
@@ -164,7 +195,18 @@ export default function Home() {
           handleVisibleFormMini={handleVisibleFormMini}
         />
       </div>
-      <Pagination total={100} pageSize={10} />
+      <Pagination
+        current={pagination.pageNumber}
+        pageSize={pagination.elementsPerPage}
+        total={pagination.totalElements}
+        showSizeChanger={false}
+        onChange={(page) => {
+          setPagination((prev) => ({
+            ...prev,
+            pageNumber: page, // antd começa em 1
+          }));
+        }}
+      />
     </div>
   );
 }

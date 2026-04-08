@@ -29,7 +29,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
 
   return (
     <>
-      <div className="mb-4 flex flex-col">
+      <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Minis por página" />
         <Select
           value={amount}
@@ -37,15 +37,16 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           placeholder="Selecione"
           className="w-full"
           options={[
-            { value: "10", label: "10" },
-            { value: "20", label: "20" },
-            { value: "30", label: "30" },
-            { value: "40", label: "40" },
-            { value: "50", label: "50" },
+            { value: 10, label: "10" },
+            { value: 20, label: "20" },
+            { value: 30, label: "30" },
+            { value: 40, label: "40" },
+            { value: 50, label: "50" },
+            { value: 100, label: "100" },
           ]}
         />
       </div>
-      <div className="mb-4 flex flex-col">
+      <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Nome" />
         <Input
           placeholder={prefixExample + "Ferrari"}
@@ -53,7 +54,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           onChange={(e) => handleName(e.target.value)}
         />
       </div>
-      <div className="mb-4 flex flex-col">
+      <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Marcas" />
         <Select
           mode="multiple"
@@ -66,7 +67,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           ]}
         />
       </div>
-      <div className="mb-4 flex flex-col w-full">
+      <div className="mb-2 flex flex-col w-full">
         <Label className="max-sm:text-white" text="Ano" />
         <InputNumber
           style={{ width: "100%" }}
@@ -76,7 +77,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           onChange={(value) => handleYear(value)}
         />
       </div>
-      <div className="mb-4 flex flex-col">
+      <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Tipos" />
         <Select
           mode="multiple"
@@ -92,7 +93,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           ]}
         />
       </div>
-      <div className="mb-4 flex flex-col">
+      <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Linhas" />
         <Select
           mode="multiple"
@@ -107,8 +108,8 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           ]}
         />
       </div>
-      <div className="mb-4 flex flex-col">
-        <Label text="Status" />
+      <div className="mb-2 flex flex-col">
+        <Label className="max-sm:text-white" text="Status" />
 
         <Select
           mode="multiple"
@@ -122,8 +123,8 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
           ]}
         />
       </div>
-      <div className="mb-4 flex flex-col">
-        <Label text="Escala" />
+      <div className="mb-2 flex flex-col">
+        <Label className="max-sm:text-white" text="Escala" />
         <Select
           mode="multiple"
           style={{ width: "100%" }}
@@ -137,7 +138,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
         />
       </div>
 
-      <div className="mb-4 flex flex-col">
+      <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Preço mínimo" />
         <InputNumber
           style={{ width: "100%" }}
@@ -148,7 +149,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
         />
       </div>
 
-      <div className="mb-4 flex flex-col">
+      <div className="mb-0 flex flex-col">
         <Label className="max-sm:text-white" text="Preço máximo" />
         <InputNumber
           style={{ width: "100%" }}
@@ -159,12 +160,17 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
         />
       </div>
 
-      <Divider />
+      <Divider style={{ marginTop: 12, marginBottom: 12 }} />
 
       <Button type="primary" block onClick={handleFilterMiniaturas}>
         Filtrar
       </Button>
-      <Button className="mt-2" type="link" block onClick={clearFilters}>
+      <Button
+        className="mt-2 max-sm:text-white"
+        type="dashed"
+        block
+        onClick={clearFilters}
+      >
         Limpar filtros
       </Button>
     </>

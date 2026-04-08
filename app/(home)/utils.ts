@@ -1,10 +1,18 @@
 import { toast } from "react-toastify";
-import { Miniatura } from "./types";
+import { Miniatura, PaginationInfo } from "./types";
 
 export const formatImage = (img?: string) => {
   if (!img) return undefined;
 
   return img.startsWith("data:") ? img : `data:image/jpeg;base64,${img}`;
+};
+
+export const PaginationDefault: PaginationInfo = {
+  pageNumber: 0,
+  pageNumberInitial: 0,
+  totalPages: 0,
+  totalElements: 0,
+  elementsPerPage: 5,
 };
 
 export const minis: Miniatura[] = [
@@ -510,7 +518,7 @@ export const handleRedirectToWhatsApp = (
   // tirar quando o icone de whatsapp só tiver para cliente
   // handleVisibleFormMini();
   //
-  const message = `Olá, tenho interesse na miniatura ${mini.name} ${mini.ano}, da ${mini.marca} - ${link}`;
+  const message = `Olá, tenho interesse na miniatura ${mini.nome} ${mini.ano}, da ${mini.marca} - ${link}`;
   const encodedMessage = encodeURIComponent(message);
 
   // if (isMobile) {

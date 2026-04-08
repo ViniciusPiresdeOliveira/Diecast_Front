@@ -7,9 +7,10 @@ import {
   useMemo,
   useState,
 } from "react";
+import { PaginationDefault } from "../(home)/utils";
 
 type FilterContextType = {
-  amount: string;
+  amount: number;
   type: string[] | null;
   mark: string[] | null;
   line: string[] | null;
@@ -20,7 +21,7 @@ type FilterContextType = {
   minPrice: number | null;
   maxPrice: number | null;
 
-  handleAmount: (value: string) => void;
+  handleAmount: (value: number) => void;
   handleMark: (value: string[]) => void;
   handleType: (value: string[]) => void;
   handleStatus: (value: string[]) => void;
@@ -39,7 +40,7 @@ export const FilterContext = createContext<FilterContextType | undefined>(
 );
 
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
-  const [amount, setMount] = useState("10");
+  const [amount, setMount] = useState(PaginationDefault.elementsPerPage);
   const [name, setName] = useState("");
   const [mark, setMark] = useState<string[] | null>(null);
   const [status, setStatus] = useState<string[] | null>(null);
@@ -50,7 +51,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
   const [minPrice, setMinPrice] = useState<number | null>(null);
   const [maxPrice, setMaxPrice] = useState<number | null>(null);
 
-  const handleAmount = useCallback((value: string) => {
+  const handleAmount = useCallback((value: number) => {
     setMount(value);
   }, []);
 
