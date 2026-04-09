@@ -25,11 +25,11 @@ export const Header = ({ handleVisibilityMenu }: HeaderProps) => {
         />
         <p className="text-white font-semibold">Diecast</p>
       </button>
-      <div className="hidden min-sm:flex gap-6 text-white font-medium">
+      <div className="hidden min-md:flex gap-6 text-white font-medium">
         <Link href={"/eventos"}>Eventos</Link>
       </div>
       <button
-        className="p-2 cursor-pointer min-sm:hidden"
+        className="p-2 cursor-pointer min-md:hidden"
         onClick={handleVisibilityMenu}
       >
         <Menu color="white" />

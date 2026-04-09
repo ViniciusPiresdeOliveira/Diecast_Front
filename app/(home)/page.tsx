@@ -65,7 +65,6 @@ export default function Home() {
     line,
     type,
     status,
-    handleAmount,
   } = useFilter();
   const { showLoading, hideLoading } = useLoading();
 
@@ -135,7 +134,7 @@ export default function Home() {
       />
       <Header handleVisibilityMenu={handleVisibilityMenu} /> */}
       <div className="flex justify-center pt-12 relative">
-        <div className="flex justify-end absolute right-1/30 p-3.5 top-0 cursor-pointer ">
+        <div className="flex justify-end absolute right-1/200 p-3.5 top-0 cursor-pointer ">
           <Download
             color="#1f3565"
             width={36}
@@ -152,14 +151,29 @@ export default function Home() {
         </div>
         <div ref={sentinelRef} className="h-[1px]" />{" "}
         <div
-          className={`max-sm:hidden left-0  border-blue-600 h-full w-64 border ml-4 p-4 rounded-lg sticky top-[25px] overflow-y-auto transition-all duration-500
+          className={`max-md:hidden left-0 mr-2 md:-mr-1.25 md:ml-2 border-blue-600 h-full lg:w-64 md:w-56 border p-4 rounded-lg sticky top-[25px] overflow-y-auto transition-all duration-500
   ${isSticky ? " max-h-[95vh]" : " max-h-[850px] mt-[-35px]"}`}
         >
           {" "}
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
           <Filter handleFilterMiniaturas={fetchGetFilterMiniaturas} />
         </div>
-        <div className="max-w-7xl w-full p-4 flex flex-wrap gap-4 justify-center">
+        {/* <div className="max-w-7xl w-[72.5vw] p-4 flex flex-wrap gap-4 justify-start"> */}
+        <div
+          className="max-w-7xl sm:w-[80vw] md:w-[70vw]
+        p-4 grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 
+        auto-rows-max items-start"
+        >
+          {/* <div
+          className="
+  max-w-7xl w-full p-4 justify-items-start
+  grid gap-4
+  grid-cols-1 
+  sm:grid-cols-2 
+  lg:grid-cols-2 
+  xl:grid-cols-3
+"
+        > */}
           {listMini.length > 0 ? (
             listMini.map((mini, index) => (
               <Card
