@@ -1,6 +1,9 @@
+import { getAllMarksMini } from "@/app/api/marca_miniatura";
 import { Label } from "@/app/components/Label";
 import { MessageError } from "@/app/components/MessageError";
+import { useLoading } from "@/app/hooks/useLoading";
 import { useTypeDevice } from "@/app/hooks/useTypeDevice";
+import { GenericGetTypes } from "@/app/types";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,
@@ -29,7 +32,10 @@ export const ModalFormMini = ({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
+  const [listMarksMini, setListMarksMini] = useState<GenericGetTypes[]>([]);
   const { isMobile } = useTypeDevice();
+  const { showLoading, hideLoading } = useLoading();
+
   const {
     control,
     handleSubmit,
@@ -42,6 +48,8 @@ export const ModalFormMini = ({
     },
   });
 
+  console.log("listMarksMini", listMarksMini);
+
   const onSubmit = (data: MiniFormValues) => {
     console.log("Dados validados:", data);
     handleVisibleFormMini();
@@ -52,6 +60,26 @@ export const ModalFormMini = ({
     handleVisibleFormMini();
     reset();
   };
+
+  const fetchGetAllMarksMini = async () => {
+    showLoading();
+
+    try {
+      const { data } = await getAllMarksMini();
+      setListMarksMini(data);
+    } catch (error) {
+      console.log("responseeee 2", error);
+    } finally {
+      hideLoading();
+    }
+  };
+
+  useEffect(() => {
+    if (isModalOpen) {
+      fetchGetAllMarksMini();
+    }
+  }, [isModalOpen]);
+
   useEffect(() => {
     setIsModalOpen(visible);
 
@@ -74,7 +102,7 @@ export const ModalFormMini = ({
       onCancel={handleCancel}
       okText="Salvar"
       cancelText="Cancelar"
-      width={"90%"}
+      width={"70%"}
     >
       <Divider />
       <div className="md:flex -sm:flex-col justify-between">
@@ -109,11 +137,11 @@ export const ModalFormMini = ({
                   // placeholder="Marca"
                   onChange={field.onChange}
                   status={errors.salePrice ? "error" : ""}
-                >
-                  <Option value="hotwheels">Hot Wheels</Option>
-                  <Option value="matchbox">Matchbox</Option>
-                  <Option value="gtmini">GT Mini</Option>
-                </Select>
+                  options={listMarksMini.map((mark) => ({
+                    label: mark.nome,
+                    value: String(mark.id),
+                  }))}
+                />
                 {errors.brand && (
                   <MessageError message={errors.brand.message as string} />
                 )}
