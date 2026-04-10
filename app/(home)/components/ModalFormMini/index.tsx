@@ -1,5 +1,7 @@
+import { getAllScalesMini } from "@/app/api/escala_miniatura";
 import { getAllLinesMini } from "@/app/api/linha_miniatura";
 import { getAllMarksMini } from "@/app/api/marca_miniatura";
+import { postMiniatura } from "@/app/api/miniatura";
 import { getAllStatusMini } from "@/app/api/status_miniatura";
 import { getAllTypesMini } from "@/app/api/tipo_miniatura";
 import { Label } from "@/app/components/Label";
@@ -7,6 +9,7 @@ import { MessageError } from "@/app/components/MessageError";
 import { useLoading } from "@/app/hooks/useLoading";
 import { useTypeDevice } from "@/app/hooks/useTypeDevice";
 import { GenericGetTypes } from "@/app/types";
+import { getErrorMessage } from "@/app/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
   Button,
@@ -18,10 +21,10 @@ import {
   Select,
   Upload,
 } from "antd";
-import { Option } from "antd/es/mentions";
 import { UploadIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import { ModalFormMiniProps } from "./types";
 import { defaultValuesForm } from "./utils";
 import { MiniFormValues, miniSchema } from "./validation";
@@ -39,6 +42,7 @@ export const ModalFormMini = ({
   const [listTypesMini, setListTypesMini] = useState<GenericGetTypes[]>([]);
   const [listLinesMini, setListLinesMini] = useState<GenericGetTypes[]>([]);
   const [listStatusMini, setListStatusMini] = useState<GenericGetTypes[]>([]);
+  const [listScalesMini, setListScalesMini] = useState<GenericGetTypes[]>([]);
   const { isMobile } = useTypeDevice();
   const { showLoading, hideLoading } = useLoading();
 
@@ -56,14 +60,20 @@ export const ModalFormMini = ({
 
   console.log("listMarksMini", listMarksMini);
 
-  const onSubmit = (data: MiniFormValues) => {
+  const handleCancel = () => {
     handleVisibleFormMini();
     reset();
   };
 
-  const handleCancel = () => {
-    handleVisibleFormMini();
-    reset();
+  const fetchGetAllScalesMini = async () => {
+    showLoading();
+    try {
+      const { data } = await getAllScalesMini();
+      setListScalesMini(data);
+    } catch (e) {
+    } finally {
+      hideLoading();
+    }
   };
 
   const fetchGetAllTypesMini = async () => {
@@ -110,12 +120,27 @@ export const ModalFormMini = ({
     }
   };
 
+  const handlePostMini = async (mini: MiniFormValues) => {
+    showLoading();
+    try {
+      await postMiniatura(mini);
+      toast.success(`${mini.name} cadastrado com sucesso`);
+      reset();
+      handleVisibleFormMini();
+    } catch (e) {
+      toast.error(getErrorMessage(e));
+    } finally {
+      hideLoading();
+    }
+  };
+
   useEffect(() => {
     if (isModalOpen) {
       fetchGetAllMarksMini();
       fetchGetAllTypesMini();
       fetchGetAllLinesMini();
       fetchGetAllStatusMini();
+      fetchGetAllScalesMini();
     }
   }, [isModalOpen]);
 
@@ -140,7 +165,7 @@ export const ModalFormMini = ({
     <Modal
       title={type === "add" ? "Criar Miniatura" : "Editar Miniatura"}
       open={isModalOpen}
-      onOk={handleSubmit(onSubmit)}
+      onOk={handleSubmit(handlePostMini)}
       okButtonProps={{
         disabled: hasErrorInForm, // ou hasErrors
       }}
@@ -195,23 +220,38 @@ export const ModalFormMini = ({
           <Controller
             name="price"
             control={control}
-            render={({ field }) => (
-              <div className={classNameContainerInputs}>
-                <Label text="Preço" required />
-                <InputNumber
-                  {...field}
-                  style={{ width: "100%" }}
-                  status={errors.price ? "error" : ""}
-                  // placeholder="Quantidade no Estoque"
-                  min={0}
-                  type="number"
-                />
+            render={({ field }) => {
+              const formatCurrency = (value: number) => {
+                return (value / 100).toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                });
+              };
 
-                {errors.price && (
-                  <MessageError message={errors.price.message as string} />
-                )}
-              </div>
-            )}
+              const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+                const onlyNumbers = e.target.value.replace(/\D/g, "");
+                const numericValue = Number(onlyNumbers);
+
+                field.onChange(numericValue); // salva em centavos
+              };
+
+              return (
+                <div className={classNameContainerInputs}>
+                  <Label text="Preço" required />
+
+                  <Input
+                    value={formatCurrency(field.value || 0)}
+                    onChange={handleChange}
+                    status={errors.price ? "error" : ""}
+                    inputMode="numeric"
+                  />
+
+                  {errors.price && (
+                    <MessageError message={errors.price.message as string} />
+                  )}
+                </div>
+              );
+            }}
           />
 
           <Controller
@@ -225,7 +265,7 @@ export const ModalFormMini = ({
                   style={{ width: "100%" }}
                   status={errors.stock ? "error" : ""}
                   // placeholder="Quantidade no Estoque"
-                  min={0}
+                  min={1}
                   type="number"
                 />
 
@@ -406,10 +446,11 @@ export const ModalFormMini = ({
                   // placeholder="Escala"
                   onChange={field.onChange}
                   status={errors.scale ? "error" : ""}
-                >
-                  <Option value="thunt">1/24</Option>
-                  <Option value="superthunt">1/64</Option>
-                </Select>
+                  options={listScalesMini.map((mark) => ({
+                    label: mark.nome,
+                    value: String(mark.id),
+                  }))}
+                />
                 {errors.scale && (
                   <MessageError message={errors.scale.message as string} />
                 )}

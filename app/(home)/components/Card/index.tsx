@@ -67,7 +67,12 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
           </p>
 
           <p className="text-lg text-blue-700 font-bold">
-            R$ {mini?.valor?.toFixed(2) ?? "0.00"}
+            {mini?.valor
+              ? mini.valor.toLocaleString("pt-BR", {
+                  style: "currency",
+                  currency: "BRL",
+                })
+              : "R$ 0,00"}
           </p>
         </div>
       </button>
