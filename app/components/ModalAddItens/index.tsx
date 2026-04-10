@@ -1,23 +1,34 @@
 "use client";
 
+import { getAllScalesMini } from "@/app/api/escala_miniatura";
+import { getAllLinesMini } from "@/app/api/linha_miniatura";
+import { getAllMarksMini } from "@/app/api/marca_miniatura";
+import { getAllStatusMini } from "@/app/api/status_miniatura";
+import { getAllTypesMini } from "@/app/api/tipo_miniatura";
+import { useLoading } from "@/app/hooks/useLoading";
+import { GenericGetTypes } from "@/app/types";
+import { getErrorMessage } from "@/app/utils";
 import { Button, Input, Modal, Popconfirm, Space, Table } from "antd";
-import { Pencil, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 import { ModalAddItensProps } from "./types";
 
 export const ModalAddItens = ({
   title,
-  data,
+  typeAdd,
   loading,
   isVisible,
   handleVisibility,
   onCreate,
   onUpdate,
   onDelete,
+  handleForceRefreshLists,
 }: ModalAddItensProps) => {
   const [value, setValue] = useState("");
   const [editingId, setEditingId] = useState<string | number | null>(null);
-
+  const [listData, setListData] = useState<GenericGetTypes[]>([]);
+  const { hideLoading, showLoading } = useLoading();
   const handleSubmit = async () => {
     if (!value.trim()) return;
 
@@ -37,25 +48,24 @@ export const ModalAddItens = ({
 
   const columns = [
     {
-      title: "Nome",
-      dataIndex: "name",
-      key: "name",
+      title: "Id",
+      dataIndex: "id",
+      key: "id",
+      width: "20%",
     },
     {
-      title: "Ações",
+      title: "Nome",
+      dataIndex: "nome",
+      width: "60%", // maior
+      key: "nome",
+    },
+    {
+      title: "Excluir",
       key: "actions",
+      width: "20%",
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (_: any, record: any) => (
-        <Space>
-          <Button
-            size="small"
-            icon={<Pencil size={14} />}
-            onClick={() => {
-              setEditingId(record.id);
-              setValue(record.name);
-            }}
-          />
-
+        <Space style={{ width: "100%" }} className="ml-3">
           <Popconfirm
             title="Deseja excluir?"
             onConfirm={() => onDelete(record.id)}
@@ -66,6 +76,35 @@ export const ModalAddItens = ({
       ),
     },
   ];
+
+  const validateTypeAdd = async () => {
+    showLoading();
+    const apiMethods = {
+      marca: getAllMarksMini,
+      tipos: getAllTypesMini,
+      linha: getAllLinesMini,
+      status: getAllStatusMini,
+      escala: getAllScalesMini,
+    };
+    const fetchMethod = apiMethods[typeAdd];
+
+    if (!fetchMethod) return;
+    try {
+      const { data } = await fetchMethod();
+      setListData(data); // Supondo que seu state se chame setData
+    } catch (e) {
+      toast.error(getErrorMessage(e));
+      handleVisibility();
+    } finally {
+      hideLoading();
+    }
+  };
+
+  useEffect(() => {
+    if (isVisible && typeAdd) {
+      validateTypeAdd();
+    }
+  }, [typeAdd]);
 
   return (
     <Modal
@@ -89,9 +128,10 @@ export const ModalAddItens = ({
       <Table
         rowKey="id"
         loading={loading}
-        dataSource={data}
+        dataSource={listData}
         columns={columns}
         pagination={false}
+        scroll={{ y: 300 }} // 👈 altura máxima
       />
     </Modal>
   );

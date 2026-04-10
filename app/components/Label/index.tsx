@@ -6,7 +6,13 @@ import { twMerge } from "tailwind-merge";
 import { ModalAddItens } from "../ModalAddItens";
 import { LabelProps } from "./types";
 
-export const Label = ({ text, className, required, iconAdd }: LabelProps) => {
+export const Label = ({
+  text,
+  className,
+  required,
+  iconAdd,
+  handleForceRefreshLists,
+}: LabelProps) => {
   const [modalFormVisible, setModalFormVisible] = useState(false);
 
   const handleVisibilityModalForm = () => {
@@ -45,8 +51,9 @@ export const Label = ({ text, className, required, iconAdd }: LabelProps) => {
             <ModalAddItens
               isVisible={modalFormVisible}
               handleVisibility={handleVisibilityModalForm}
+              handleForceRefreshLists={handleForceRefreshLists}
               title={text}
-              data={[]}
+              typeAdd={iconAdd}
               onCreate={() => alert("onCreate")}
               onUpdate={() => alert("onUpdate")}
               onDelete={() => alert("onDelete")}

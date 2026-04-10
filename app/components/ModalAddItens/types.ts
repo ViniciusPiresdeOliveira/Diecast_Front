@@ -1,3 +1,5 @@
+import { TypeAdd } from "../Label/types";
+
 export type ModalAddItens = {
   id: number | string;
   name: string;
@@ -5,10 +7,11 @@ export type ModalAddItens = {
 
 export type ModalAddItensProps = {
   title: string;
-  data: ModalAddItens[];
+  typeAdd: TypeAdd;
   loading?: boolean;
   isVisible: boolean;
 
+  handleForceRefreshLists?: (type: TypeAdd) => void;
   handleVisibility: () => void;
   onCreate: (value: string) => Promise<void> | void;
   onUpdate: (id: ModalAddItens["id"], value: string) => Promise<void> | void;

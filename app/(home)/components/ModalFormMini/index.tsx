@@ -5,6 +5,7 @@ import { postMiniatura } from "@/app/api/miniatura";
 import { getAllStatusMini } from "@/app/api/status_miniatura";
 import { getAllTypesMini } from "@/app/api/tipo_miniatura";
 import { Label } from "@/app/components/Label";
+import { TypeAdd } from "@/app/components/Label/types";
 import { MessageError } from "@/app/components/MessageError";
 import { useLoading } from "@/app/hooks/useLoading";
 import { useTypeDevice } from "@/app/hooks/useTypeDevice";
@@ -43,6 +44,7 @@ export const ModalFormMini = ({
   const [listLinesMini, setListLinesMini] = useState<GenericGetTypes[]>([]);
   const [listStatusMini, setListStatusMini] = useState<GenericGetTypes[]>([]);
   const [listScalesMini, setListScalesMini] = useState<GenericGetTypes[]>([]);
+  const [refreshRequests, setRefreshRequests] = useState<TypeAdd | "">("");
   const { isMobile } = useTypeDevice();
   const { showLoading, hideLoading } = useLoading();
 
@@ -59,6 +61,10 @@ export const ModalFormMini = ({
   });
 
   console.log("listMarksMini", listMarksMini);
+
+  const handleForceRefreshLists = (type: TypeAdd | "") => {
+    setRefreshRequests(() => type);
+  };
 
   const handleCancel = () => {
     handleVisibleFormMini();
@@ -145,12 +151,33 @@ export const ModalFormMini = ({
   }, [isModalOpen]);
 
   useEffect(() => {
-    setIsModalOpen(visible);
-
-    if (mini && type === "edit") {
-      reset(mini);
+    if (refreshRequests.length === 0) {
+      return;
     }
-  }, [visible, mini, type, reset]);
+    const refreshMap = {
+      escala: fetchGetAllScalesMini,
+      linha: fetchGetAllLinesMini,
+      tipos: fetchGetAllTypesMini,
+      marca: fetchGetAllMarksMini,
+      status: fetchGetAllStatusMini,
+    };
+
+    const key = refreshRequests as keyof typeof refreshMap;
+    const executeRefresh = refreshMap[key];
+
+    if (executeRefresh) {
+      executeRefresh();
+      handleForceRefreshLists("");
+    }
+  }, [refreshRequests]);
+
+  // useEffect(() => {
+  //   setIsModalOpen(visible);
+
+  //   if (mini && type === "edit") {
+  //     reset(mini);
+  //   }
+  // }, [visible, mini, type, reset]);
 
   useEffect(() => {
     setIsModalOpen(visible);
@@ -167,7 +194,7 @@ export const ModalFormMini = ({
       open={isModalOpen}
       onOk={handleSubmit(handlePostMini)}
       okButtonProps={{
-        disabled: hasErrorInForm, // ou hasErrors
+        disabled: hasErrorInForm,
       }}
       onCancel={handleCancel}
       okText="Salvar"
@@ -343,7 +370,12 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Marca" required iconAdd />
+                <Label
+                  text="Marca"
+                  required
+                  iconAdd="marca"
+                  handleForceRefreshLists={handleForceRefreshLists}
+                />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
@@ -367,7 +399,12 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Tipos" required iconAdd />
+                <Label
+                  text="Tipos"
+                  required
+                  iconAdd="tipos"
+                  handleForceRefreshLists={handleForceRefreshLists}
+                />
                 <Select
                   {...field}
                   mode="multiple"
@@ -392,7 +429,12 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Linha" required iconAdd />
+                <Label
+                  text="Linha"
+                  required
+                  iconAdd="linha"
+                  handleForceRefreshLists={handleForceRefreshLists}
+                />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
@@ -416,7 +458,12 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Status" required iconAdd />
+                <Label
+                  text="Status"
+                  required
+                  iconAdd="status"
+                  handleForceRefreshLists={handleForceRefreshLists}
+                />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
@@ -439,7 +486,12 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Escala" required iconAdd />
+                <Label
+                  text="Escala"
+                  required
+                  iconAdd="escala"
+                  handleForceRefreshLists={handleForceRefreshLists}
+                />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
