@@ -12,7 +12,7 @@ export const PaginationDefault: PaginationInfo = {
   pageNumberInitial: 0,
   totalPages: 0,
   totalElements: 0,
-  elementsPerPage: 4,
+  elementsPerPage: 10,
 };
 
 export const minis: Miniatura[] = [

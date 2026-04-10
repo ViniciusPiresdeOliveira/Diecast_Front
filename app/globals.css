@@ -70,6 +70,15 @@ body {
   border-radius: 9999px;
 }
 
+ant-btn
+  css-dev-only-do-not-override-1d8anct
+  css-var-root
+  ant-btn-default
+  ant-btn-color-default
+  ant-btn-variant-outlined {
+  border: 1px solid red;
+}
+
 /* 
 @keyframes loadingAnim {
   0% {

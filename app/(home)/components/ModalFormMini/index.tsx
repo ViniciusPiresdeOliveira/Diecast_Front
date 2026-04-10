@@ -1,4 +1,7 @@
+import { getAllLinesMini } from "@/app/api/linha_miniatura";
 import { getAllMarksMini } from "@/app/api/marca_miniatura";
+import { getAllStatusMini } from "@/app/api/status_miniatura";
+import { getAllTypesMini } from "@/app/api/tipo_miniatura";
 import { Label } from "@/app/components/Label";
 import { MessageError } from "@/app/components/MessageError";
 import { useLoading } from "@/app/hooks/useLoading";
@@ -33,6 +36,9 @@ export const ModalFormMini = ({
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [listMarksMini, setListMarksMini] = useState<GenericGetTypes[]>([]);
+  const [listTypesMini, setListTypesMini] = useState<GenericGetTypes[]>([]);
+  const [listLinesMini, setListLinesMini] = useState<GenericGetTypes[]>([]);
+  const [listStatusMini, setListStatusMini] = useState<GenericGetTypes[]>([]);
   const { isMobile } = useTypeDevice();
   const { showLoading, hideLoading } = useLoading();
 
@@ -51,7 +57,6 @@ export const ModalFormMini = ({
   console.log("listMarksMini", listMarksMini);
 
   const onSubmit = (data: MiniFormValues) => {
-    console.log("Dados validados:", data);
     handleVisibleFormMini();
     reset();
   };
@@ -61,14 +66,45 @@ export const ModalFormMini = ({
     reset();
   };
 
+  const fetchGetAllTypesMini = async () => {
+    showLoading();
+    try {
+      const { data } = await getAllTypesMini();
+      setListTypesMini(data);
+    } catch (e) {
+    } finally {
+      hideLoading();
+    }
+  };
+
   const fetchGetAllMarksMini = async () => {
     showLoading();
-
     try {
       const { data } = await getAllMarksMini();
       setListMarksMini(data);
-    } catch (error) {
-      console.log("responseeee 2", error);
+    } catch (e) {
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const fetchGetAllLinesMini = async () => {
+    showLoading();
+    try {
+      const { data } = await getAllLinesMini();
+      setListLinesMini(data);
+    } catch (e) {
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const fetchGetAllStatusMini = async () => {
+    showLoading();
+    try {
+      const { data } = await getAllStatusMini();
+      setListStatusMini(data);
+    } catch (e) {
     } finally {
       hideLoading();
     }
@@ -77,6 +113,9 @@ export const ModalFormMini = ({
   useEffect(() => {
     if (isModalOpen) {
       fetchGetAllMarksMini();
+      fetchGetAllTypesMini();
+      fetchGetAllLinesMini();
+      fetchGetAllStatusMini();
     }
   }, [isModalOpen]);
 
@@ -93,12 +132,18 @@ export const ModalFormMini = ({
   }, [visible]);
 
   const classNameContainerInputs = "flex-col mb-2";
+  const hasErrorInForm = Object.keys(errors).length > 0;
+
+  console.log("errors yup => ", errors);
 
   return (
     <Modal
       title={type === "add" ? "Criar Miniatura" : "Editar Miniatura"}
       open={isModalOpen}
       onOk={handleSubmit(onSubmit)}
+      okButtonProps={{
+        disabled: hasErrorInForm, // ou hasErrors
+      }}
       onCancel={handleCancel}
       okText="Salvar"
       cancelText="Cancelar"
@@ -120,30 +165,6 @@ export const ModalFormMini = ({
                 />
                 {errors.name && (
                   <MessageError message={errors.name.message as string} />
-                )}
-              </div>
-            )}
-          />
-
-          <Controller
-            name="brand"
-            control={control}
-            render={({ field }) => (
-              <div className={classNameContainerInputs}>
-                <Label text="Marca" required iconAdd />
-                <Select
-                  {...field}
-                  style={{ width: "100%" }}
-                  // placeholder="Marca"
-                  onChange={field.onChange}
-                  status={errors.salePrice ? "error" : ""}
-                  options={listMarksMini.map((mark) => ({
-                    label: mark.nome,
-                    value: String(mark.id),
-                  }))}
-                />
-                {errors.brand && (
-                  <MessageError message={errors.brand.message as string} />
                 )}
               </div>
             )}
@@ -172,71 +193,45 @@ export const ModalFormMini = ({
           />
 
           <Controller
-            name="types"
+            name="price"
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Tipos" required iconAdd />
-                <Select
-                  {...field}
-                  mode="multiple"
-                  style={{ width: "100%" }}
-                  // placeholder="Tipos"
-                  onChange={field.onChange}
-                  status={errors.types ? "error" : ""}
-                >
-                  <Option value="jdm">JDM</Option>
-                  <Option value="supercar">Supercar</Option>
-                  <Option value="muscle">Muscle</Option>
-                  <Option value="classic">Clássico</Option>
-                </Select>
-                {errors.types && (
-                  <MessageError message={errors.types.message as string} />
-                )}
-              </div>
-            )}
-          />
-          <Controller
-            name="line"
-            control={control}
-            render={({ field }) => (
-              <div className={classNameContainerInputs}>
-                <Label text="Linha" required iconAdd />
-                <Select
+                <Label text="Preço" required />
+                <InputNumber
                   {...field}
                   style={{ width: "100%" }}
-                  // placeholder="Tipos"
-                  onChange={field.onChange}
-                  status={errors.line ? "error" : ""}
-                >
-                  <Option value="thunt">T-Hunt</Option>
-                  <Option value="superthunt">Super T-Hunt</Option>
-                  <Option value="mainline">Mainline</Option>
-                </Select>
-                {errors.line && (
-                  <MessageError message={errors.line.message as string} />
+                  status={errors.price ? "error" : ""}
+                  // placeholder="Quantidade no Estoque"
+                  min={0}
+                  type="number"
+                />
+
+                {errors.price && (
+                  <MessageError message={errors.price.message as string} />
                 )}
               </div>
             )}
           />
 
           <Controller
-            name="status"
+            name="stock"
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label text="Status" required iconAdd />
-
-                <Select
+                <Label text="Quantidade no Estoque" required />
+                <InputNumber
                   {...field}
                   style={{ width: "100%" }}
-                  // placeholder="Status"
-                  onChange={field.onChange}
-                  status={errors.status ? "error" : ""}
-                >
-                  <Option value="Loose">Loose</Option>
-                  <Option value="Blister">Blister</Option>
-                </Select>
+                  status={errors.stock ? "error" : ""}
+                  // placeholder="Quantidade no Estoque"
+                  min={0}
+                  type="number"
+                />
+
+                {errors.stock && (
+                  <MessageError message={errors.stock.message as string} />
+                )}
               </div>
             )}
           />
@@ -273,12 +268,17 @@ export const ModalFormMini = ({
                   style={{ marginTop: "3px", width: "100%" }}
                 >
                   {field.value?.length ? null : (
-                    <Button style={{ width: "100%" }}>
+                    <Button
+                      style={{
+                        width: "100%",
+                        borderColor: errors.image ? "#ff4d4f" : undefined,
+                      }}
+                    >
+                      {" "}
                       <UploadIcon width={14} /> Upload
                     </Button>
                   )}
                 </Upload>
-
                 {!isMobile && (
                   <Image
                     wrapperStyle={{ display: "none" }}
@@ -299,6 +299,102 @@ export const ModalFormMini = ({
         </div>
         <div className="md:w-[47%] -sm:w-full">
           <Controller
+            name="brand"
+            control={control}
+            render={({ field }) => (
+              <div className={classNameContainerInputs}>
+                <Label text="Marca" required iconAdd />
+                <Select
+                  {...field}
+                  style={{ width: "100%" }}
+                  // placeholder="Marca"
+                  onChange={field.onChange}
+                  status={errors.brand ? "error" : ""}
+                  options={listMarksMini.map((mark) => ({
+                    label: mark.nome,
+                    value: String(mark.id),
+                  }))}
+                />
+                {errors.brand && (
+                  <MessageError message={errors.brand.message as string} />
+                )}
+              </div>
+            )}
+          />
+
+          <Controller
+            name="types"
+            control={control}
+            render={({ field }) => (
+              <div className={classNameContainerInputs}>
+                <Label text="Tipos" required iconAdd />
+                <Select
+                  {...field}
+                  mode="multiple"
+                  style={{ width: "100%", cursor: "pointer" }}
+                  className="hover:cursor-pointer"
+                  // placeholder="Tipos"
+                  onChange={field.onChange}
+                  status={errors.types ? "error" : ""}
+                  options={listTypesMini.map((mark) => ({
+                    label: mark.nome,
+                    value: String(mark.id),
+                  }))}
+                />
+                {errors.types && (
+                  <MessageError message={errors.types.message as string} />
+                )}
+              </div>
+            )}
+          />
+          <Controller
+            name="line"
+            control={control}
+            render={({ field }) => (
+              <div className={classNameContainerInputs}>
+                <Label text="Linha" required iconAdd />
+                <Select
+                  {...field}
+                  style={{ width: "100%" }}
+                  // placeholder="Tipos"
+                  onChange={field.onChange}
+                  status={errors.line ? "error" : ""}
+                  options={listLinesMini.map((mark) => ({
+                    label: mark.nome,
+                    value: String(mark.id),
+                  }))}
+                />
+                {errors.line && (
+                  <MessageError message={errors.line.message as string} />
+                )}
+              </div>
+            )}
+          />
+
+          <Controller
+            name="status"
+            control={control}
+            render={({ field }) => (
+              <div className={classNameContainerInputs}>
+                <Label text="Status" required iconAdd />
+                <Select
+                  {...field}
+                  style={{ width: "100%" }}
+                  // placeholder="Status"
+                  onChange={field.onChange}
+                  status={errors.status ? "error" : ""}
+                  options={listStatusMini.map((mark) => ({
+                    label: mark.nome,
+                    value: String(mark.id),
+                  }))}
+                />
+                {errors.status && (
+                  <MessageError message={errors.status.message as string} />
+                )}
+              </div>
+            )}
+          />
+          <Controller
             name="scale"
             control={control}
             render={({ field }) => (
@@ -316,111 +412,6 @@ export const ModalFormMini = ({
                 </Select>
                 {errors.scale && (
                   <MessageError message={errors.scale.message as string} />
-                )}
-              </div>
-            )}
-          />
-          <Controller
-            name="costPrice"
-            control={control}
-            render={({ field }) => (
-              <div className={classNameContainerInputs}>
-                <Label text="Preço de Custo" required />
-                <InputNumber
-                  {...field}
-                  style={{ width: "100%" }}
-                  status={errors.costPrice ? "error" : ""}
-                  // placeholder="Preço de Custo"
-                  min={0}
-                  type="number"
-                />
-                {errors.costPrice && (
-                  <MessageError message={errors.costPrice.message as string} />
-                )}
-              </div>
-            )}
-          />
-          <Controller
-            name="salePrice"
-            control={control}
-            render={({ field }) => (
-              <div className={classNameContainerInputs}>
-                <Label text="Preço de Venda" required />
-                <InputNumber
-                  {...field}
-                  style={{ width: "100%" }}
-                  status={errors.salePrice ? "error" : ""}
-                  // placeholder="Preço de Venda"
-                  min={0}
-                  type="number"
-                />
-                {errors.salePrice && (
-                  <MessageError message={errors.salePrice.message as string} />
-                )}
-              </div>
-            )}
-          />
-          <Controller
-            name="stock"
-            control={control}
-            render={({ field }) => (
-              <div className={classNameContainerInputs}>
-                <Label text="Quantidade no Estoque" required />
-                <InputNumber
-                  {...field}
-                  style={{ width: "100%" }}
-                  status={errors.stock ? "error" : ""}
-                  // placeholder="Quantidade no Estoque"
-                  min={0}
-                  type="number"
-                />
-
-                {errors.stock && (
-                  <MessageError message={errors.stock.message as string} />
-                )}
-              </div>
-            )}
-          />
-
-          <Controller
-            name="weight"
-            control={control}
-            render={({ field }) => (
-              <div className={classNameContainerInputs}>
-                <Label text="Peso" required />
-                <InputNumber
-                  {...field}
-                  style={{ width: "100%" }}
-                  status={errors.weight ? "error" : ""}
-                  // placeholder="Peso"
-                  min={0}
-                  type="number"
-                />
-
-                {errors.weight && (
-                  <MessageError message={errors.weight.message as string} />
-                )}
-              </div>
-            )}
-          />
-
-          <Controller
-            name="volume"
-            control={control}
-            render={({ field }) => (
-              <div className={classNameContainerInputs}>
-                <Label text="Volume" required />
-                <InputNumber
-                  {...field}
-                  style={{ width: "100%" }}
-                  status={errors.volume ? "error" : ""}
-                  // placeholder="Volume"
-                  min={0}
-                  type="number"
-                />
-
-                {errors.volume && (
-                  <MessageError message={errors.volume.message as string} />
                 )}
               </div>
             )}

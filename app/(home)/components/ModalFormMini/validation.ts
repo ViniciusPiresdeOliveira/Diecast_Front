@@ -11,26 +11,19 @@ export const miniSchema = yup.object({
     .min(1900, "Ano inválido")
     .max(new Date().getFullYear(), "Ano inválido"),
   types: yup.array().of(yup.string()).min(1, "Selecione ao menos um tipo"),
-  line: yup.string().nullable(),
-  salePrice: yup
+  line: yup.string().required("Linha é obrigatória"),
+  price: yup
     .number()
-    .typeError("Preço de venda deve ser um número")
-    .required("Preço de venda é obrigatório")
-    .min(0, "Não pode ser negativo"),
-  costPrice: yup
-    .number()
-    .typeError("Preço de custo deve ser um número")
-    .required("Preço de custo é obrigatório")
+    .typeError("Preço deve ser um número")
+    .required("Preço é obrigatório")
     .min(0, "Não pode ser negativo"),
   stock: yup
     .number()
     .typeError("Estoque deve ser um número")
     .required("Estoque é obrigatório")
     .min(0, "Não pode ser negativo"),
-  scale: yup.string().nullable(),
-  weight: yup.number().nullable(),
-  volume: yup.number().nullable(),
-  status: yup.boolean().required(),
+  status: yup.string().required("Status é obrigatório"),
+  scale: yup.string().required("Escala é obrigatória"),
   image: yup
     .array()
     .of(yup.mixed<UploadFile>().required())

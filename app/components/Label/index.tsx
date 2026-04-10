@@ -18,7 +18,7 @@ export const Label = ({ text, className, required, iconAdd }: LabelProps) => {
   // }, [modalFormVisible]);
 
   return (
-    <label
+    <div
       className={twMerge(
         clsx(
           "flex items-center justify-between text-sm font-medium text-gray-700",
@@ -35,10 +35,10 @@ export const Label = ({ text, className, required, iconAdd }: LabelProps) => {
         <>
           <Tooltip title={"Adicione " + text}>
             <button
-              className="cursor-pointer transition-transform duration-200 hover:scale-110"
+              className="cursor-pointer transition-transform duration-200 -mt-2 hover:scale-110"
               onClick={handleVisibilityModalForm}
             >
-              <CirclePlusIcon color="#25d366" size={14} />
+              <CirclePlusIcon color="#25d366" size={18} />
             </button>
           </Tooltip>
           {modalFormVisible && (
@@ -54,6 +54,6 @@ export const Label = ({ text, className, required, iconAdd }: LabelProps) => {
           )}
         </>
       )}
-    </label>
+    </div>
   );
 };
