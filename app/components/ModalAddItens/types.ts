@@ -13,7 +13,4 @@ export type ModalAddItensProps = {
 
   handleForceRefreshLists?: (type: TypeAdd) => void;
   handleVisibility: () => void;
-  onCreate: (value: string) => Promise<void> | void;
-  onUpdate: (id: ModalAddItens["id"], value: string) => Promise<void> | void;
-  onDelete: (id: ModalAddItens["id"]) => Promise<void> | void;
 };

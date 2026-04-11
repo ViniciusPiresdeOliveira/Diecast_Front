@@ -1,10 +1,30 @@
 "use client";
 
-import { getAllScalesMini } from "@/app/api/escala_miniatura";
-import { getAllLinesMini } from "@/app/api/linha_miniatura";
-import { getAllMarksMini } from "@/app/api/marca_miniatura";
-import { getAllStatusMini } from "@/app/api/status_miniatura";
-import { getAllTypesMini } from "@/app/api/tipo_miniatura";
+import {
+  deleteScaleMiniById,
+  getAllScalesMini,
+  postScaleMini,
+} from "@/app/api/escala_miniatura";
+import {
+  deleteLineMiniById,
+  getAllLinesMini,
+  postLineMini,
+} from "@/app/api/linha_miniatura";
+import {
+  deleteMarkMiniById,
+  getAllMarksMini,
+  postMarkMini,
+} from "@/app/api/marca_miniatura";
+import {
+  deleteStatusMiniById,
+  getAllStatusMini,
+  postStatusMini,
+} from "@/app/api/status_miniatura";
+import {
+  deleteTypesMiniById,
+  getAllTypesMini,
+  postTypesMini,
+} from "@/app/api/tipo_miniatura";
 import { useLoading } from "@/app/hooks/useLoading";
 import { GenericGetTypes } from "@/app/types";
 import { getErrorMessage } from "@/app/utils";
@@ -20,29 +40,42 @@ export const ModalAddItens = ({
   loading,
   isVisible,
   handleVisibility,
-  onCreate,
-  onUpdate,
-  onDelete,
   handleForceRefreshLists,
 }: ModalAddItensProps) => {
   const [value, setValue] = useState("");
   const [editingId, setEditingId] = useState<string | number | null>(null);
   const [listData, setListData] = useState<GenericGetTypes[]>([]);
   const { hideLoading, showLoading } = useLoading();
+
   const handleSubmit = async () => {
     if (!value.trim()) return;
 
+    showLoading();
+
+    const createMethods = {
+      marca: postMarkMini,
+      tipos: postTypesMini,
+      linha: postLineMini,
+      status: postStatusMini,
+      escala: postScaleMini,
+    };
+
+    const createMethod = createMethods[typeAdd];
+
+    if (!createMethod) return;
+
     try {
-      if (editingId) {
-        await onUpdate(editingId, value);
-        setEditingId(null);
-      } else {
-        await onCreate(value);
-      }
-    } catch (error) {
-      console.log("error", error);
+      await createMethod({ nome: value });
+
+      toast.success(`${value} criado com sucesso`);
+
+      await fetchGetAllTypeAdd(); // 🔥 recarrega lista
+      handleForceRefreshLists?.(typeAdd); // atualiza pai
+    } catch (e) {
+      toast.error(getErrorMessage(e));
     } finally {
       setValue("");
+      hideLoading();
     }
   };
 
@@ -68,16 +101,24 @@ export const ModalAddItens = ({
         <Space style={{ width: "100%" }} className="ml-3">
           <Popconfirm
             title="Deseja excluir?"
-            onConfirm={() => onDelete(record.id)}
+            onConfirm={() => handleDeleteByType(record.id)}
+            okText="Sim"
+            cancelText="Não"
           >
-            <Button danger size="small" icon={<Trash2 size={14} />} />
+            <Button
+              danger
+              className="transition-all duration-300 ease-out
+      hover:scale-110"
+              size="small"
+              icon={<Trash2 size={14} />}
+            />
           </Popconfirm>
         </Space>
       ),
     },
   ];
 
-  const validateTypeAdd = async () => {
+  const fetchGetAllTypeAdd = async () => {
     showLoading();
     const apiMethods = {
       marca: getAllMarksMini,
@@ -100,9 +141,39 @@ export const ModalAddItens = ({
     }
   };
 
+  const handleDeleteByType = async (id: number) => {
+    showLoading();
+
+    const deleteMethods = {
+      marca: deleteMarkMiniById,
+      tipos: deleteTypesMiniById,
+      linha: deleteLineMiniById,
+      status: deleteStatusMiniById,
+      escala: deleteScaleMiniById,
+    };
+
+    const deleteMethod = deleteMethods[typeAdd];
+
+    if (!deleteMethod) return;
+
+    try {
+      await deleteMethod(id);
+      const nameDeleted = listData?.filter((e) => e.id === id)[0].nome;
+
+      toast.success(`${nameDeleted} excluído com sucesso`);
+
+      await fetchGetAllTypeAdd(); // 🔥 recarrega lista
+      handleForceRefreshLists?.(typeAdd); // opcional (atualiza pai)
+    } catch (e) {
+      toast.error(getErrorMessage(e));
+    } finally {
+      hideLoading();
+    }
+  };
+
   useEffect(() => {
     if (isVisible && typeAdd) {
-      validateTypeAdd();
+      fetchGetAllTypeAdd();
     }
   }, [typeAdd]);
 

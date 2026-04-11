@@ -54,9 +54,6 @@ export const Label = ({
               handleForceRefreshLists={handleForceRefreshLists}
               title={text}
               typeAdd={iconAdd}
-              onCreate={() => alert("onCreate")}
-              onUpdate={() => alert("onUpdate")}
-              onDelete={() => alert("onDelete")}
             />
           )}
         </>
