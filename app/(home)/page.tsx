@@ -93,6 +93,7 @@ export default function Home() {
         pageNumber: data.pageable.pageNumber + 1,
         pageNumberInitial: data.pageable.pageNumber + 1,
         totalPages: data.totalPages,
+        pageSize: data.pageSize,
         totalElements: data.totalElements,
         elementsPerPage: data.numberOfElements,
       });
@@ -126,6 +127,9 @@ export default function Home() {
     fetchGetFilterMiniaturas();
   }, []);
 
+  console.log("pagination", pagination);
+
+  const hasMiniInList = listMini.length > 0;
   return (
     <div className="flex flex-col items-center pb-5 w-full">
       {/* <Drawer
@@ -160,21 +164,13 @@ export default function Home() {
         </div>
         {/* <div className="max-w-7xl w-[72.5vw] p-4 flex flex-wrap gap-4 justify-start"> */}
         <div
-          className="max-w-7xl sm:w-[80vw] md:w-[70vw]
-        p-4 grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 
-        auto-rows-max items-start"
+          className={`max-w-7xl sm:w-[80vw] md:w-[70vw] p-4 ${
+            hasMiniInList
+              ? "grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-max items-start"
+              : ""
+          }`}
         >
-          {/* <div
-          className="
-  max-w-7xl w-full p-4 justify-items-start
-  grid gap-4
-  grid-cols-1 
-  sm:grid-cols-2 
-  lg:grid-cols-2 
-  xl:grid-cols-3
-"
-        > */}
-          {listMini.length > 0 ? (
+          {hasMiniInList ? (
             listMini.map((mini, index) => (
               <Card
                 key={index}
@@ -183,7 +179,7 @@ export default function Home() {
               />
             ))
           ) : (
-            <div className="w-[71vw] flex items-center justify-center mb-44">
+            <div className="w-full flex items-center justify-center mb-44">
               <div className="flex flex-col items-center text-center">
                 <span className="text-5xl mb-4">🔍</span>
                 <p className="text-2xl font-semibold text-gray-700">
@@ -211,7 +207,7 @@ export default function Home() {
       </div>
       <Pagination
         current={pagination.pageNumber}
-        pageSize={pagination.elementsPerPage}
+        pageSize={pagination.pageSize}
         total={pagination.totalElements}
         showSizeChanger={false}
         onChange={(page) => {

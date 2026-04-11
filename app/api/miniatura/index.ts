@@ -7,6 +7,10 @@ export const getFilterMiniatura = (filters: FilterMiniatura) => {
   return api.post("/miniaturas/filtro", filters);
 };
 
+export const getMiniById = (id: number) => {
+  return api.get(`/miniaturas/${id}`);
+};
+
 export const postMiniatura = (mini: MiniFormValues) => {
   const formData = new FormData();
 
