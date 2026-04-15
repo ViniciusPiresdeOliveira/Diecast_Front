@@ -5,4 +5,5 @@ export interface ModalFormMiniProps {
   mini: Miniatura | null;
   handleVisibleFormMini: () => void;
   type: "add" | "edit";
+  refreshMiniList: () => void;
 }

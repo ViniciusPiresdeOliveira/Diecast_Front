@@ -7,7 +7,6 @@ import { FilterProps } from "./types";
 export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
   const {
     maxPrice,
-    amount,
     minPrice,
     name,
     year,
@@ -22,14 +21,13 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
     handleName,
     handleYear,
     handleMark,
-    handleAmount,
     handleType,
     handleLine,
   } = useFilter();
 
   return (
     <>
-      <div className="mb-2 flex flex-col">
+      {/* <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Minis por página" />
         <Select
           value={amount}
@@ -45,7 +43,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
             { value: 100, label: "100" },
           ]}
         />
-      </div>
+      </div> */}
       <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Nome" />
         <Input

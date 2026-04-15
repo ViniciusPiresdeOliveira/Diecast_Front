@@ -1,7 +1,7 @@
 "use client";
 import { Pagination } from "antd";
 
-import { CirclePlus, Download } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { getFilterMiniatura } from "../api/miniatura";
 import { FilterMiniatura } from "../api/miniatura/types";
@@ -12,7 +12,7 @@ import { Filter } from "./components/Filter";
 import { ModalFormMini } from "./components/ModalFormMini";
 import { ModalPhoto } from "./components/ModalPhoto";
 import { Miniatura, PaginationInfo } from "./types";
-import { handleDownloadCatalog, PaginationDefault } from "./utils";
+import { PAGE_INITIAL, PaginationDefault } from "./utils";
 
 export default function Home() {
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
@@ -23,6 +23,7 @@ export default function Home() {
   const [listMini, setListMini] = useState<Miniatura[]>([]);
   const [pagination, setPagination] =
     useState<PaginationInfo>(PaginationDefault);
+  const [pageNumber, setPageNumber] = useState(PAGE_INITIAL);
 
   const handleVisibleFormMini = () => {
     setVisibleModalFormMini((e) => !e);
@@ -80,20 +81,16 @@ export default function Home() {
       escala: scale || null,
       precoMin: minPrice || null,
       precoMax: maxPrice ?? null,
-      page:
-        amount !== pagination.elementsPerPage
-          ? 0
-          : Math.max(0, pagination.pageNumber - 1),
+      page: pageNumber === 0 ? 0 : pageNumber - 1,
       size: amount,
     };
     try {
       const { data } = await getFilterMiniatura(filterPayload);
       setListMini(data.content);
       setPagination({
-        pageNumber: data.pageable.pageNumber + 1,
-        pageNumberInitial: data.pageable.pageNumber + 1,
+        // pageNumber: data.pageable.pageNumber + 1,
         totalPages: data.totalPages,
-        pageSize: data.pageSize,
+        pageSize: data.pageable.pageSize,
         totalElements: data.totalElements,
         elementsPerPage: data.numberOfElements,
       });
@@ -104,28 +101,20 @@ export default function Home() {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("pagionada", pagination.pageNumber);
-  //   setPagination((prev) => ({
-  //     ...prev,
-  //     pageNumber: 0, // antd começa em 1
-  //   }));
-  // }, [amount]);
+  const refreshMiniList = () => {
+    setPageNumber(PAGE_INITIAL);
+  };
+  console.log("pagination", pagination);
 
   useEffect(() => {
-    // console.log("pagionada", pagination.pageNumber);
-    // setPagination((prev) => ({
-    //   ...prev,
-    //   pageNumber: 0, // antd começa em 1
-    // }));
-    if (pagination.pageNumberInitial !== pagination.pageNumber) {
-      fetchGetFilterMiniaturas();
-    }
-  }, [pagination.pageNumber]);
-
-  useEffect(() => {
+    // if (pagination.pageNumber !== 0) {
     fetchGetFilterMiniaturas();
-  }, []);
+    // }
+  }, [pageNumber]);
+
+  // useEffect(() => {
+  //   fetchGetFilterMiniaturas();
+  // }, []);
 
   console.log("pagination", pagination);
 
@@ -139,12 +128,12 @@ export default function Home() {
       <Header handleVisibilityMenu={handleVisibilityMenu} /> */}
       <div className="flex justify-center pt-12 relative">
         <div className="flex justify-end absolute right-1/200 p-3.5 top-0 cursor-pointer ">
-          <Download
+          {/* <Download
             color="#1f3565"
             width={36}
             height={36}
             onClick={handleDownloadCatalog}
-          />
+          /> */}
           <CirclePlus
             color="#1f3565"
             width={36}
@@ -203,18 +192,16 @@ export default function Home() {
           mini={null}
           visible={visibleModalFormMini}
           handleVisibleFormMini={handleVisibleFormMini}
+          refreshMiniList={refreshMiniList}
         />
       </div>
       <Pagination
-        current={pagination.pageNumber}
+        current={pageNumber}
         pageSize={pagination.pageSize}
         total={pagination.totalElements}
         showSizeChanger={false}
         onChange={(page) => {
-          setPagination((prev) => ({
-            ...prev,
-            pageNumber: page, // antd começa em 1
-          }));
+          setPageNumber(page);
         }}
       />
     </div>

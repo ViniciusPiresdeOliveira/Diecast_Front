@@ -8,12 +8,13 @@ export const formatImage = (img?: string) => {
 };
 
 export const PaginationDefault: PaginationInfo = {
-  pageNumber: 0,
-  pageNumberInitial: 0,
   totalPages: 0,
   totalElements: 0,
-  elementsPerPage: 10,
+  elementsPerPage: 30,
+  pageSize: 1,
 };
+
+export const PAGE_INITIAL = 0;
 
 export const minis: Miniatura[] = [
   {

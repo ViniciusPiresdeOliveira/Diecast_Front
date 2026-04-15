@@ -35,6 +35,7 @@ export const ModalFormMini = ({
   mini,
   handleVisibleFormMini,
   type,
+  refreshMiniList,
 }: ModalFormMiniProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -130,6 +131,7 @@ export const ModalFormMini = ({
     showLoading();
     try {
       await postMiniatura(mini);
+      refreshMiniList();
       toast.success(`${mini.name} cadastrado com sucesso`);
       reset();
       handleVisibleFormMini();
