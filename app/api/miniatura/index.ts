@@ -1,7 +1,7 @@
-import { mapMiniaturaPayload } from "@/app/(home)/components/ModalFormMini/utils";
 import { MiniFormValues } from "@/app/(home)/components/ModalFormMini/validation";
 import api from "..";
 import { FilterMiniatura } from "./types";
+import { buildMiniaturaFormData } from "./utils";
 
 export const getFilterMiniatura = (filters: FilterMiniatura) => {
   return api.post("/miniaturas/filtro", filters);
@@ -15,23 +15,18 @@ export const deleteMiniById = (id: number) => {
   return api.delete(`/miniaturas/${id}`);
 };
 
+export const putMiniatura = (mini: MiniFormValues, idMini: number) => {
+  const { formData } = buildMiniaturaFormData(mini);
+
+  return api.put(`/miniaturas/${idMini}`, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+};
+
 export const postMiniatura = (mini: MiniFormValues) => {
-  const formData = new FormData();
-
-  const file = mini.image?.[0]?.originFileObj;
-
-  const payload = mapMiniaturaPayload(mini);
-
-  formData.append(
-    "miniatura",
-    new Blob([JSON.stringify(payload)], {
-      type: "application/json",
-    }),
-  );
-
-  if (file) {
-    formData.append("imagem", file);
-  }
+  const { formData } = buildMiniaturaFormData(mini);
 
   return api.post("/miniaturas", formData, {
     headers: {

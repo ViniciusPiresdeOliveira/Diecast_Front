@@ -56,6 +56,8 @@ export default function Home() {
   }, [visibleModalFormMini]);
 
   const handleSelectedMini = (mini: Miniatura | null) => {
+    console.log("handleSelectedMini", mini);
+
     setSelectedMini(mini);
   };
 

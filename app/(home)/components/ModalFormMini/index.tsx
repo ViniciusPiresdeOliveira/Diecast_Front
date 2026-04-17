@@ -1,7 +1,7 @@
 import { getAllScalesMini } from "@/app/api/escala_miniatura";
 import { getAllLinesMini } from "@/app/api/linha_miniatura";
 import { getAllMarksMini } from "@/app/api/marca_miniatura";
-import { postMiniatura } from "@/app/api/miniatura";
+import { postMiniatura, putMiniatura } from "@/app/api/miniatura";
 import { getAllStatusMini } from "@/app/api/status_miniatura";
 import { getAllTypesMini } from "@/app/api/tipo_miniatura";
 import { Label } from "@/app/components/Label";
@@ -54,6 +54,7 @@ export const ModalFormMini = ({
     control,
     handleSubmit,
     reset,
+    watch,
     formState: { errors, isDirty },
   } = useForm({
     resolver: yupResolver(miniSchema),
@@ -125,13 +126,19 @@ export const ModalFormMini = ({
       hideLoading();
     }
   };
+  console.log("mini assd f gff ", watch());
 
-  const handlePostMini = async (mini: MiniFormValues) => {
+  const handleRegisterMini = async (miniForm: MiniFormValues) => {
     showLoading();
     try {
-      await postMiniatura(mini);
+      if (mini) {
+        await putMiniatura(miniForm, mini?.id);
+      } else {
+        await postMiniatura(miniForm);
+      }
       refreshMiniList();
-      toast.success(`${mini.name} cadastrado com sucesso`);
+      const messageSuccess = `${miniForm.name} ${mini ? "atualizado" : "cadastrado"} com sucesso`;
+      toast.success(messageSuccess);
       reset();
       handleVisibleFormMini(type);
     } catch (e) {
@@ -232,7 +239,7 @@ export const ModalFormMini = ({
     <Modal
       title={type === "add" ? "Criar Miniatura" : "Editar Miniatura"}
       open={isModalOpen}
-      onOk={handleSubmit(handlePostMini)}
+      onOk={handleSubmit(handleRegisterMini)}
       okButtonProps={{
         disabled: hasErrorInForm || !isDirty,
       }}
