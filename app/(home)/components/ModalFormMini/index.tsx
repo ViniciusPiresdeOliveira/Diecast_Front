@@ -181,11 +181,14 @@ export const ModalFormMini = ({
 
   useEffect(() => {
     setIsModalOpen(visible);
+    if (!visible) {
+      reset();
+    }
   }, [visible, mini, type, reset]);
 
-  useEffect(() => {
-    setIsModalOpen(visible);
-  }, [visible]);
+  // useEffect(() => {
+  //   setIsModalOpen(visible);
+  // }, [visible]);
 
   useEffect(() => {
     if (!mini) {
