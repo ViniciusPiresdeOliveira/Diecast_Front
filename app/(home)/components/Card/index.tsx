@@ -1,16 +1,41 @@
+import { deleteMiniById } from "@/app/api/miniatura";
 import { ImageNotFound } from "@/app/components/ImageNotFound";
+import { useLoading } from "@/app/hooks/useLoading";
+import { getErrorMessage } from "@/app/utils";
+import { Popconfirm } from "antd";
+import { Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { toast } from "react-toastify";
 import { formatImage } from "../../utils";
 import { CardProps } from "./types";
 
-export const Card = ({ mini, handleSelectedMini }: CardProps) => {
+export const Card = ({
+  mini,
+  handleSelectedMini,
+  handleVisibleFormMini,
+  refreshMiniList,
+}: CardProps) => {
   const stylesMiniWithCar = "relative";
   const stylesMiniWithoutCar = "flex items-center justify-center";
   const router = useRouter();
+  const { hideLoading, showLoading } = useLoading();
 
   const handleNavigateToMiniById = () => {
     router.push(`/mini/${mini.id}`);
+  };
+
+  const handleDeleteMiniById = async () => {
+    showLoading();
+    try {
+      await deleteMiniById(mini.id);
+      refreshMiniList();
+      toast.success(`${mini.nome} apagada com sucesso`);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      hideLoading();
+    }
   };
 
   return (
@@ -26,7 +51,7 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
       hover:bg-gray-200
       hover:shadow-md hover:shadow-black/30
       hover:border-blue-700
-      h-[195px]
+      h-[195px] relative
       "
     >
       <div
@@ -50,6 +75,28 @@ export const Card = ({ mini, handleSelectedMini }: CardProps) => {
           <ImageNotFound />
         )}
       </div>
+      <button
+        onClick={() => {
+          handleSelectedMini(mini);
+          console.log("mini asd 22", mini);
+
+          handleVisibleFormMini("edit");
+        }}
+        className="z-10 cursor-pointer w-8 h-8 absolute right-8 top-1 border-0 flex items-center justify-center ransition-transform duration-300 hover:scale-110"
+      >
+        <Pencil size={20} width={20} height={20} color="#07ac5a" />
+      </button>
+
+      <button className="z-10 cursor-pointer w-8 h-8 absolute right-1 top-1 border-0 border-blue-primary rounded-full flex items-center justify-center ransition-transform duration-300 hover:scale-110">
+        <Popconfirm
+          title="Deseja excluir?"
+          onConfirm={handleDeleteMiniById}
+          okText="Sim"
+          cancelText="Não"
+        >
+          <Trash2 size={20} width={20} height={20} color="#f31a13" />
+        </Popconfirm>
+      </button>
 
       <button
         onClick={handleNavigateToMiniById}

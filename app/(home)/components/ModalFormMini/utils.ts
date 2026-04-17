@@ -1,17 +1,16 @@
-import { UploadFile } from "antd";
 import { MiniFormValues } from "./validation";
 
 export const defaultValuesForm = {
-  name: "",
-  brand: "",
-  year: undefined,
-  types: [],
-  line: "",
-  price: undefined,
-  stock: 1,
-  scale: "",
-  status: "",
-  image: [] as UploadFile[],
+  id: 0,
+  nome: "",
+  marca: undefined,
+  tipos: undefined,
+  status: undefined,
+  imagem: "", // byte[] → array de números
+  ano: 0,
+  escala: undefined,
+  linha: undefined,
+  valor: 0, // BigDecimal → number
 };
 
 export const mapMiniaturaPayload = (mini: MiniFormValues) => {

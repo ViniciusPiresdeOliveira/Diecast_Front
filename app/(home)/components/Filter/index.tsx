@@ -27,28 +27,11 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
 
   return (
     <>
-      {/* <div className="mb-2 flex flex-col">
-        <Label className="max-sm:text-white" text="Minis por página" />
-        <Select
-          value={amount}
-          onChange={handleAmount}
-          placeholder="Selecione"
-          className="w-full"
-          options={[
-            { value: 10, label: "10" },
-            { value: 20, label: "20" },
-            { value: 30, label: "30" },
-            { value: 40, label: "40" },
-            { value: 50, label: "50" },
-            { value: 100, label: "100" },
-          ]}
-        />
-      </div> */}
       <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Nome" />
         <Input
           placeholder={prefixExample + "Ferrari"}
-          value={name}
+          value={name ?? ""}
           onChange={(e) => handleName(e.target.value)}
         />
       </div>

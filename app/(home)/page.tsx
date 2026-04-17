@@ -10,11 +10,27 @@ import { useLoading } from "../hooks/useLoading";
 import { Card } from "./components/Card";
 import { Filter } from "./components/Filter";
 import { ModalFormMini } from "./components/ModalFormMini";
+import { TypeOfModalAction } from "./components/ModalFormMini/types";
 import { ModalPhoto } from "./components/ModalPhoto";
 import { Miniatura, PaginationInfo } from "./types";
 import { PAGE_INITIAL, PaginationDefault } from "./utils";
 
 export default function Home() {
+  const {
+    maxPrice,
+    amount,
+    scale,
+    minPrice,
+    name,
+    year,
+    mark,
+    line,
+    type,
+    status,
+    clearFilters,
+  } = useFilter();
+  const { showLoading, hideLoading } = useLoading();
+
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
   const [selectedMini, setSelectedMini] = useState<Miniatura | null>(null);
   const [visibleModalFormMini, setVisibleModalFormMini] = useState(false);
@@ -24,18 +40,28 @@ export default function Home() {
   const [pagination, setPagination] =
     useState<PaginationInfo>(PaginationDefault);
   const [pageNumber, setPageNumber] = useState(PAGE_INITIAL);
+  const [typeOfModalAction, setTypeOfModalAction] =
+    useState<TypeOfModalAction>("add");
 
-  const handleVisibleFormMini = () => {
+  const handleVisibleFormMini = (type: TypeOfModalAction) => {
+    setTypeOfModalAction(type);
     setVisibleModalFormMini((e) => !e);
   };
+
+  useEffect(() => {
+    if (visibleModalFormMini === false) {
+      setTypeOfModalAction("add");
+      handleSelectedMini(null);
+    }
+  }, [visibleModalFormMini]);
 
   const handleSelectedMini = (mini: Miniatura | null) => {
     setSelectedMini(mini);
   };
 
-  const handleVisibilityMenu = () => {
-    setMenuVisibility((e) => !e);
-  };
+  // const handleVisibilityMenu = () => {
+  //   setMenuVisibility((e) => !e);
+  // };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -55,22 +81,14 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  const {
-    maxPrice,
-    amount,
-    scale,
-    minPrice,
-    name,
-    year,
-    mark,
-    line,
-    type,
-    status,
-  } = useFilter();
-  const { showLoading, hideLoading } = useLoading();
-
+  console.log("name eee 1", name);
   const fetchGetFilterMiniaturas = async () => {
+    console.log("name eee 2", name);
     showLoading();
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // opcional (animação)
+    });
     const filterPayload: FilterMiniatura = {
       nome: name || null,
       marcaId: mark || null,
@@ -103,7 +121,11 @@ export default function Home() {
 
   const refreshMiniList = () => {
     setPageNumber(PAGE_INITIAL);
+    if (pageNumber === 0) {
+      fetchGetFilterMiniaturas();
+    }
   };
+
   console.log("pagination", pagination);
 
   useEffect(() => {
@@ -139,7 +161,7 @@ export default function Home() {
             width={36}
             height={36}
             className="ml-5"
-            onClick={handleVisibleFormMini}
+            onClick={() => handleVisibleFormMini("add")}
           />
         </div>
         <div ref={sentinelRef} className="h-[1px]" />{" "}
@@ -165,6 +187,8 @@ export default function Home() {
                 key={index}
                 mini={mini}
                 handleSelectedMini={handleSelectedMini}
+                handleVisibleFormMini={handleVisibleFormMini}
+                refreshMiniList={refreshMiniList}
               />
             ))
           ) : (
@@ -181,14 +205,14 @@ export default function Home() {
             </div>
           )}
         </div>
-        {selectedMini && (
+        {selectedMini && typeOfModalAction !== "edit" && (
           <ModalPhoto
             selectedMini={selectedMini}
             handleSelectedMini={handleSelectedMini}
           />
         )}
         <ModalFormMini
-          type="add"
+          type={typeOfModalAction}
           mini={null}
           visible={visibleModalFormMini}
           handleVisibleFormMini={handleVisibleFormMini}

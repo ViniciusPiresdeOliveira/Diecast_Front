@@ -21,7 +21,7 @@ export const miniSchema = yup.object({
     .number()
     .typeError("Estoque deve ser um número")
     .required("Estoque é obrigatório")
-    .min(0, "Não pode ser negativo"),
+    .min(1, "Tem que ser no mínimo 1"),
   status: yup.string().required("Status é obrigatório"),
   scale: yup.string().required("Escala é obrigatória"),
   image: yup

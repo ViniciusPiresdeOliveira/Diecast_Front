@@ -16,7 +16,7 @@ type FilterContextType = {
   line: string[] | null;
   status: string[] | null;
   scale: string[] | null;
-  name: string;
+  name: string | null;
   year: number | null;
   minPrice: number | null;
   maxPrice: number | null;
@@ -41,7 +41,7 @@ export const FilterContext = createContext<FilterContextType | undefined>(
 
 export const FilterProvider = ({ children }: { children: ReactNode }) => {
   const [amount, setMount] = useState(PaginationDefault.elementsPerPage);
-  const [name, setName] = useState("");
+  const [name, setName] = useState<string | null>(null);
   const [mark, setMark] = useState<string[] | null>(null);
   const [status, setStatus] = useState<string[] | null>(null);
   const [scale, setScale] = useState<string[] | null>(null);
@@ -75,7 +75,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
     setMark(value);
   }, []);
 
-  const handleName = useCallback((value: string) => {
+  const handleName = useCallback((value: string | null) => {
     setName(value);
   }, []);
 
@@ -92,11 +92,13 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   const clearFilters = useCallback(() => {
-    setMark([""]);
-    setName("");
-    setType([""]);
-    setLine([""]);
+    setName(null);
+    setMark(null);
     setYear(null);
+    setType(null);
+    setLine(null);
+    setStatus(null);
+    setScale(null);
     setMinPrice(null);
     setMaxPrice(null);
   }, []);

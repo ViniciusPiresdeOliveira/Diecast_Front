@@ -11,6 +11,10 @@ export const getMiniById = (id: number) => {
   return api.get(`/miniaturas/${id}`);
 };
 
+export const deleteMiniById = (id: number) => {
+  return api.delete(`/miniaturas/${id}`);
+};
+
 export const postMiniatura = (mini: MiniFormValues) => {
   const formData = new FormData();
 

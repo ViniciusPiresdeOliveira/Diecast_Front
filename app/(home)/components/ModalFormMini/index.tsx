@@ -68,7 +68,7 @@ export const ModalFormMini = ({
   };
 
   const handleCancel = () => {
-    handleVisibleFormMini();
+    handleVisibleFormMini(type);
     reset();
   };
 
@@ -134,7 +134,7 @@ export const ModalFormMini = ({
       refreshMiniList();
       toast.success(`${mini.name} cadastrado com sucesso`);
       reset();
-      handleVisibleFormMini();
+      handleVisibleFormMini(type);
     } catch (e) {
       toast.error(getErrorMessage(e));
     } finally {
@@ -173,13 +173,9 @@ export const ModalFormMini = ({
     }
   }, [refreshRequests]);
 
-  // useEffect(() => {
-  //   setIsModalOpen(visible);
-
-  //   if (mini && type === "edit") {
-  //     reset(mini);
-  //   }
-  // }, [visible, mini, type, reset]);
+  useEffect(() => {
+    setIsModalOpen(visible);
+  }, [visible, mini, type, reset]);
 
   useEffect(() => {
     setIsModalOpen(visible);
@@ -188,7 +184,7 @@ export const ModalFormMini = ({
   const classNameContainerInputs = "flex-col mb-2";
   const hasErrorInForm = Object.keys(errors).length > 0;
 
-  console.log("errors yup => ", errors);
+  console.log("mini asd ", mini);
 
   return (
     <Modal
