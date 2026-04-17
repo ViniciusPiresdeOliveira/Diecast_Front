@@ -6,11 +6,11 @@ export const defaultValuesForm = {
   marca: undefined,
   tipos: undefined,
   status: undefined,
-  imagem: "", // byte[] → array de números
+  imagem: "",
   ano: 0,
   escala: undefined,
   linha: undefined,
-  valor: 0, // BigDecimal → number
+  valor: 0,
 };
 
 export const mapMiniaturaPayload = (mini: MiniFormValues) => {

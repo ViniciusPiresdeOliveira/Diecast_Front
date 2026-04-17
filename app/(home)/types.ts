@@ -27,12 +27,12 @@ export interface Miniatura {
   nome: string;
   marca: MarcaMiniatura;
   tipos: TipoMiniatura[];
-  status?: StatusMiniatura;
+  status: StatusMiniatura;
   imagem?: string; // byte[] → array de números
-  ano?: number;
-  escala?: EscalaMiniatura;
-  linha?: LinhaMiniatura;
-  valor?: number; // BigDecimal → number
+  ano: number;
+  escala: EscalaMiniatura;
+  linha: LinhaMiniatura;
+  valor: number; // BigDecimal → number
 }
 
 export interface PaginationInfo {

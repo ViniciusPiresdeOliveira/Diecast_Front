@@ -26,6 +26,7 @@ import { UploadIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
+import { formatImage } from "../../utils";
 import { ModalFormMiniProps } from "./types";
 import { defaultValuesForm } from "./utils";
 import { MiniFormValues, miniSchema } from "./validation";
@@ -53,15 +54,13 @@ export const ModalFormMini = ({
     control,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isDirty },
   } = useForm({
     resolver: yupResolver(miniSchema),
     defaultValues: {
       ...defaultValuesForm,
     },
   });
-
-  console.log("listMarksMini", listMarksMini);
 
   const handleForceRefreshLists = (type: TypeAdd | "") => {
     setRefreshRequests(() => type);
@@ -181,8 +180,51 @@ export const ModalFormMini = ({
     setIsModalOpen(visible);
   }, [visible]);
 
+  useEffect(() => {
+    if (!mini) {
+      reset(defaultValuesForm);
+      return;
+    }
+    reset({
+      name: mini.nome,
+      year: mini.ano,
+      price: Math.round(mini.valor * 100), // converte pra centavos
+      stock: 1, // se tiver no objeto real
+      brand: String(mini.marca?.id),
+      types: mini.tipos?.map((t) => String(t.id)) || [],
+      line: String(mini.linha?.id),
+      status: String(mini.status?.id),
+      scale: String(mini.escala?.id),
+      image: mini.imagem
+        ? [
+            {
+              uid: "-1",
+              name: "image.png",
+              status: "done",
+              url: formatImage(mini.imagem),
+            },
+          ]
+        : [],
+    });
+  }, [mini, reset]);
+
   const classNameContainerInputs = "flex-col mb-2";
   const hasErrorInForm = Object.keys(errors).length > 0;
+
+  // const manipulateStateOfSaveButton = () => {
+  //   if (type === "edit") {
+  //     if (isDirty) {
+  //       return false;
+  //     }
+  //     return true;
+  //   }
+  //   if (type === "add") {
+  //     if (isDirty) {
+  //       return false;
+  //     }
+  //     return true;
+  //   }
+  // };
 
   console.log("mini asd ", mini);
 
@@ -192,7 +234,7 @@ export const ModalFormMini = ({
       open={isModalOpen}
       onOk={handleSubmit(handlePostMini)}
       okButtonProps={{
-        disabled: hasErrorInForm,
+        disabled: hasErrorInForm || !isDirty,
       }}
       onCancel={handleCancel}
       okText="Salvar"

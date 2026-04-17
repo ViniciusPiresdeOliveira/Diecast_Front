@@ -97,8 +97,8 @@ export default function Home() {
       linhaId: line || null,
       status: status || null,
       escala: scale || null,
-      precoMin: minPrice || null,
-      precoMax: maxPrice ?? null,
+      precoMin: minPrice ? minPrice / 100 : null,
+      precoMax: maxPrice ? maxPrice / 100 : null,
       page: pageNumber === 0 ? 0 : pageNumber - 1,
       size: amount,
     };
@@ -182,9 +182,9 @@ export default function Home() {
           }`}
         >
           {hasMiniInList ? (
-            listMini.map((mini, index) => (
+            listMini.map((mini) => (
               <Card
-                key={index}
+                key={mini.id}
                 mini={mini}
                 handleSelectedMini={handleSelectedMini}
                 handleVisibleFormMini={handleVisibleFormMini}
@@ -213,7 +213,7 @@ export default function Home() {
         )}
         <ModalFormMini
           type={typeOfModalAction}
-          mini={null}
+          mini={selectedMini}
           visible={visibleModalFormMini}
           handleVisibleFormMini={handleVisibleFormMini}
           refreshMiniList={refreshMiniList}

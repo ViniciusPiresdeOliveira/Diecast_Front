@@ -25,6 +25,20 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
     handleLine,
   } = useFilter();
 
+  const formatCurrency = (value?: number) => {
+    if (!value) return "R$ 0,00";
+
+    return (value / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
+  const parseCurrency = (value: string | undefined) => {
+    if (!value) return 0;
+    return Number(value.replace(/\D/g, ""));
+  };
+
   return (
     <>
       <div className="mb-2 flex flex-col">
@@ -121,23 +135,27 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
 
       <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Preço mínimo" />
-        <InputNumber
+        <Input
           style={{ width: "100%" }}
-          min={0}
-          type="number"
-          value={minPrice ?? undefined}
-          onChange={(value) => handleMinPrice(value)}
+          value={formatCurrency(minPrice || 0)}
+          onChange={(e) => {
+            const numericValue = parseCurrency(e.target.value);
+            handleMinPrice(numericValue);
+          }}
+          inputMode="numeric"
         />
       </div>
 
       <div className="mb-0 flex flex-col">
         <Label className="max-sm:text-white" text="Preço máximo" />
-        <InputNumber
+        <Input
           style={{ width: "100%" }}
-          min={0}
-          type="number"
-          value={maxPrice ?? undefined}
-          onChange={(value) => handleMaxPrice(value)}
+          value={formatCurrency(maxPrice || 0)}
+          onChange={(e) => {
+            const numericValue = parseCurrency(e.target.value);
+            handleMaxPrice(numericValue);
+          }}
+          inputMode="numeric"
         />
       </div>
 
