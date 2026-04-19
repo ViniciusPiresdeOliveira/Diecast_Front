@@ -69,8 +69,8 @@ export const ModalAddItens = ({
 
       toast.success(`${value} criado com sucesso`);
 
-      await fetchGetAllTypeAdd(); // 🔥 recarrega lista
-      handleForceRefreshLists?.(typeAdd); // atualiza pai
+      await fetchGetAllTypeAdd();
+      handleForceRefreshLists?.(typeAdd);
     } catch (e) {
       toast.error(getErrorMessage(e));
     } finally {

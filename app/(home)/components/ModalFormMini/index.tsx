@@ -37,6 +37,11 @@ export const ModalFormMini = ({
   handleVisibleFormMini,
   type,
   refreshMiniList,
+  refreshMarksList,
+  refreshTypesList,
+  refreshLinesList,
+  refreshStatusList,
+  refreshScalesList,
 }: ModalFormMiniProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -54,7 +59,6 @@ export const ModalFormMini = ({
     control,
     handleSubmit,
     reset,
-    watch,
     formState: { errors, isDirty },
   } = useForm({
     resolver: yupResolver(miniSchema),
@@ -63,7 +67,35 @@ export const ModalFormMini = ({
     },
   });
 
-  const handleForceRefreshLists = (type: TypeAdd | "") => {
+  const handleRefreshByType = async (type: TypeAdd | ""): Promise<void> => {
+    switch (type) {
+      case "marca":
+        await refreshMarksList();
+        break;
+
+      case "tipos":
+        await refreshTypesList();
+        break;
+
+      case "linha":
+        await refreshLinesList();
+        break;
+
+      case "status":
+        await refreshStatusList();
+        break;
+
+      case "escala":
+        await refreshScalesList();
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  const handleForceRefreshLists = async (type: TypeAdd | "") => {
+    await handleRefreshByType(type);
     setRefreshRequests(() => type);
   };
 
@@ -126,7 +158,6 @@ export const ModalFormMini = ({
       hideLoading();
     }
   };
-  console.log("mini assd f gff ", watch());
 
   const handleRegisterMini = async (miniForm: MiniFormValues) => {
     showLoading();
@@ -186,10 +217,6 @@ export const ModalFormMini = ({
     }
   }, [visible, mini, type, reset]);
 
-  // useEffect(() => {
-  //   setIsModalOpen(visible);
-  // }, [visible]);
-
   useEffect(() => {
     if (!mini) {
       reset(defaultValuesForm);
@@ -220,23 +247,6 @@ export const ModalFormMini = ({
 
   const classNameContainerInputs = "flex-col mb-2";
   const hasErrorInForm = Object.keys(errors).length > 0;
-
-  // const manipulateStateOfSaveButton = () => {
-  //   if (type === "edit") {
-  //     if (isDirty) {
-  //       return false;
-  //     }
-  //     return true;
-  //   }
-  //   if (type === "add") {
-  //     if (isDirty) {
-  //       return false;
-  //     }
-  //     return true;
-  //   }
-  // };
-
-  console.log("mini asd ", mini);
 
   return (
     <Modal

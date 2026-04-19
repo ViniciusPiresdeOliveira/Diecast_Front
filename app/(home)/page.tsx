@@ -13,7 +13,6 @@ import { getFilterMiniatura } from "../api/miniatura";
 import { FilterMiniatura } from "../api/miniatura/types";
 import { useFilter } from "../hooks/useFilter";
 import { useLoading } from "../hooks/useLoading";
-import { GenericGetTypes } from "../types";
 import { toNumberArray } from "../utils";
 import { Card } from "./components/Card";
 import { Filter } from "./components/Filter";
@@ -51,11 +50,6 @@ export default function Home() {
   const [pageNumber, setPageNumber] = useState(PAGE_INITIAL);
   const [typeOfModalAction, setTypeOfModalAction] =
     useState<TypeOfModalAction>("add");
-  const [listMarksMini, setListMarksMini] = useState<GenericGetTypes[]>([]);
-  const [listTypesMini, setListTypesMini] = useState<GenericGetTypes[]>([]);
-  const [listLinesMini, setListLinesMini] = useState<GenericGetTypes[]>([]);
-  const [listStatusMini, setListStatusMini] = useState<GenericGetTypes[]>([]);
-  const [listScalesMini, setListScalesMini] = useState<GenericGetTypes[]>([]);
   const [filterLists, setFilterLists] = useState<FilterLists>({
     marks: [],
     types: [],
@@ -98,7 +92,6 @@ export default function Home() {
     return () => observer.disconnect();
   }, []);
 
-  console.log("name eee 1", name);
   const fetchGetFilterMiniaturas = async () => {
     showLoading();
     window.scrollTo({
@@ -144,104 +137,87 @@ export default function Home() {
     }
   };
 
-  // const fetchGetAllScalesMini = async () => {
-  //   showLoading();
-  //   try {
-  //     const { data } = await getAllScalesMini();
-  //     setListScalesMini(data);
-  //   } catch (e) {
-  //   } finally {
-  //     hideLoading();
-  //   }
-  // };
-
-  // const fetchGetAllTypesMini = async () => {
-  //   showLoading();
-  //   try {
-  //     const { data } = await getAllTypesMini();
-  //     setListTypesMini(data);
-  //   } catch (e) {
-  //   } finally {
-  //     hideLoading();
-  //   }
-  // };
-
-  // const fetchGetAllMarksMini = async () => {
-  //   showLoading();
-  //   try {
-  //     const { data } = await getAllMarksMini();
-  //     setListMarksMini(data);
-  //   } catch (e) {
-  //   } finally {
-  //     hideLoading();
-  //   }
-  // };
-
-  // const fetchGetAllLinesMini = async () => {
-  //   showLoading();
-  //   try {
-  //     const { data } = await getAllLinesMini();
-  //     setListLinesMini(data);
-  //   } catch (e) {
-  //   } finally {
-  //     hideLoading();
-  //   }
-  // };
-
-  // const fetchGetAllStatusMini = async () => {
-  //   showLoading();
-  //   try {
-  //     const { data } = await getAllStatusMini();
-  //     setListStatusMini(data);
-  //   } catch (e) {
-  //   } finally {
-  //     hideLoading();
-  //   }
-  // };
-
-  console.log("pagination", pagination);
-
-  useEffect(() => {
-    // if (pagination.pageNumber !== 0) {
-    fetchGetFilterMiniaturas();
-    // }
-  }, [pageNumber]);
-
-  // useEffect(() => {
-  //   fetchGetAllTypesMini();
-  //   fetchGetAllMarksMini();
-  //   fetchGetAllLinesMini();
-  //   fetchGetAllStatusMini();
-  //   fetchGetAllScalesMini();
-  // }, []);
-
-  const fetchAllFilter = async () => {
+  const fetchGetAllTypes = async () => {
     showLoading();
     try {
-      const [types, marks, lines, status, scales] = await Promise.all([
-        getAllTypesMini(),
-        getAllMarksMini(),
-        getAllLinesMini(),
-        getAllStatusMini(),
-        getAllScalesMini(),
-      ]);
+      const response = await getAllTypesMini();
 
-      setFilterLists({
-        types: types.data,
-        marks: marks.data,
-        lines: lines.data,
-        status: status.data,
-        scales: scales.data,
-      });
+      setFilterLists((prev) => ({
+        ...prev,
+        types: response.data,
+      }));
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const fetchGetAllMarks = async () => {
+    showLoading();
+    try {
+      const response = await getAllMarksMini();
+
+      setFilterLists((prev) => ({
+        ...prev,
+        marks: response.data,
+      }));
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const fetchGetAllLines = async () => {
+    showLoading();
+    try {
+      const response = await getAllLinesMini();
+
+      setFilterLists((prev) => ({
+        ...prev,
+        lines: response.data,
+      }));
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const fetchGetAllStatus = async () => {
+    showLoading();
+    try {
+      const response = await getAllStatusMini();
+
+      setFilterLists((prev) => ({
+        ...prev,
+        status: response.data,
+      }));
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const fetchGetAllScales = async () => {
+    showLoading();
+    try {
+      const response = await getAllScalesMini();
+
+      setFilterLists((prev) => ({
+        ...prev,
+        scales: response.data,
+      }));
     } finally {
       hideLoading();
     }
   };
 
   useEffect(() => {
-    fetchAllFilter();
+    fetchGetAllTypes();
+    fetchGetAllMarks();
+    fetchGetAllLines();
+    fetchGetAllStatus();
+    fetchGetAllScales();
   }, []);
-  console.log("pagination", pagination);
+
+  useEffect(() => {
+    fetchGetFilterMiniaturas();
+  }, [pageNumber]);
 
   const hasMiniInList = listMini.length > 0;
   return (
@@ -323,6 +299,11 @@ export default function Home() {
           visible={visibleModalFormMini}
           handleVisibleFormMini={handleVisibleFormMini}
           refreshMiniList={refreshMiniList}
+          refreshMarksList={fetchGetAllMarks}
+          refreshTypesList={fetchGetAllTypes}
+          refreshLinesList={fetchGetAllLines}
+          refreshStatusList={fetchGetAllStatus}
+          refreshScalesList={fetchGetAllScales}
         />
       </div>
       <Pagination
