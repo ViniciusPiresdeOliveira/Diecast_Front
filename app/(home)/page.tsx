@@ -1,14 +1,23 @@
 "use client";
 import { Pagination } from "antd";
 
+import { getAllScalesMini } from "@/app/api/escala_miniatura";
+import { getAllLinesMini } from "@/app/api/linha_miniatura";
+import { getAllMarksMini } from "@/app/api/marca_miniatura";
+import { getAllStatusMini } from "@/app/api/status_miniatura";
+import { getAllTypesMini } from "@/app/api/tipo_miniatura";
 import { CirclePlus } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import { getFilterMiniatura } from "../api/miniatura";
 import { FilterMiniatura } from "../api/miniatura/types";
 import { useFilter } from "../hooks/useFilter";
 import { useLoading } from "../hooks/useLoading";
+import { GenericGetTypes } from "../types";
+import { toNumberArray } from "../utils";
 import { Card } from "./components/Card";
 import { Filter } from "./components/Filter";
+import { FilterLists } from "./components/Filter/types";
 import { ModalFormMini } from "./components/ModalFormMini";
 import { TypeOfModalAction } from "./components/ModalFormMini/types";
 import { ModalPhoto } from "./components/ModalPhoto";
@@ -42,6 +51,18 @@ export default function Home() {
   const [pageNumber, setPageNumber] = useState(PAGE_INITIAL);
   const [typeOfModalAction, setTypeOfModalAction] =
     useState<TypeOfModalAction>("add");
+  const [listMarksMini, setListMarksMini] = useState<GenericGetTypes[]>([]);
+  const [listTypesMini, setListTypesMini] = useState<GenericGetTypes[]>([]);
+  const [listLinesMini, setListLinesMini] = useState<GenericGetTypes[]>([]);
+  const [listStatusMini, setListStatusMini] = useState<GenericGetTypes[]>([]);
+  const [listScalesMini, setListScalesMini] = useState<GenericGetTypes[]>([]);
+  const [filterLists, setFilterLists] = useState<FilterLists>({
+    marks: [],
+    types: [],
+    lines: [],
+    status: [],
+    scales: [],
+  });
 
   const handleVisibleFormMini = (type: TypeOfModalAction) => {
     setTypeOfModalAction(type);
@@ -56,14 +77,8 @@ export default function Home() {
   }, [visibleModalFormMini]);
 
   const handleSelectedMini = (mini: Miniatura | null) => {
-    console.log("handleSelectedMini", mini);
-
     setSelectedMini(mini);
   };
-
-  // const handleVisibilityMenu = () => {
-  //   setMenuVisibility((e) => !e);
-  // };
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -85,7 +100,6 @@ export default function Home() {
 
   console.log("name eee 1", name);
   const fetchGetFilterMiniaturas = async () => {
-    console.log("name eee 2", name);
     showLoading();
     window.scrollTo({
       top: 0,
@@ -93,12 +107,12 @@ export default function Home() {
     });
     const filterPayload: FilterMiniatura = {
       nome: name || null,
-      marcaId: mark || null,
+      marcaIds: toNumberArray(mark),
       ano: year || null,
-      tipoId: type || null,
-      linhaId: line || null,
-      status: status || null,
-      escala: scale || null,
+      tipoIds: toNumberArray(type),
+      linhaIds: toNumberArray(line),
+      statusIds: toNumberArray(status),
+      escalaIds: toNumberArray(scale),
       precoMin: minPrice ? minPrice / 100 : null,
       precoMax: maxPrice ? maxPrice / 100 : null,
       page: pageNumber === 0 ? 0 : pageNumber - 1,
@@ -108,14 +122,16 @@ export default function Home() {
       const { data } = await getFilterMiniatura(filterPayload);
       setListMini(data.content);
       setPagination({
-        // pageNumber: data.pageable.pageNumber + 1,
         totalPages: data.totalPages,
         pageSize: data.pageable.pageSize,
         totalElements: data.totalElements,
         elementsPerPage: data.numberOfElements,
       });
+      if (data.content.length === 0) {
+        setPageNumber(0);
+      }
     } catch (error) {
-      console.log("responseeee 2", error);
+      toast.error("Erro ao recuperar lista de miniaturas");
     } finally {
       hideLoading();
     }
@@ -128,6 +144,61 @@ export default function Home() {
     }
   };
 
+  // const fetchGetAllScalesMini = async () => {
+  //   showLoading();
+  //   try {
+  //     const { data } = await getAllScalesMini();
+  //     setListScalesMini(data);
+  //   } catch (e) {
+  //   } finally {
+  //     hideLoading();
+  //   }
+  // };
+
+  // const fetchGetAllTypesMini = async () => {
+  //   showLoading();
+  //   try {
+  //     const { data } = await getAllTypesMini();
+  //     setListTypesMini(data);
+  //   } catch (e) {
+  //   } finally {
+  //     hideLoading();
+  //   }
+  // };
+
+  // const fetchGetAllMarksMini = async () => {
+  //   showLoading();
+  //   try {
+  //     const { data } = await getAllMarksMini();
+  //     setListMarksMini(data);
+  //   } catch (e) {
+  //   } finally {
+  //     hideLoading();
+  //   }
+  // };
+
+  // const fetchGetAllLinesMini = async () => {
+  //   showLoading();
+  //   try {
+  //     const { data } = await getAllLinesMini();
+  //     setListLinesMini(data);
+  //   } catch (e) {
+  //   } finally {
+  //     hideLoading();
+  //   }
+  // };
+
+  // const fetchGetAllStatusMini = async () => {
+  //   showLoading();
+  //   try {
+  //     const { data } = await getAllStatusMini();
+  //     setListStatusMini(data);
+  //   } catch (e) {
+  //   } finally {
+  //     hideLoading();
+  //   }
+  // };
+
   console.log("pagination", pagination);
 
   useEffect(() => {
@@ -137,9 +208,39 @@ export default function Home() {
   }, [pageNumber]);
 
   // useEffect(() => {
-  //   fetchGetFilterMiniaturas();
+  //   fetchGetAllTypesMini();
+  //   fetchGetAllMarksMini();
+  //   fetchGetAllLinesMini();
+  //   fetchGetAllStatusMini();
+  //   fetchGetAllScalesMini();
   // }, []);
 
+  const fetchAllFilter = async () => {
+    showLoading();
+    try {
+      const [types, marks, lines, status, scales] = await Promise.all([
+        getAllTypesMini(),
+        getAllMarksMini(),
+        getAllLinesMini(),
+        getAllStatusMini(),
+        getAllScalesMini(),
+      ]);
+
+      setFilterLists({
+        types: types.data,
+        marks: marks.data,
+        lines: lines.data,
+        status: status.data,
+        scales: scales.data,
+      });
+    } finally {
+      hideLoading();
+    }
+  };
+
+  useEffect(() => {
+    fetchAllFilter();
+  }, []);
   console.log("pagination", pagination);
 
   const hasMiniInList = listMini.length > 0;
@@ -173,7 +274,10 @@ export default function Home() {
         >
           {" "}
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
-          <Filter handleFilterMiniaturas={fetchGetFilterMiniaturas} />
+          <Filter
+            handleFilterMiniaturas={fetchGetFilterMiniaturas}
+            lists={filterLists}
+          />
         </div>
         {/* <div className="max-w-7xl w-[72.5vw] p-4 flex flex-wrap gap-4 justify-start"> */}
         <div

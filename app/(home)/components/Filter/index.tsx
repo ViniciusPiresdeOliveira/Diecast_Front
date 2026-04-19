@@ -4,7 +4,7 @@ import { prefixExample } from "@/app/utils";
 import { Button, Divider, Input, InputNumber, Select } from "antd";
 import { FilterProps } from "./types";
 
-export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
+export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
   const {
     maxPrice,
     minPrice,
@@ -14,6 +14,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
     line,
     type,
     status,
+    scale,
     clearFilters,
     handleMinPrice,
     handleStatus,
@@ -23,6 +24,7 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
     handleMark,
     handleType,
     handleLine,
+    handleScale,
   } = useFilter();
 
   const formatCurrency = (value?: number) => {
@@ -53,13 +55,13 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
         <Label className="max-sm:text-white" text="Marcas" />
         <Select
           mode="multiple"
-          style={{ width: "100%" }}
+          style={{ width: "100%", cursor: "pointer" }}
           onChange={handleMark}
           value={mark}
-          options={[
-            { label: "Hot Wheels", value: "Hot Wheels" },
-            { label: "Matchbox", value: "Matchbox" },
-          ]}
+          options={lists?.marks.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
         />
       </div>
       <div className="mb-2 flex flex-col w-full">
@@ -76,31 +78,28 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
         <Label className="max-sm:text-white" text="Tipos" />
         <Select
           mode="multiple"
-          style={{ width: "100%" }}
+          style={{ width: "100%", cursor: "pointer" }}
           // placeholder="Tipos"
           onChange={(e) => handleType(e)}
           value={type}
-          options={[
-            { label: "jdm", value: "JDM" },
-            { label: "supercar", value: "Supercar" },
-            { label: "muscle", value: "Muscle" },
-            { label: "classic", value: "Clássico" },
-          ]}
+          options={lists?.types.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
         />
       </div>
       <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Linhas" />
         <Select
           mode="multiple"
-          style={{ width: "100%" }}
+          style={{ width: "100%", cursor: "pointer" }}
           // placeholder="Tipos"
           onChange={(e) => handleLine(e)}
           value={line}
-          options={[
-            { label: "thunt", value: "T-Hunt" },
-            { label: "superthunt", value: "Super T-Hunt" },
-            { label: "mainline", value: "Mainline" },
-          ]}
+          options={lists?.lines.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
         />
       </div>
       <div className="mb-2 flex flex-col">
@@ -108,28 +107,28 @@ export const Filter = ({ handleFilterMiniaturas }: FilterProps) => {
 
         <Select
           mode="multiple"
-          style={{ width: "100%" }}
+          style={{ width: "100%", cursor: "pointer" }}
           // placeholder="Status"
           onChange={(e) => handleStatus(e)}
           value={status}
-          options={[
-            { label: "Loose", value: "Loose" },
-            { label: "Blister", value: "Blister" },
-          ]}
+          options={lists?.status.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
         />
       </div>
       <div className="mb-2 flex flex-col">
         <Label className="max-sm:text-white" text="Escala" />
         <Select
           mode="multiple"
-          style={{ width: "100%" }}
+          style={{ width: "100%", cursor: "pointer" }}
           // placeholder="Escala"
-          onChange={(e) => handleStatus(e)}
-          value={status}
-          options={[
-            { label: "1/24", value: "1/24" },
-            { label: "1/64", value: "1/64" },
-          ]}
+          onChange={(e) => handleScale(e)}
+          value={scale}
+          options={lists?.scales.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
         />
       </div>
 

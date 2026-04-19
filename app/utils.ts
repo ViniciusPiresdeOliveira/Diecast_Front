@@ -13,3 +13,6 @@ export const getErrorMessage = (error: unknown): string => {
 
   return "Erro inesperado";
 };
+
+export const toNumberArray = (arr?: string[] | null) =>
+  arr?.map(Number).filter((n) => !isNaN(n)) || null;

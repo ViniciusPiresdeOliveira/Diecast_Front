@@ -36,7 +36,6 @@ export interface Miniatura {
 }
 
 export interface PaginationInfo {
-  // pageNumber: number;
   totalPages: number;
   totalElements: number;
   elementsPerPage: number;

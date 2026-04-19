@@ -1,11 +1,11 @@
 export interface FilterMiniatura {
   nome: string | null;
-  marcaId: string[] | null;
+  marcaIds: number[] | null;
   ano: number | null;
-  tipoId: string[] | null;
-  linhaId: string[] | null;
-  status: string[] | null;
-  escala: string[] | null;
+  tipoIds: number[] | null;
+  linhaIds: number[] | null;
+  statusIds: number[] | null;
+  escalaIds: number[] | null;
   precoMin: number | null;
   precoMax: number | null;
   page: number;
