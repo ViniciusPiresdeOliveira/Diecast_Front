@@ -4,6 +4,7 @@ import { ImageNotFound } from "@/app/components/ImageNotFound";
 import { useCurrentUrl } from "@/app/hooks/useCurrentUrl";
 import { useLoading } from "@/app/hooks/useLoading";
 import { useTypeDevice } from "@/app/hooks/useTypeDevice";
+import { formatCurrencyBRL } from "@/app/utils";
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
 import { Image as ImageANTD } from "antd";
@@ -14,7 +15,7 @@ import { toast } from "react-toastify";
 import { Miniatura } from "../../types";
 import { formatImage, handleRedirectToWhatsApp } from "../../utils";
 import { MiniCard } from "./components/CardCarousel";
-import { optionsCarousel } from "./utils";
+import { formatListPTBR, optionsCarousel } from "./utils";
 
 export default function MiniDetail() {
   const [mini, setMini] = useState<Miniatura>();
@@ -68,11 +69,44 @@ export default function MiniDetail() {
           )}
         </div>
         <div className="max-w-[400px] md:max-w-[500px] ">
-          <h1 className="text-2xl font-bold mb-4">
-            {mini?.marca.nome} {mini?.nome} - {mini?.ano}
-          </h1>
+          <h1 className="text-2xl font-bold mb-1">{mini?.nome}</h1>
+          <div className="space-y-1 mt-0 text-md text-gray-700">
+            <div className="flex gap-1">
+              <span className="font-bold">Marca:</span>
+              <span>{mini?.marca?.nome}</span>
+            </div>
 
-          <p className="text-4xl font-bold">R${mini?.valor}</p>
+            <div className="flex gap-1">
+              <span className="font-bold">Ano:</span>
+              <span>{mini?.ano}</span>
+            </div>
+
+            <div className="flex gap-1">
+              <span className="font-bold">Escala:</span>
+              <span>{mini?.escala?.nome}</span>
+            </div>
+
+            <div className="flex gap-1">
+              <span className="font-bold">Status:</span>
+              <span>{mini?.status?.nome}</span>
+            </div>
+
+            <div className="flex gap-1">
+              <span className="font-bold">Linha:</span>
+              <span>{mini?.linha?.nome}</span>
+            </div>
+
+            <div className="flex gap-1">
+              <span className="font-bold">
+                {(mini?.tipos?.length ?? 0) > 1 ? "Tipos" : "Tipo"}:
+              </span>{" "}
+              <span>{formatListPTBR(mini?.tipos)}</span>
+            </div>
+          </div>
+
+          <p className="text-4xl font-bold mt-4">
+            {formatCurrencyBRL(mini?.valor)}
+          </p>
           <div className="mt-4">
             <p className="text-start md:text-left text-gray-600 mb-2">
               Interessado nesta miniatura? Entre em contato pelo WhatsApp e
@@ -90,7 +124,7 @@ export default function MiniDetail() {
                   width={20}
                   height={20}
                 />
-                Falar no WhatsApp
+                Comprar pelo WhatsApp{" "}
               </button>
             )}
           </div>

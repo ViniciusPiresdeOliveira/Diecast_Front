@@ -14,5 +14,18 @@ export const getErrorMessage = (error: unknown): string => {
   return "Erro inesperado";
 };
 
+export const formatCurrencyBRL = (value?: number | string) => {
+  if (value === null || value === undefined) return "";
+
+  const number = typeof value === "string" ? Number(value) : value;
+
+  if (isNaN(number)) return "";
+
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  }).format(number);
+};
+
 export const toNumberArray = (arr?: string[] | null) =>
   arr?.map(Number).filter((n) => !isNaN(n)) || null;

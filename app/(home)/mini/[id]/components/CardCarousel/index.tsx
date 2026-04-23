@@ -2,6 +2,7 @@
 
 import { formatImage } from "@/app/(home)/utils";
 import { ImageNotFound } from "@/app/components/ImageNotFound";
+import { formatCurrencyBRL } from "@/app/utils";
 import { Image as ImageANTD } from "antd";
 import { useRouter } from "next/navigation";
 import { MiniCardProps } from "./types";
@@ -28,11 +29,9 @@ export const MiniCard = ({ mini, className }: MiniCardProps) => {
       )}
 
       <div className="flex flex-col justify-around items-center h-full">
-        <h3 className="font-semibold text-center">
-          {mini.marca.nome} {mini.nome}
-        </h3>
+        <h3 className="font-semibold text-center">{mini.nome}</h3>
 
-        <p className="font-bold text-lg">R$ {mini.valor}</p>
+        <p className="font-bold text-lg">{formatCurrencyBRL(mini.valor)}</p>
 
         <button
           onClick={() => router.push(`/mini/${mini.id}`)}

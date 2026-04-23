@@ -1,4 +1,5 @@
 import { InstagramIcon } from "lucide-react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 export const Footer = () => {
   const router = useRouter();
@@ -19,6 +20,22 @@ export const Footer = () => {
       >
         <InstagramIcon size={18} />
         Siga-nos no Instagram
+      </a>
+      <a
+        href="https://chat.whatsapp.com/B88velEqWatGGzb1xKccXk?fbclid=PAZXh0bgNhZW0CMTEAc3J0YwZhcHBfaWQMMjU2MjgxMDQwNTU4AAGnihHRLlq75YwxWlBtZ8X_CvvOrhkHIKQXr4bnrKJJABiMhm2F7ZNoA_OJZB4_aem_1-p1UnOayO0MVaWbtn5VsQ"
+        target="_blank"
+        aria-label="Faça parte de nosso grupo exclusivo, onde postamos miniaturas em primeira mão"
+        rel="noopener noreferrer"
+        className="text-white font-semibold flex gap-2 items-center hover:opacity-80 transition"
+      >
+        <Image
+          color="#eefr"
+          src="/whatsapp.svg"
+          alt="WhatsApp"
+          width={18}
+          height={18}
+        />
+        Faça parte do grupo exclusivo e veja novos álbuns toda semana!
       </a>
     </div>
   );

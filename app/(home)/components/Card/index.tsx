@@ -1,7 +1,7 @@
 import { deleteMiniById } from "@/app/api/miniatura";
 import { ImageNotFound } from "@/app/components/ImageNotFound";
 import { useLoading } from "@/app/hooks/useLoading";
-import { getErrorMessage } from "@/app/utils";
+import { formatCurrencyBRL, getErrorMessage } from "@/app/utils";
 import { Popconfirm } from "antd";
 import { Pencil, Trash2 } from "lucide-react";
 import Image from "next/image";
@@ -114,12 +114,7 @@ export const Card = ({
           </p>
 
           <p className="text-lg text-blue-700 font-bold">
-            {mini?.valor
-              ? mini.valor.toLocaleString("pt-BR", {
-                  style: "currency",
-                  currency: "BRL",
-                })
-              : "R$ 0,00"}
+            {formatCurrencyBRL(mini.valor)}
           </p>
         </div>
       </button>
