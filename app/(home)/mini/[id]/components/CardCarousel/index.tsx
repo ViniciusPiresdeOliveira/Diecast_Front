@@ -1,5 +1,6 @@
 "use client";
 
+import { formatImage } from "@/app/(home)/utils";
 import { ImageNotFound } from "@/app/components/ImageNotFound";
 import { Image as ImageANTD } from "antd";
 import { useRouter } from "next/navigation";
@@ -12,10 +13,10 @@ export const MiniCard = ({ mini, className }: MiniCardProps) => {
     <div
       className={`mb-9 rounded-xl w-[175px] h-[400px] shadow-md p-4 flex flex-col items-center gap-3 transition-all duration-300 border border-blue-300 hover:border-blue-700 mx-auto  ${className}`}
     >
-      {mini.image ? (
+      {mini.imagem ? (
         <ImageANTD
-          src={mini.image}
-          alt={mini.name}
+          src={formatImage(mini.imagem)}
+          alt={mini.nome}
           width={200}
           height={200}
           className="object-contain"
@@ -28,10 +29,10 @@ export const MiniCard = ({ mini, className }: MiniCardProps) => {
 
       <div className="flex flex-col justify-around items-center h-full">
         <h3 className="font-semibold text-center">
-          {mini.marca} {mini.name}
+          {mini.marca.nome} {mini.nome}
         </h3>
 
-        <p className="font-bold text-lg">R$ {mini.preco}</p>
+        <p className="font-bold text-lg">R$ {mini.valor}</p>
 
         <button
           onClick={() => router.push(`/mini/${mini.id}`)}

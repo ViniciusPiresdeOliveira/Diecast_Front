@@ -13,7 +13,7 @@ export const defaultValuesForm = {
   valor: 0,
 };
 
-export const mapMiniaturaPayload = (mini: MiniFormValues) => {
+export const mapMiniaturaPayload = (mini: MiniFormValues, isPost: boolean) => {
   return {
     nome: mini.name,
     marcaId: Number(mini.brand),
@@ -23,5 +23,6 @@ export const mapMiniaturaPayload = (mini: MiniFormValues) => {
     escalaId: mini.scale,
     linhaId: Number(mini.line),
     valor: mini.price / 100,
+    ...(isPost && { quantidadeEstoque: mini.stock }),
   };
 };

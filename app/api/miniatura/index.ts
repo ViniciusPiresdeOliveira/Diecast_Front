@@ -7,6 +7,12 @@ export const getFilterMiniatura = (filters: FilterMiniatura) => {
   return api.post("/miniaturas/filtro", filters);
 };
 
+export const getSimilarMiniaturesById = (id: number, limit = 15) => {
+  return api.get(`/miniaturas/similares/${id}`, {
+    params: { limit },
+  });
+};
+
 export const getMiniById = (id: number) => {
   return api.get(`/miniaturas/${id}`);
 };
@@ -16,7 +22,7 @@ export const deleteMiniById = (id: number) => {
 };
 
 export const putMiniatura = (mini: MiniFormValues, idMini: number) => {
-  const { formData } = buildMiniaturaFormData(mini);
+  const { formData } = buildMiniaturaFormData(mini, false);
 
   return api.put(`/miniaturas/${idMini}`, formData, {
     headers: {
@@ -26,7 +32,7 @@ export const putMiniatura = (mini: MiniFormValues, idMini: number) => {
 };
 
 export const postMiniatura = (mini: MiniFormValues) => {
-  const { formData } = buildMiniaturaFormData(mini);
+  const { formData } = buildMiniaturaFormData(mini, true);
 
   return api.post("/miniaturas", formData, {
     headers: {

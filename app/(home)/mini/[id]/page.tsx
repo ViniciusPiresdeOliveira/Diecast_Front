@@ -1,5 +1,5 @@
 "use client";
-import { getMiniById } from "@/app/api/miniatura";
+import { getMiniById, getSimilarMiniaturesById } from "@/app/api/miniatura";
 import { ImageNotFound } from "@/app/components/ImageNotFound";
 import { useCurrentUrl } from "@/app/hooks/useCurrentUrl";
 import { useLoading } from "@/app/hooks/useLoading";
@@ -12,12 +12,13 @@ import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Miniatura } from "../../types";
-import { formatImage, handleRedirectToWhatsApp, minis } from "../../utils";
+import { formatImage, handleRedirectToWhatsApp } from "../../utils";
 import { MiniCard } from "./components/CardCarousel";
 import { optionsCarousel } from "./utils";
 
 export default function MiniDetail() {
   const [mini, setMini] = useState<Miniatura>();
+  const [similiarMinis, setSimiliarMinis] = useState<Miniatura[]>([]);
   const params = useParams();
   const link = useCurrentUrl();
   const { isMobile } = useTypeDevice();
@@ -25,20 +26,27 @@ export default function MiniDetail() {
 
   const id = Number(params.id);
 
-  const fetchGetMiniById = async () => {
+  const fetchData = async () => {
     showLoading();
+
     try {
-      const { data } = await getMiniById(id);
-      setMini(data);
+      const [miniRes, similarRes] = await Promise.all([
+        getMiniById(id),
+        getSimilarMiniaturesById(id),
+      ]);
+
+      setMini(miniRes.data);
+      setSimiliarMinis(similarRes.data);
     } catch (error) {
-      toast.error("Erro ao buscar miniatura");
+      toast.error("Erro ao carregar dados da miniatura");
     } finally {
       hideLoading();
     }
   };
 
   useEffect(() => {
-    fetchGetMiniById();
+    if (!id) return;
+    fetchData();
   }, [id]);
 
   return (
@@ -91,14 +99,12 @@ export default function MiniDetail() {
       <div className="mt-16 w-full max-w-5xl mx-auto">
         <h2 className="text-2xl font-bold mb-6 text-center">Outras minis</h2>
 
-        <Splide options={optionsCarousel}>
-          {minis
-            .filter((item) => item.id !== mini?.id)
-            .map((item) => (
-              <SplideSlide key={item.id}>
-                <MiniCard mini={item} />
-              </SplideSlide>
-            ))}
+        <Splide key={similiarMinis.length} options={optionsCarousel}>
+          {similiarMinis.map((item) => (
+            <SplideSlide key={item.id}>
+              <MiniCard mini={item} />
+            </SplideSlide>
+          ))}
         </Splide>
       </div>
     </div>

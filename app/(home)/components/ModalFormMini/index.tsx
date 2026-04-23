@@ -341,27 +341,29 @@ export const ModalFormMini = ({
             }}
           />
 
-          <Controller
-            name="stock"
-            control={control}
-            render={({ field }) => (
-              <div className={classNameContainerInputs}>
-                <Label text="Quantidade no Estoque" required />
-                <InputNumber
-                  {...field}
-                  style={{ width: "100%" }}
-                  status={errors.stock ? "error" : ""}
-                  // placeholder="Quantidade no Estoque"
-                  min={1}
-                  type="number"
-                />
+          {!mini && (
+            <Controller
+              name="stock"
+              control={control}
+              render={({ field }) => (
+                <div className={classNameContainerInputs}>
+                  <Label text="Quantidade no Estoque" required />
+                  <InputNumber
+                    {...field}
+                    style={{ width: "100%" }}
+                    status={errors.stock ? "error" : ""}
+                    // placeholder="Quantidade no Estoque"
+                    min={1}
+                    type="number"
+                  />
 
-                {errors.stock && (
-                  <MessageError message={errors.stock.message as string} />
-                )}
-              </div>
-            )}
-          />
+                  {errors.stock && (
+                    <MessageError message={errors.stock.message as string} />
+                  )}
+                </div>
+              )}
+            />
+          )}
 
           <Controller
             name="image"

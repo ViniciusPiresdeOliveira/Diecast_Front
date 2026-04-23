@@ -82,12 +82,12 @@ export const Card = ({
 
           handleVisibleFormMini("edit");
         }}
-        className="z-10 cursor-pointer w-8 h-8 absolute right-8 top-1 border-0 flex items-center justify-center ransition-transform duration-300 hover:scale-110"
+        className="z-10 cursor-pointer w-8 h-8 absolute right-8 top-0 border-0 flex items-center justify-center ransition-transform duration-300 hover:scale-110"
       >
         <Pencil size={20} width={20} height={20} color="#07ac5a" />
       </button>
 
-      <button className="z-10 cursor-pointer w-8 h-8 absolute right-1 top-1 border-0 border-blue-primary rounded-full flex items-center justify-center ransition-transform duration-300 hover:scale-110">
+      <button className="z-10 cursor-pointer w-8 h-8 absolute right-1 top-0 border-0 border-blue-primary rounded-full flex items-center justify-center ransition-transform duration-300 hover:scale-110">
         <Popconfirm
           title="Deseja excluir?"
           onConfirm={handleDeleteMiniById}
