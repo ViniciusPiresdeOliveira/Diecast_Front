@@ -1,5 +1,6 @@
 import { deleteMiniById } from "@/app/api/miniatura";
 import { ImageNotFound } from "@/app/components/ImageNotFound";
+import { useAuth } from "@/app/hooks/useAuth";
 import { useLoading } from "@/app/hooks/useLoading";
 import { formatCurrencyBRL, getErrorMessage } from "@/app/utils";
 import { Popconfirm } from "antd";
@@ -16,9 +17,10 @@ export const Card = ({
   handleVisibleFormMini,
   refreshMiniList,
 }: CardProps) => {
+  const router = useRouter();
+  const { user } = useAuth();
   const stylesMiniWithCar = "relative";
   const stylesMiniWithoutCar = "flex items-center justify-center";
-  const router = useRouter();
   const { hideLoading, showLoading } = useLoading();
 
   const handleNavigateToMiniById = () => {
@@ -75,28 +77,30 @@ export const Card = ({
           <ImageNotFound />
         )}
       </div>
-      <button
-        onClick={() => {
-          handleSelectedMini(mini);
-          console.log("mini asd 22", mini);
+      {user?.role === "ADMIN" && (
+        <>
+          <button
+            onClick={() => {
+              handleSelectedMini(mini);
+              handleVisibleFormMini("edit");
+            }}
+            className="z-10 cursor-pointer w-8 h-8 absolute right-8 top-0 border-0 flex items-center justify-center ransition-transform duration-300 hover:scale-110"
+          >
+            <Pencil size={20} width={20} height={20} color="#07ac5a" />
+          </button>
 
-          handleVisibleFormMini("edit");
-        }}
-        className="z-10 cursor-pointer w-8 h-8 absolute right-8 top-0 border-0 flex items-center justify-center ransition-transform duration-300 hover:scale-110"
-      >
-        <Pencil size={20} width={20} height={20} color="#07ac5a" />
-      </button>
-
-      <button className="z-10 cursor-pointer w-8 h-8 absolute right-1 top-0 border-0 border-blue-primary rounded-full flex items-center justify-center ransition-transform duration-300 hover:scale-110">
-        <Popconfirm
-          title="Deseja excluir?"
-          onConfirm={handleDeleteMiniById}
-          okText="Sim"
-          cancelText="Não"
-        >
-          <Trash2 size={20} width={20} height={20} color="#f31a13" />
-        </Popconfirm>
-      </button>
+          <button className="z-10 cursor-pointer w-8 h-8 absolute right-1 top-0 border-0 border-blue-primary rounded-full flex items-center justify-center ransition-transform duration-300 hover:scale-110">
+            <Popconfirm
+              title="Deseja excluir?"
+              onConfirm={handleDeleteMiniById}
+              okText="Sim"
+              cancelText="Não"
+            >
+              <Trash2 size={20} width={20} height={20} color="#f31a13" />
+            </Popconfirm>
+          </button>
+        </>
+      )}
 
       <button
         onClick={handleNavigateToMiniById}

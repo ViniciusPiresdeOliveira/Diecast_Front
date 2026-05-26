@@ -11,6 +11,7 @@ import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { getFilterMiniatura } from "../api/miniatura";
 import { FilterMiniatura } from "../api/miniatura/types";
+import { useAuth } from "../hooks/useAuth";
 import { useFilter } from "../hooks/useFilter";
 import { useLoading } from "../hooks/useLoading";
 import { toNumberArray } from "../utils";
@@ -38,6 +39,8 @@ export default function Home() {
     clearFilters,
   } = useFilter();
   const { showLoading, hideLoading } = useLoading();
+  const { user } = useAuth();
+  console.log("user asodkj", user);
 
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
   const [selectedMini, setSelectedMini] = useState<Miniatura | null>(null);
@@ -228,21 +231,23 @@ export default function Home() {
       />
       <Header handleVisibilityMenu={handleVisibilityMenu} /> */}
       <div className="flex justify-center pt-12 relative">
-        <div className="flex justify-end absolute right-1/200 p-3.5 top-0 cursor-pointer ">
-          {/* <Download
+        {user?.role === "ADMIN" && (
+          <div className="flex justify-end absolute right-1/200 p-3.5 top-0 cursor-pointer ">
+            {/* <Download
             color="#1f3565"
             width={36}
             height={36}
             onClick={handleDownloadCatalog}
           /> */}
-          <CirclePlus
-            color="#1f3565"
-            width={36}
-            height={36}
-            className="ml-5"
-            onClick={() => handleVisibleFormMini("add")}
-          />
-        </div>
+            <CirclePlus
+              color="#1f3565"
+              width={36}
+              height={36}
+              className="ml-5"
+              onClick={() => handleVisibleFormMini("add")}
+            />
+          </div>
+        )}
         <div ref={sentinelRef} className="h-[1px]" />{" "}
         <div
           className={`max-md:hidden left-0 mr-2 md:-mr-1.25 md:ml-2 border-blue-600 h-full lg:w-64 md:w-56 border p-4 rounded-lg sticky top-[25px] overflow-y-auto transition-all duration-500

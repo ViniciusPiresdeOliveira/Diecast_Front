@@ -1,13 +1,30 @@
-import { Menu } from "lucide-react";
+import { fetchLogout } from "@/app/api/logout";
+import { useAuth } from "@/app/hooks/useAuth";
+import { useLoading } from "@/app/hooks/useLoading";
+import { LogOut, Menu } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { HeaderProps } from "./types";
 export const Header = ({ handleVisibilityMenu }: HeaderProps) => {
   const router = useRouter();
+  const { showLoading, hideLoading } = useLoading();
+  const { user, handleClearUser } = useAuth();
 
   const handleNavigateToHome = () => {
     router.push(`/`);
+  };
+
+  const handleLogout = async () => {
+    try {
+      showLoading();
+      await fetchLogout();
+    } catch (error) {
+      console.log("ff");
+    } finally {
+      hideLoading();
+    }
+    handleClearUser(); // limpa contexto
   };
 
   return (
@@ -28,6 +45,14 @@ export const Header = ({ handleVisibilityMenu }: HeaderProps) => {
       <div className="hidden min-md:flex gap-6 text-white font-medium">
         <Link href={"/eventos"}>Eventos</Link>
       </div>
+      {user?.role === "ADMIN" && (
+        <button
+          onClick={handleLogout}
+          className="z-10 cursor-pointer w-8 h-8 absolute right-0 top-0 border-0 flex items-center justify-center transition-transform duration-300 hover:scale-110"
+        >
+          <LogOut size={20} color="#ff4d4f" />
+        </button>
+      )}
       <button
         className="p-2 cursor-pointer min-md:hidden"
         onClick={handleVisibilityMenu}
