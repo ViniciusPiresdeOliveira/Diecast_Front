@@ -11,6 +11,7 @@ export const defaultValuesForm = {
   escala: undefined,
   linha: undefined,
   valor: 0,
+  stock: 1,
 };
 
 export const mapMiniaturaPayload = (mini: MiniFormValues, isPost: boolean) => {

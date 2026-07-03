@@ -40,25 +40,32 @@ export const Header = ({ handleVisibilityMenu }: HeaderProps) => {
           height={50}
           className="rounded-full object-contain"
         />
-        <p className="text-white font-semibold">Diecast</p>
+        <p className="text-white font-semibold">
+          {user?.name ? `Olá, ${user.name}` : "Diecast"}
+        </p>
       </button>
-      <div className="hidden min-md:flex gap-6 text-white font-medium">
-        <Link href={"/eventos"}>Eventos</Link>
-      </div>
-      {user?.role === "ADMIN" && (
+      <div className="flex justify-center items-center gap-6">
+        <div className="hidden min-md:flex gap-6 text-gray-200 font-medium">
+          <Link href={"/afiliado"}>Afiliado</Link>
+        </div>
+        <div className="hidden min-md:flex gap-6 text-gray-200 font-medium">
+          <Link href={"/eventos"}>Eventos</Link>
+        </div>
+        {user?.role === "ADMIN" && (
+          <button
+            onClick={handleLogout}
+            className="z-10 cursor-pointer w-8 h-8 flex items-center justify-center transition-transform duration-300 hover:scale-110"
+          >
+            <LogOut size={24} color="white" />
+          </button>
+        )}
         <button
-          onClick={handleLogout}
-          className="z-10 cursor-pointer w-8 h-8 absolute right-0 top-0 border-0 flex items-center justify-center transition-transform duration-300 hover:scale-110"
+          className="p-2 cursor-pointer min-md:hidden"
+          onClick={handleVisibilityMenu}
         >
-          <LogOut size={20} color="#ff4d4f" />
+          <Menu color="white" />
         </button>
-      )}
-      <button
-        className="p-2 cursor-pointer min-md:hidden"
-        onClick={handleVisibilityMenu}
-      >
-        <Menu color="white" />
-      </button>
+      </div>
     </div>
   );
 };

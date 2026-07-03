@@ -519,7 +519,8 @@ export const handleRedirectToWhatsApp = (
   // tirar quando o icone de whatsapp só tiver para cliente
   // handleVisibleFormMini();
   //
-  const message = `Olá, tenho interesse na miniatura ${mini.nome} ${mini.ano}, da ${mini.marca} - ${link}`;
+
+  const message = `Olá, tenho interesse na miniatura ${mini.nome} ${mini.ano}, da ${mini.marca.nome} - ${link}`;
   const encodedMessage = encodeURIComponent(message);
 
   // if (isMobile) {

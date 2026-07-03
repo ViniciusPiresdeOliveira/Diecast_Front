@@ -53,9 +53,10 @@ export const Card = ({
       hover:bg-gray-200
       hover:shadow-md hover:shadow-black/30
       hover:border-blue-700
-      h-[195px] relative
+      h-[195px] relative group
       "
     >
+      {/* IMAGEM */}
       <div
         className={
           "w-40 h-40 shrink-0 rounded-md overflow-hidden z-10 " +
@@ -69,7 +70,7 @@ export const Card = ({
             fill
             className="object-contain cursor-pointer z-10 transition-transform duration-300 hover:scale-110"
             onClick={(e) => {
-              e.stopPropagation(); // Evita navegar para a página se clicar na foto para ampliar
+              e.stopPropagation();
               handleSelectedMini(mini);
             }}
           />
@@ -77,36 +78,55 @@ export const Card = ({
           <ImageNotFound />
         )}
       </div>
+
+      {/* BOTÕES (APARECEM NO HOVER) */}
       {user?.role === "ADMIN" && (
         <>
+          {/* EDITAR */}
           <button
             onClick={() => {
               handleSelectedMini(mini);
               handleVisibleFormMini("edit");
             }}
-            className="z-10 cursor-pointer w-8 h-8 absolute right-8 top-0 border-0 flex items-center justify-center ransition-transform duration-300 hover:scale-110"
+            className="
+            z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-24
+            flex items-center justify-center
+            opacity-0 translate-y-2
+            group-hover:opacity-100 group-hover:translate-y-0
+            transition-all duration-300 hover:scale-110
+            "
           >
-            <Pencil size={20} width={20} height={20} color="#07ac5a" />
+            <Pencil size={24} color="#07ac5a" />
           </button>
 
-          <button className="z-10 cursor-pointer w-8 h-8 absolute right-1 top-0 border-0 border-blue-primary rounded-full flex items-center justify-center ransition-transform duration-300 hover:scale-110">
+          {/* EXCLUIR */}
+          <button
+            className="
+            z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-15
+            flex items-center justify-center rounded-full
+            opacity-0 translate-y-2
+            group-hover:opacity-100 group-hover:translate-y-0
+            transition-all duration-300 hover:scale-110
+            "
+          >
             <Popconfirm
               title="Deseja excluir?"
               onConfirm={handleDeleteMiniById}
               okText="Sim"
               cancelText="Não"
             >
-              <Trash2 size={20} width={20} height={20} color="#f31a13" />
+              <Trash2 size={24} color="#f31a13" />
             </Popconfirm>
           </button>
         </>
       )}
 
+      {/* CONTEÚDO */}
       <button
         onClick={handleNavigateToMiniById}
         className="relative w-full h-full p-2"
       >
-        <div className="flex-1 min-w-0 flex flex-col gap-1 h-full justify-evenly items-start cursor-pointer text-left ">
+        <div className="flex-1 min-w-0 flex flex-col gap-1 h-full justify-evenly items-start cursor-pointer text-left">
           <p className="font-medium text-zinc-600 break-words line-clamp-2">
             <span className="text-zinc-800 font-bold">Nome:</span>{" "}
             <span className="font-medium text-zinc-600">{mini.nome}</span>

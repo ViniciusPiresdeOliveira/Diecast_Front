@@ -341,7 +341,7 @@ export const ModalFormMini = ({
             }}
           />
 
-          {!mini && (
+          {/* {!mini && (
             <Controller
               name="stock"
               control={control}
@@ -363,7 +363,7 @@ export const ModalFormMini = ({
                 </div>
               )}
             />
-          )}
+          )} */}
 
           <Controller
             name="image"
