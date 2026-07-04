@@ -2,6 +2,7 @@ import { deleteMiniById } from "@/app/api/miniatura";
 import { ImageNotFound } from "@/app/components/ImageNotFound";
 import { useAuth } from "@/app/hooks/useAuth";
 import { useLoading } from "@/app/hooks/useLoading";
+import { useTypeDevice } from "@/app/hooks/useTypeDevice";
 import { formatCurrencyBRL, getErrorMessage } from "@/app/utils";
 import { Popconfirm } from "antd";
 import { Pencil, Trash2 } from "lucide-react";
@@ -19,9 +20,11 @@ export const Card = ({
 }: CardProps) => {
   const router = useRouter();
   const { user } = useAuth();
+  const { isMobile } = useTypeDevice();
+  const { hideLoading, showLoading } = useLoading();
+
   const stylesMiniWithCar = "relative";
   const stylesMiniWithoutCar = "flex items-center justify-center";
-  const { hideLoading, showLoading } = useLoading();
 
   const handleNavigateToMiniById = () => {
     router.push(`/mini/${mini.id}`);
@@ -88,26 +91,28 @@ export const Card = ({
               handleSelectedMini(mini);
               handleVisibleFormMini("edit");
             }}
-            className="
-            z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-24
-            flex items-center justify-center
-            opacity-0 translate-y-2
-            group-hover:opacity-100 group-hover:translate-y-0
-            transition-all duration-300 hover:scale-110
-            "
+            className={
+              "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-24 " +
+              "flex items-center justify-center " +
+              "transition-all duration-300 hover:scale-110 " +
+              (isMobile
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0")
+            }
           >
             <Pencil size={24} color="#07ac5a" />
           </button>
 
           {/* EXCLUIR */}
           <button
-            className="
-            z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-15
-            flex items-center justify-center rounded-full
-            opacity-0 translate-y-2
-            group-hover:opacity-100 group-hover:translate-y-0
-            transition-all duration-300 hover:scale-110
-            "
+            className={
+              "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-15 " +
+              "flex items-center justify-center rounded-full " +
+              "transition-all duration-300 hover:scale-110 " +
+              (isMobile
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0")
+            }
           >
             <Popconfirm
               title="Deseja excluir?"

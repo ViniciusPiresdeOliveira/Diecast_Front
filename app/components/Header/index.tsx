@@ -24,7 +24,7 @@ export const Header = ({ handleVisibilityMenu }: HeaderProps) => {
     } finally {
       hideLoading();
     }
-    handleClearUser(); // limpa contexto
+    handleClearUser();
   };
 
   return (

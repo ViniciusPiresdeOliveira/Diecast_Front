@@ -1,25 +1,41 @@
 "use client";
 
+import { getAllLinksAffiliate } from "@/app/api/link_afiliado";
 import { useLoading } from "@/app/hooks/useLoading";
+import { getErrorMessage } from "@/app/utils";
 import { useEffect, useState } from "react";
-
-type Preview = {
-  title: string;
-  summary: string;
-  thumbnail?: string;
-  url: string;
-};
+import { toast } from "react-toastify";
+import { LinkAfiliado, Preview } from "./types";
 
 export default function Afiliado() {
   const { showLoading, hideLoading } = useLoading();
   const [previews, setPreviews] = useState<Preview[]>([]);
+  const [linksAffiliate, setLinksAffiliate] = useState<LinkAfiliado[]>([]);
 
   // 🔥 array de URLs (mockado por enquanto)
-  const urls = ["https://meli.la/214921q"];
+
+  const fetchAllLinksAffiliate = async () => {
+    try {
+      showLoading();
+      const { data } = await getAllLinksAffiliate();
+      setLinksAffiliate(data);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      hideLoading();
+    }
+  };
 
   useEffect(() => {
+    const urls = linksAffiliate.map((item) => item.link);
+    if (urls.length === 0) {
+      return;
+    }
     showLoading();
     async function load() {
+      // const links = ["https://meli.la/214921q"];
+      console.log("ee eff links", urls);
+
       const res = await fetch("/api/preview", {
         method: "POST",
         body: JSON.stringify({ urls }),
@@ -31,6 +47,10 @@ export default function Afiliado() {
     }
 
     load();
+  }, [linksAffiliate]);
+
+  useEffect(() => {
+    fetchAllLinksAffiliate();
   }, []);
 
   return (
