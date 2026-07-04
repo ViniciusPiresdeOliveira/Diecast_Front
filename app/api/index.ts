@@ -1,4 +1,5 @@
 import axios from "axios";
+import { NextResponse } from "next/server";
 
 const baseURL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -27,14 +28,20 @@ api.interceptors.response.use(
     // 👇 se der 401 (não autenticado)
     if (error.response?.status === 401) {
       console.log("Não autenticado - redirecionando...");
+      // if (typeof window !== "undefined") {
+      //   console.log("Não autenticado - redirecionando... 2");
+      // }
+    }
+    if (error.response?.status === 403) {
+      const res = NextResponse.json(
+        { error: "Usuário não autenticado" },
+        { status: 403 },
+      );
 
-      // limpa qualquer estado local (se quiser)
-      // handleClearUser() ❌ não pode usar hook aqui direto
-
-      // redireciona
-      if (typeof window !== "undefined") {
-        console.log("Não autenticado - redirecionando... 2");
-      }
+      res.cookies.delete("token");
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 3000);
     }
 
     return Promise.reject(error);

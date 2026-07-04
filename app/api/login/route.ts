@@ -26,10 +26,12 @@ export async function POST(req: Request) {
         { status: error.response?.status || 401 },
       );
     }
-
-    return NextResponse.json(
+    const res = NextResponse.json(
       { error: "Erro interno do servidor" },
       { status: 500 },
     );
+
+    res.cookies.delete("token");
+    return res;
   }
 }

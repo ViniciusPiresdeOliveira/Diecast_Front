@@ -29,12 +29,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
-  // 👇 AQUI resolve seu problema
   useEffect(() => {
     async function loadUser() {
       try {
-        const res = await getAuthMe();
-        handleUser(res.data.name, res.data.role);
+        const { data } = await getAuthMe();
+        handleUser(data.name, data.role);
       } catch (err) {
         handleClearUser();
       }

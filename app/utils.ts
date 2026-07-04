@@ -4,6 +4,10 @@ export const prefixExample = "Ex.: ";
 
 export const getErrorMessage = (error: unknown): string => {
   if (axios.isAxiosError(error)) {
+    if (error.response?.status === 403) {
+      return "Sessão expirada. Faça login novamente.";
+    }
+
     return error.response?.data?.message || "Erro na requisição";
   }
 
