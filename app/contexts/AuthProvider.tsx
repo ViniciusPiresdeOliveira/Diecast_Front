@@ -33,7 +33,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     async function loadUser() {
       try {
         const { data } = await getAuthMe();
-        handleUser(data.name, data.role);
+        handleUser(data.login, data.role);
       } catch (err) {
         handleClearUser();
       }
