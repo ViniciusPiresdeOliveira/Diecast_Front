@@ -1,23 +1,25 @@
 "use client";
-import { Pagination } from "antd";
 
 import { getAllScalesMini } from "@/app/api/escala_miniatura";
 import { getAllLinesMini } from "@/app/api/linha_miniatura";
 import { getAllMarksMini } from "@/app/api/marca_miniatura";
 import { getAllStatusMini } from "@/app/api/status_miniatura";
 import { getAllTypesMini } from "@/app/api/tipo_miniatura";
-import { CirclePlus } from "lucide-react";
+import type { TableColumnsType } from "antd";
+import { Pagination, Segmented, Table } from "antd";
+import { CirclePlus, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { getFilterMiniatura } from "../api/miniatura";
+import { deleteMiniById, getFilterMiniatura } from "../api/miniatura";
 import { FilterMiniatura } from "../api/miniatura/types";
 import { useAuth } from "../hooks/useAuth";
 import { useFilter } from "../hooks/useFilter";
 import { useLoading } from "../hooks/useLoading";
-import { toNumberArray } from "../utils";
+import { getErrorMessage, toNumberArray } from "../utils";
 import { Card } from "./components/Card";
 import { Filter } from "./components/Filter";
 import { FilterLists } from "./components/Filter/types";
+import { MiniActions } from "./components/MiniActions";
 import { ModalFormMini } from "./components/ModalFormMini";
 import { TypeOfModalAction } from "./components/ModalFormMini/types";
 import { ModalPhoto } from "./components/ModalPhoto";
@@ -40,8 +42,8 @@ export default function Home() {
   } = useFilter();
   const { showLoading, hideLoading } = useLoading();
   const { user } = useAuth();
-  console.log("user asodkj", user);
 
+  const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
   const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
   const [selectedMini, setSelectedMini] = useState<Miniatura | null>(null);
   const [visibleModalFormMini, setVisibleModalFormMini] = useState(false);
@@ -72,6 +74,60 @@ export default function Home() {
       handleSelectedMini(null);
     }
   }, [visibleModalFormMini]);
+
+  const boldTitle = (text: string) => (
+    <span className="font-bold text-lg">{text}</span>
+  );
+
+  const columns: TableColumnsType<Miniatura> = [
+    { title: boldTitle("Nome"), dataIndex: "nome", key: "nome" },
+    { title: boldTitle("Marca"), dataIndex: ["marca", "nome"], key: "marca" },
+    { title: boldTitle("Linha"), dataIndex: ["linha", "nome"], key: "linha" },
+    {
+      title: boldTitle("Tipo"),
+      dataIndex: "tipos",
+      key: "tipos",
+      render: (tipos: { id: number; nome: string }[]) =>
+        tipos && tipos.length > 0 ? tipos.map((t) => t.nome).join(", ") : "-",
+    },
+    {
+      title: boldTitle("Escala"),
+      dataIndex: ["escala", "nome"],
+      key: "escala",
+    },
+    { title: boldTitle("Ano"), dataIndex: "ano", key: "ano", width: 80 },
+    {
+      title: boldTitle("Condição"),
+      dataIndex: ["condicao", "nome"],
+      key: "condicao",
+    },
+    {
+      title: boldTitle("Valor"),
+      dataIndex: "valor",
+      key: "valor",
+      render: (valor) =>
+        valor != null
+          ? valor.toLocaleString("pt-BR", {
+              style: "currency",
+              currency: "BRL",
+            })
+          : "-",
+    },
+    {
+      title: boldTitle("Ações"),
+      key: "acoes",
+      width: 100,
+      render: (_, record) => (
+        <MiniActions
+          mini={record}
+          handleSelectedMini={handleSelectedMini}
+          handleVisibleFormMini={handleVisibleFormMini}
+          handleDeleteMiniById={handleDeleteMiniById}
+          variant="table"
+        />
+      ),
+    },
+  ];
 
   const handleSelectedMini = (mini: Miniatura | null) => {
     setSelectedMini(mini);
@@ -128,6 +184,21 @@ export default function Home() {
       }
     } catch (error) {
       toast.error("Erro ao recuperar lista de miniaturas");
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const handleDeleteMiniById = async (mini: Miniatura): Promise<boolean> => {
+    showLoading();
+    try {
+      await deleteMiniById(mini.id);
+      refreshMiniList();
+      toast.success(`${mini.nome} apagada com sucesso`);
+      return true;
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+      return false;
     } finally {
       hideLoading();
     }
@@ -222,7 +293,54 @@ export default function Home() {
     fetchGetFilterMiniaturas();
   }, [pageNumber]);
 
+  const renderMiniList = () => {
+    if (!hasMiniInList) {
+      return (
+        <div className="w-full flex items-center justify-center mb-44">
+          <div className="flex flex-col items-center text-center">
+            <span className="text-5xl mb-4">🔍</span>
+            <p className="text-2xl font-semibold text-gray-700">
+              Nenhuma miniatura encontrada
+            </p>
+            <p className="text-gray-500 mt-2">
+              Tente ajustar os filtros ou buscar por outro nome
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    if (showTable) {
+      return (
+        <Table
+          rowKey="id"
+          columns={columns}
+          dataSource={listMini}
+          pagination={false}
+          scroll={{ x: true }}
+        />
+      );
+    }
+
+    return (
+      <div className="grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-max items-start">
+        {listMini.map((mini) => (
+          <Card
+            key={mini.id}
+            mini={mini}
+            handleSelectedMini={handleSelectedMini}
+            handleVisibleFormMini={handleVisibleFormMini}
+            refreshMiniList={refreshMiniList}
+            handleDeleteMiniById={handleDeleteMiniById}
+          />
+        ))}
+      </div>
+    );
+  };
+
   const hasMiniInList = listMini.length > 0;
+  const showTable = viewMode === "table" && user?.role === "ADMIN";
+
   return (
     <div className="flex flex-col items-center pb-5 w-full">
       {/* <Drawer
@@ -243,7 +361,7 @@ export default function Home() {
               color="#1f3565"
               width={36}
               height={36}
-              className="ml-5"
+              className="ml-5 hover:scale-110 transition-all duration-300 ease-out"
               onClick={() => handleVisibleFormMini("add")}
             />
           </div>
@@ -261,36 +379,35 @@ export default function Home() {
           />
         </div>
         {/* <div className="max-w-7xl w-[72.5vw] p-4 flex flex-wrap gap-4 justify-start"> */}
-        <div
-          className={`max-w-7xl sm:w-[80vw] md:w-[70vw] p-4 ${
-            hasMiniInList
-              ? "grid md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 auto-rows-max items-start"
-              : ""
-          }`}
-        >
-          {hasMiniInList ? (
-            listMini.map((mini) => (
-              <Card
-                key={mini.id}
-                mini={mini}
-                handleSelectedMini={handleSelectedMini}
-                handleVisibleFormMini={handleVisibleFormMini}
-                refreshMiniList={refreshMiniList}
+        <div className="max-w-7xl sm:w-[80vw] md:w-[70vw] p-4">
+          {user?.role === "ADMIN" && (
+            <div className="flex justify-end mb-4">
+              <Segmented
+                value={viewMode}
+                orientation="horizontal"
+                onChange={(value) => setViewMode(value as "cards" | "table")}
+                options={[
+                  {
+                    value: "cards",
+                    icon: (
+                      <div className="mt-0.75">
+                        <LayoutGrid size={20} />
+                      </div>
+                    ),
+                  },
+                  {
+                    value: "table",
+                    icon: (
+                      <div className="mt-0.75">
+                        <TableIcon size={20} />{" "}
+                      </div>
+                    ),
+                  },
+                ]}
               />
-            ))
-          ) : (
-            <div className="w-full flex items-center justify-center mb-44">
-              <div className="flex flex-col items-center text-center">
-                <span className="text-5xl mb-4">🔍</span>
-                <p className="text-2xl font-semibold text-gray-700">
-                  Nenhuma miniatura encontrada
-                </p>
-                <p className="text-gray-500 mt-2">
-                  Tente ajustar os filtros ou buscar por outro nome
-                </p>
-              </div>
             </div>
           )}
+          {renderMiniList()}
         </div>
         {selectedMini && typeOfModalAction !== "edit" && (
           <ModalPhoto

@@ -1,10 +1,11 @@
 import { Miniatura } from "../../types";
 import { TypeOfModalAction } from "../ModalFormMini/types";
 
-export interface CardProps {
+export type MiniActionsProps = {
   mini: Miniatura;
-  handleSelectedMini: (e: Miniatura | null) => void;
+  handleSelectedMini: (mini: Miniatura | null) => void;
   handleVisibleFormMini: (type: TypeOfModalAction) => void;
-  refreshMiniList: () => void;
   handleDeleteMiniById: (mini: Miniatura) => Promise<boolean>;
-}
+  variant?: "card" | "table";
+  isMobile?: boolean;
+};

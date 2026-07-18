@@ -1,46 +1,28 @@
-import { deleteMiniById } from "@/app/api/miniatura";
 import { ImageNotFound } from "@/app/components/ImageNotFound";
 import { useAuth } from "@/app/hooks/useAuth";
-import { useLoading } from "@/app/hooks/useLoading";
 import { useTypeDevice } from "@/app/hooks/useTypeDevice";
-import { formatCurrencyBRL, getErrorMessage } from "@/app/utils";
-import { Popconfirm } from "antd";
-import { Pencil, Trash2 } from "lucide-react";
+import { formatCurrencyBRL } from "@/app/utils";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
 import { formatImage } from "../../utils";
+import { MiniActions } from "../MiniActions";
 import { CardProps } from "./types";
 
 export const Card = ({
   mini,
   handleSelectedMini,
   handleVisibleFormMini,
-  refreshMiniList,
+  handleDeleteMiniById,
 }: CardProps) => {
   const router = useRouter();
   const { user } = useAuth();
   const { isMobile } = useTypeDevice();
-  const { hideLoading, showLoading } = useLoading();
 
   const stylesMiniWithCar = "relative";
   const stylesMiniWithoutCar = "flex items-center justify-center";
 
   const handleNavigateToMiniById = () => {
     router.push(`/mini/${mini.id}`);
-  };
-
-  const handleDeleteMiniById = async () => {
-    showLoading();
-    try {
-      await deleteMiniById(mini.id);
-      refreshMiniList();
-      toast.success(`${mini.nome} apagada com sucesso`);
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    } finally {
-      hideLoading();
-    }
   };
 
   return (
@@ -84,49 +66,15 @@ export const Card = ({
 
       {/* BOTÕES (APARECEM NO HOVER) */}
       {user?.role === "ADMIN" && (
-        <>
-          {/* EDITAR */}
-          <button
-            onClick={() => {
-              handleSelectedMini(mini);
-              handleVisibleFormMini("edit");
-            }}
-            className={
-              "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-24 " +
-              "flex items-center justify-center " +
-              "transition-all duration-300 hover:scale-110 " +
-              (isMobile
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0")
-            }
-          >
-            <Pencil size={24} color="#07ac5a" />
-          </button>
-
-          {/* EXCLUIR */}
-          <button
-            className={
-              "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-15 " +
-              "flex items-center justify-center rounded-full " +
-              "transition-all duration-300 hover:scale-110 " +
-              (isMobile
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0")
-            }
-          >
-            <Popconfirm
-              title="Deseja excluir?"
-              onConfirm={handleDeleteMiniById}
-              okText="Sim"
-              cancelText="Não"
-            >
-              <Trash2 size={24} color="#f31a13" />
-            </Popconfirm>
-          </button>
-        </>
+        <MiniActions
+          mini={mini}
+          handleSelectedMini={handleSelectedMini}
+          handleVisibleFormMini={handleVisibleFormMini}
+          handleDeleteMiniById={handleDeleteMiniById}
+          variant="card"
+          isMobile={isMobile}
+        />
       )}
-
-      {/* CONTEÚDO */}
       <button
         onClick={handleNavigateToMiniById}
         className="relative w-full h-full p-2"
