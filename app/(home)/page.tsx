@@ -206,11 +206,13 @@ export default function Home() {
       linhaIds: toNumberArray(line),
       condicaoIds: toNumberArray(condition),
       escalaIds: toNumberArray(scale),
+      quantidadeDisponivelMin: user?.name ? 0 : 1,
       precoMin: minPrice ? minPrice / 100 : null,
       precoMax: maxPrice ? maxPrice / 100 : null,
       page: pageNumber === 0 ? 0 : pageNumber - 1,
       size: amount,
     };
+
     try {
       const { data } = await getFilterMiniatura(filterPayload);
       setListMini(data.content);

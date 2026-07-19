@@ -10,4 +10,5 @@ export interface FilterMiniatura {
   precoMax: number | null;
   page: number;
   size: number;
+  quantidadeDisponivelMin: number | null;
 }

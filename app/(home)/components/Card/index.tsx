@@ -27,19 +27,19 @@ export const Card = ({
 
   return (
     <div
-      className="
-      bg-zinc-100 text-zinc-100
-      px-2 rounded-xl
-      w-full 
-      flex items-center
-      border border-blue-300
-      transition-all duration-300 ease-out
-      hover:-translate-y-1
-      hover:bg-gray-200
-      hover:shadow-md hover:shadow-black/30
-      hover:border-blue-700
-      h-[195px] relative group
-      "
+      className={`
+  bg-zinc-100 text-zinc-100
+  px-2 rounded-xl
+  w-full 
+  flex items-center
+  border ${mini.quantidadeDisponivel === 0 ? "border-red-primary" : "border-blue-300"}
+  transition-all duration-300 ease-out
+  hover:-translate-y-1
+  hover:bg-gray-200
+  hover:shadow-md ${mini.quantidadeDisponivel === 0 ? "hover:shadow-red-primary/30" : "hover:shadow-blue-primary/30"}
+  ${mini.quantidadeDisponivel === 0 ? "hover:border-red-primary" : "hover:border-blue-primary"}
+  h-[195px] relative group
+  `}
     >
       {/* IMAGEM */}
       <div

@@ -1,12 +1,9 @@
 "use client";
 
-import { getMiniImageById } from "@/app/api/miniatura";
-import { useLoading } from "@/app/hooks/useLoading";
-import { getErrorMessage } from "@/app/utils";
 import { Image, Modal } from "antd";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { formatImage } from "../../utils";
 import { MiniActionsProps } from "./types";
 
 export const MiniActions = ({
@@ -19,9 +16,7 @@ export const MiniActions = ({
 }: MiniActionsProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
-  const { showLoading, hideLoading } = useLoading();
 
   const handleEdit = () => {
     handleSelectedMini(mini);
@@ -38,25 +33,11 @@ export const MiniActions = ({
   };
 
   const handleGetMiniImageById = async () => {
-    showLoading();
-    try {
-      const { data } = await getMiniImageById(mini.id);
-      const url = URL.createObjectURL(data);
-      setImageUrl(url);
-      setIsImagePreviewOpen(true);
-    } catch (error) {
-      toast.error(getErrorMessage(error));
-    } finally {
-      hideLoading();
-    }
+    setIsImagePreviewOpen(true);
   };
 
   const handleClosePreview = () => {
     setIsImagePreviewOpen(false);
-    if (imageUrl) {
-      URL.revokeObjectURL(imageUrl);
-      setImageUrl(null);
-    }
   };
 
   const deleteModal = (
@@ -85,10 +66,10 @@ export const MiniActions = ({
     </Modal>
   );
 
-  const imagePreview = imageUrl && (
+  const imagePreview = mini.imagem && (
     <Image
       style={{ display: "none" }}
-      src={imageUrl}
+      src={formatImage(mini.imagem)}
       preview={{
         visible: isImagePreviewOpen,
         onVisibleChange: (visible) => {
@@ -113,7 +94,7 @@ export const MiniActions = ({
           onClick={handleGetMiniImageById}
           className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
         >
-          <Eye size={24} color="#1f3565" />
+          <Eye size={22} color="#1f3565" />
         </button>
 
         <button
@@ -136,7 +117,6 @@ export const MiniActions = ({
 
   return (
     <>
-      {/* EDITAR */}
       <button
         onClick={handleEdit}
         className={
@@ -149,7 +129,6 @@ export const MiniActions = ({
         <Pencil size={24} color="#07ac5a" />
       </button>
 
-      {/* EXCLUIR */}
       <button
         onClick={() => setIsDeleteModalOpen(true)}
         className={
