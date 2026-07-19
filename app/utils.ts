@@ -1,4 +1,6 @@
 import axios from "axios";
+import clsx, { ClassValue } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export const prefixExample = "Ex.: ";
 
@@ -33,3 +35,7 @@ export const formatCurrencyBRL = (value?: number | string) => {
 
 export const toNumberArray = (arr?: string[] | null) =>
   arr?.map(Number).filter((n) => !isNaN(n)) || null;
+
+export function cn(...inputs: ClassValue[]) {
+  return twMerge(clsx(inputs));
+}

@@ -1,7 +1,10 @@
 "use client";
 
-import { Image, Modal } from "antd";
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { DeleteButton } from "@/app/components/Buttons/Delete";
+import { EditButton } from "@/app/components/Buttons/Edit";
+import { DeleteConfirmModal } from "@/app/components/Modal/Delete";
+import { Image } from "antd";
+import { Eye } from "lucide-react";
 import { useState } from "react";
 import { formatImage } from "../../utils";
 import { MiniActionsProps } from "./types";
@@ -41,29 +44,21 @@ export const MiniActions = ({
   };
 
   const deleteModal = (
-    <Modal
-      title={<span className="text-xl font-bold">Excluir miniatura</span>}
+    <DeleteConfirmModal
       open={isDeleteModalOpen}
-      onOk={handleConfirmDelete}
+      title="Excluir miniatura"
+      confirmText="Excluir"
+      isLoading={isDeleting}
+      onConfirm={handleConfirmDelete}
       onCancel={() => setIsDeleteModalOpen(false)}
-      okText="Excluir"
-      cancelText="Cancelar"
-      okButtonProps={{
-        danger: true,
-        loading: isDeleting,
-        className: "!text-base !h-10 !px-5",
-      }}
-      cancelButtonProps={{
-        disabled: isDeleting,
-        className: "!text-base !h-10 !px-5",
-      }}
-      centered
+      message="Tem certeza que deseja excluir "
+      nameSpecific={mini.nome}
     >
-      <p className="text-lg text-zinc-700 mt-2">
+      {/* <p className="text-lg text-zinc-700 mt-2">
         Tem certeza que deseja excluir{" "}
         <span className="font-bold text-zinc-900">{mini.nome}</span>?
-      </p>
-    </Modal>
+      </p> */}
+    </DeleteConfirmModal>
   );
 
   const imagePreview = mini.imagem && (
@@ -82,13 +77,7 @@ export const MiniActions = ({
   if (variant === "table") {
     return (
       <div className="flex items-center justify-center gap-3">
-        <button
-          type="button"
-          onClick={handleEdit}
-          className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
-        >
-          <Pencil size={20} color="#07ac5a" />
-        </button>
+        <EditButton onClick={handleEdit} variant="table" />
 
         <button
           onClick={handleGetMiniImageById}
@@ -97,13 +86,10 @@ export const MiniActions = ({
           <Eye size={22} color="#1f3565" />
         </button>
 
-        <button
-          type="button"
+        <DeleteButton
           onClick={() => setIsDeleteModalOpen(true)}
-          className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
-        >
-          <Trash2 size={20} color="#f31a13" />
-        </button>
+          variant="table"
+        />
 
         {deleteModal}
         {imagePreview}
@@ -111,35 +97,14 @@ export const MiniActions = ({
     );
   }
 
-  const visibilityClasses = isMobile
-    ? "opacity-100 translate-y-0"
-    : "opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0";
-
   return (
     <>
-      <button
-        onClick={handleEdit}
-        className={
-          "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-24 " +
-          "flex items-center justify-center " +
-          "transition-all duration-300 hover:scale-110 " +
-          visibilityClasses
-        }
-      >
-        <Pencil size={24} color="#07ac5a" />
-      </button>
-
-      <button
+      <EditButton onClick={handleEdit} variant="card" isMobile={isMobile} />
+      <DeleteButton
         onClick={() => setIsDeleteModalOpen(true)}
-        className={
-          "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-15 " +
-          "flex items-center justify-center rounded-full " +
-          "transition-all duration-300 hover:scale-110 " +
-          visibilityClasses
-        }
-      >
-        <Trash2 size={24} color="#f31a13" />
-      </button>
+        variant="card"
+        isMobile={isMobile}
+      />
 
       {deleteModal}
     </>
