@@ -13,6 +13,10 @@ export const getSimilarMiniaturesById = (id: number, limit = 15) => {
   });
 };
 
+export const getMiniImageById = (id: number) => {
+  return api.get(`/miniaturas/${id}/imagem`, { responseType: "blob" });
+};
+
 export const getMiniById = (id: number) => {
   return api.get(`/miniaturas/${id}`);
 };

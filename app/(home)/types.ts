@@ -33,6 +33,8 @@ export interface Miniatura {
   escala: EscalaMiniatura;
   linha: LinhaMiniatura;
   valor: number; // BigDecimal → number
+  quantidadeDisponivel: number;
+  quantidadeEmGaragem: number;
 }
 
 export interface PaginationInfo {

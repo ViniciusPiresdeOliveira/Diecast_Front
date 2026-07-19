@@ -80,26 +80,65 @@ export default function Home() {
   );
 
   const columns: TableColumnsType<Miniatura> = [
-    { title: boldTitle("Nome"), dataIndex: "nome", key: "nome" },
-    { title: boldTitle("Marca"), dataIndex: ["marca", "nome"], key: "marca" },
-    { title: boldTitle("Linha"), dataIndex: ["linha", "nome"], key: "linha" },
     {
-      title: boldTitle("Tipo"),
-      dataIndex: "tipos",
-      key: "tipos",
-      render: (tipos: { id: number; nome: string }[]) =>
-        tipos && tipos.length > 0 ? tipos.map((t) => t.nome).join(", ") : "-",
+      title: boldTitle("Nome"),
+      dataIndex: "nome",
+      key: "nome",
+      align: "center",
     },
+    {
+      title: boldTitle("Qtd. Estoque"),
+      dataIndex: "quantidadeEstoque",
+      key: "quantidadeEstoque",
+      align: "center",
+      width: 50,
+    },
+    {
+      title: boldTitle("Qtd. Disponível"),
+      dataIndex: "quantidadeDisponivel",
+      key: "quantidadeDisponivel",
+      align: "center",
+      width: 50,
+    },
+    {
+      title: boldTitle("Qtd. em Garagem"),
+      dataIndex: "quantidadeEmGaragem",
+      key: "quantidadeEmGaragem",
+      align: "center",
+      width: 50,
+    },
+    {
+      title: boldTitle("Marca"),
+      dataIndex: ["marca", "nome"],
+      key: "marca",
+      align: "center",
+    },
+    {
+      title: boldTitle("Linha"),
+      dataIndex: ["linha", "nome"],
+      key: "linha",
+      align: "center",
+    },
+    // {
+    //   title: boldTitle("Tipo"),
+    //   dataIndex: "tipos",
+    //   key: "tipos",
+    //   render: (tipos: { id: number; nome: string }[]) =>
+    //     tipos && tipos.length > 0 ? tipos.map((t) => t.nome).join(", ") : "-",
+    //   align: "center",
+    // },
     {
       title: boldTitle("Escala"),
       dataIndex: ["escala", "nome"],
       key: "escala",
+      align: "center",
     },
-    { title: boldTitle("Ano"), dataIndex: "ano", key: "ano", width: 80 },
+    // { title: boldTitle("Ano"), dataIndex: "ano", key: "ano", width: 80 },
     {
       title: boldTitle("Condição"),
       dataIndex: ["condicao", "nome"],
       key: "condicao",
+      align: "center",
     },
     {
       title: boldTitle("Valor"),
@@ -112,11 +151,13 @@ export default function Home() {
               currency: "BRL",
             })
           : "-",
+      align: "center",
     },
     {
       title: boldTitle("Ações"),
       key: "acoes",
-      width: 100,
+      // width: 85,
+      align: "center",
       render: (_, record) => (
         <MiniActions
           mini={record}
@@ -183,7 +224,7 @@ export default function Home() {
         setPageNumber(0);
       }
     } catch (error) {
-      toast.error("Erro ao recuperar lista de miniaturas");
+      toast.error(getErrorMessage(error));
     } finally {
       hideLoading();
     }
@@ -351,12 +392,6 @@ export default function Home() {
       <div className="flex justify-center pt-12 relative">
         {user?.role === "ADMIN" && (
           <div className="flex justify-end absolute right-1/200 p-3.5 top-0 cursor-pointer ">
-            {/* <Download
-            color="#1f3565"
-            width={36}
-            height={36}
-            onClick={handleDownloadCatalog}
-          /> */}
             <CirclePlus
               color="#1f3565"
               width={36}
@@ -379,7 +414,12 @@ export default function Home() {
           />
         </div>
         {/* <div className="max-w-7xl w-[72.5vw] p-4 flex flex-wrap gap-4 justify-start"> */}
-        <div className="max-w-7xl sm:w-[80vw] md:w-[70vw] p-4">
+        {/* <div className="max-w-7xl sm:w-[80vw] md:w-[70vw] p-4"> */}
+        <div
+          className={`max-w-7xl p-4 transition-all duration-600 ease-out ${
+            showTable ? "sm:w-[85vw] md:w-[75vw]" : "sm:w-[80vw] md:w-[70vw]"
+          }`}
+        >
           {user?.role === "ADMIN" && (
             <div className="flex justify-end mb-4">
               <Segmented

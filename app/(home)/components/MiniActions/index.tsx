@@ -1,8 +1,12 @@
 "use client";
 
-import { Modal } from "antd";
-import { Pencil, Trash2 } from "lucide-react";
+import { getMiniImageById } from "@/app/api/miniatura";
+import { useLoading } from "@/app/hooks/useLoading";
+import { getErrorMessage } from "@/app/utils";
+import { Image, Modal } from "antd";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 import { MiniActionsProps } from "./types";
 
 export const MiniActions = ({
@@ -15,6 +19,9 @@ export const MiniActions = ({
 }: MiniActionsProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [imageUrl, setImageUrl] = useState<string | null>(null);
+  const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
+  const { showLoading, hideLoading } = useLoading();
 
   const handleEdit = () => {
     handleSelectedMini(mini);
@@ -27,6 +34,28 @@ export const MiniActions = ({
     setIsDeleting(false);
     if (success) {
       setIsDeleteModalOpen(false);
+    }
+  };
+
+  const handleGetMiniImageById = async () => {
+    showLoading();
+    try {
+      const { data } = await getMiniImageById(mini.id);
+      const url = URL.createObjectURL(data);
+      setImageUrl(url);
+      setIsImagePreviewOpen(true);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const handleClosePreview = () => {
+    setIsImagePreviewOpen(false);
+    if (imageUrl) {
+      URL.revokeObjectURL(imageUrl);
+      setImageUrl(null);
     }
   };
 
@@ -56,15 +85,35 @@ export const MiniActions = ({
     </Modal>
   );
 
+  const imagePreview = imageUrl && (
+    <Image
+      style={{ display: "none" }}
+      src={imageUrl}
+      preview={{
+        visible: isImagePreviewOpen,
+        onVisibleChange: (visible) => {
+          if (!visible) handleClosePreview();
+        },
+      }}
+    />
+  );
+
   if (variant === "table") {
     return (
-      <div className="flex items-center gap-3">
+      <div className="flex items-center justify-center gap-3">
         <button
           type="button"
           onClick={handleEdit}
           className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
         >
           <Pencil size={20} color="#07ac5a" />
+        </button>
+
+        <button
+          onClick={handleGetMiniImageById}
+          className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
+        >
+          <Eye size={24} color="#1f3565" />
         </button>
 
         <button
@@ -76,6 +125,7 @@ export const MiniActions = ({
         </button>
 
         {deleteModal}
+        {imagePreview}
       </div>
     );
   }
