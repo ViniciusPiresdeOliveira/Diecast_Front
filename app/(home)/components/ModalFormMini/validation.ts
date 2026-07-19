@@ -20,7 +20,7 @@ export const miniSchema = yup.object({
   stock: yup.number().typeError("Estoque deve ser um número"),
   //   .required("Estoque é obrigatório")
   //   .min(1, "Tem que ser no mínimo 1"),
-  status: yup.string().required("Status é obrigatório"),
+  condition: yup.string().required("Condição é obrigatória"),
   scale: yup.string().required("Escala é obrigatória"),
   image: yup
     .array()

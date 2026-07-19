@@ -87,8 +87,8 @@ export default function MiniDetail() {
             </div>
 
             <div className="flex gap-1">
-              <span className="font-bold">Status:</span>
-              <span>{mini?.status?.nome}</span>
+              <span className="font-bold">Condição:</span>
+              <span>{mini?.condicao?.nome}</span>
             </div>
 
             <div className="flex gap-1">

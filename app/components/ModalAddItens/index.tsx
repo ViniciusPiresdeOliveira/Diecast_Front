@@ -1,6 +1,11 @@
 "use client";
 
 import {
+  deleteConditionMiniById,
+  getAllConditionMini,
+  postConditionMini,
+} from "@/app/api/condicao_miniatura";
+import {
   deleteScaleMiniById,
   getAllScalesMini,
   postScaleMini,
@@ -15,11 +20,6 @@ import {
   getAllMarksMini,
   postMarkMini,
 } from "@/app/api/marca_miniatura";
-import {
-  deleteStatusMiniById,
-  getAllStatusMini,
-  postStatusMini,
-} from "@/app/api/status_miniatura";
 import {
   deleteTypesMiniById,
   getAllTypesMini,
@@ -56,7 +56,7 @@ export const ModalAddItens = ({
       marca: postMarkMini,
       tipos: postTypesMini,
       linha: postLineMini,
-      status: postStatusMini,
+      condicao: postConditionMini,
       escala: postScaleMini,
     };
 
@@ -124,7 +124,7 @@ export const ModalAddItens = ({
       marca: getAllMarksMini,
       tipos: getAllTypesMini,
       linha: getAllLinesMini,
-      status: getAllStatusMini,
+      condicao: getAllConditionMini,
       escala: getAllScalesMini,
     };
     const fetchMethod = apiMethods[typeAdd];
@@ -148,7 +148,7 @@ export const ModalAddItens = ({
       marca: deleteMarkMiniById,
       tipos: deleteTypesMiniById,
       linha: deleteLineMiniById,
-      status: deleteStatusMiniById,
+      condition: deleteConditionMiniById,
       escala: deleteScaleMiniById,
     };
 

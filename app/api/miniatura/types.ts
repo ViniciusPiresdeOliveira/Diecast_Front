@@ -4,7 +4,7 @@ export interface FilterMiniatura {
   ano: number | null;
   tipoIds: number[] | null;
   linhaIds: number[] | null;
-  statusIds: number[] | null;
+  condicaoIds: number[] | null;
   escalaIds: number[] | null;
   precoMin: number | null;
   precoMax: number | null;

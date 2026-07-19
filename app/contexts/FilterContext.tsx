@@ -14,7 +14,7 @@ type FilterContextType = {
   type: string[] | null;
   mark: string[] | null;
   line: string[] | null;
-  status: string[] | null;
+  condition: string[] | null;
   scale: string[] | null;
   name: string | null;
   year: number | null;
@@ -24,7 +24,7 @@ type FilterContextType = {
   handleAmount: (value: number) => void;
   handleMark: (value: string[]) => void;
   handleType: (value: string[]) => void;
-  handleStatus: (value: string[]) => void;
+  handleCondition: (value: string[]) => void;
   handleScale: (value: string[]) => void;
   handleLine: (value: string[]) => void;
   handleName: (value: string) => void;
@@ -43,7 +43,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
   const [amount, setMount] = useState(PaginationDefault.elementsPerPage);
   const [name, setName] = useState<string | null>(null);
   const [mark, setMark] = useState<string[] | null>(null);
-  const [status, setStatus] = useState<string[] | null>(null);
+  const [condition, setCondition] = useState<string[] | null>(null);
   const [scale, setScale] = useState<string[] | null>(null);
   const [line, setLine] = useState<string[] | null>(null);
   const [type, setType] = useState<string[] | null>(null);
@@ -55,8 +55,8 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
     setMount(value);
   }, []);
 
-  const handleStatus = useCallback((value: string[]) => {
-    setStatus(value);
+  const handleCondition = useCallback((value: string[]) => {
+    setCondition(value);
   }, []);
 
   const handleScale = useCallback((value: string[]) => {
@@ -97,7 +97,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
     setYear(null);
     setType(null);
     setLine(null);
-    setStatus(null);
+    setCondition(null);
     setScale(null);
     setMinPrice(null);
     setMaxPrice(null);
@@ -113,7 +113,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
       minPrice,
       maxPrice,
       line,
-      status,
+      condition,
       scale,
       handleMark,
       handleLine,
@@ -123,7 +123,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
       handleMinPrice,
       handleMaxPrice,
       handleAmount,
-      handleStatus,
+      handleCondition,
       handleScale,
       clearFilters,
     }),
@@ -136,7 +136,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
       minPrice,
       maxPrice,
       line,
-      status,
+      condition,
       scale,
       handleMark,
       handleLine,
@@ -146,7 +146,7 @@ export const FilterProvider = ({ children }: { children: ReactNode }) => {
       handleMinPrice,
       handleMaxPrice,
       handleAmount,
-      handleStatus,
+      handleCondition,
       handleScale,
       clearFilters,
     ],

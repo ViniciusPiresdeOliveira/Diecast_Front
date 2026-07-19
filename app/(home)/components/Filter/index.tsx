@@ -13,11 +13,11 @@ export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
     mark,
     line,
     type,
-    status,
+    condition,
     scale,
     clearFilters,
     handleMinPrice,
-    handleStatus,
+    handleCondition,
     handleMaxPrice,
     handleName,
     handleYear,
@@ -103,15 +103,15 @@ export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
         />
       </div>
       <div className="mb-2 flex flex-col">
-        <Label className="max-sm:text-white" text="Status" />
+        <Label className="max-sm:text-white" text="Condição" />
 
         <Select
           mode="multiple"
           style={{ width: "100%", cursor: "pointer" }}
           // placeholder="Status"
-          onChange={(e) => handleStatus(e)}
-          value={status}
-          options={lists?.status.map((mark) => ({
+          onChange={(e) => handleCondition(e)}
+          value={condition}
+          options={lists?.conditions.map((mark) => ({
             label: mark.nome,
             value: String(mark.id),
           }))}

@@ -1,9 +1,9 @@
 "use client";
 
+import { getAllConditionMini } from "@/app/api/condicao_miniatura";
 import { getAllScalesMini } from "@/app/api/escala_miniatura";
 import { getAllLinesMini } from "@/app/api/linha_miniatura";
 import { getAllMarksMini } from "@/app/api/marca_miniatura";
-import { getAllStatusMini } from "@/app/api/status_miniatura";
 import { getAllTypesMini } from "@/app/api/tipo_miniatura";
 import type { TableColumnsType } from "antd";
 import { Pagination, Segmented, Table } from "antd";
@@ -37,14 +37,14 @@ export default function Home() {
     mark,
     line,
     type,
-    status,
-    clearFilters,
+    condition,
   } = useFilter();
   const { showLoading, hideLoading } = useLoading();
   const { user } = useAuth();
 
-  const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
-  const [menuVisibility, setMenuVisibility] = useState<boolean>(false);
+  const [viewMode, setViewMode] = useState<"cards" | "table">(
+    user ? "table" : "cards",
+  );
   const [selectedMini, setSelectedMini] = useState<Miniatura | null>(null);
   const [visibleModalFormMini, setVisibleModalFormMini] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -59,7 +59,7 @@ export default function Home() {
     marks: [],
     types: [],
     lines: [],
-    status: [],
+    conditions: [],
     scales: [],
   });
 
@@ -204,7 +204,7 @@ export default function Home() {
       ano: year || null,
       tipoIds: toNumberArray(type),
       linhaIds: toNumberArray(line),
-      statusIds: toNumberArray(status),
+      condicaoIds: toNumberArray(condition),
       escalaIds: toNumberArray(scale),
       precoMin: minPrice ? minPrice / 100 : null,
       precoMax: maxPrice ? maxPrice / 100 : null,
@@ -294,14 +294,13 @@ export default function Home() {
     }
   };
 
-  const fetchGetAllStatus = async () => {
+  const fetchGetAllConditions = async () => {
     showLoading();
     try {
-      const response = await getAllStatusMini();
-
+      const response = await getAllConditionMini();
       setFilterLists((prev) => ({
         ...prev,
-        status: response.data,
+        conditions: response.data,
       }));
     } finally {
       hideLoading();
@@ -326,7 +325,7 @@ export default function Home() {
     fetchGetAllTypes();
     fetchGetAllMarks();
     fetchGetAllLines();
-    fetchGetAllStatus();
+    fetchGetAllConditions();
     fetchGetAllScales();
   }, []);
 
@@ -464,7 +463,7 @@ export default function Home() {
           refreshMarksList={fetchGetAllMarks}
           refreshTypesList={fetchGetAllTypes}
           refreshLinesList={fetchGetAllLines}
-          refreshStatusList={fetchGetAllStatus}
+          refreshConditionsList={fetchGetAllConditions}
           refreshScalesList={fetchGetAllScales}
         />
       </div>

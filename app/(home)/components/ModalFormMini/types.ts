@@ -10,6 +10,6 @@ export interface ModalFormMiniProps {
   refreshMarksList: () => Promise<void>;
   refreshTypesList: () => Promise<void>;
   refreshLinesList: () => Promise<void>;
-  refreshStatusList: () => Promise<void>;
+  refreshConditionsList: () => Promise<void>;
   refreshScalesList: () => Promise<void>;
 }

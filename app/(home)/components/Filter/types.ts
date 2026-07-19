@@ -9,6 +9,6 @@ export interface FilterLists {
   marks: GenericGetTypes[];
   types: GenericGetTypes[];
   lines: GenericGetTypes[];
-  status: GenericGetTypes[];
+  conditions: GenericGetTypes[];
   scales: GenericGetTypes[];
 }

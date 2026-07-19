@@ -1,8 +1,8 @@
+import { getAllConditionMini } from "@/app/api/condicao_miniatura";
 import { getAllScalesMini } from "@/app/api/escala_miniatura";
 import { getAllLinesMini } from "@/app/api/linha_miniatura";
 import { getAllMarksMini } from "@/app/api/marca_miniatura";
 import { postMiniatura, putMiniatura } from "@/app/api/miniatura";
-import { getAllStatusMini } from "@/app/api/status_miniatura";
 import { getAllTypesMini } from "@/app/api/tipo_miniatura";
 import { Label } from "@/app/components/Label";
 import { TypeAdd } from "@/app/components/Label/types";
@@ -40,7 +40,7 @@ export const ModalFormMini = ({
   refreshMarksList,
   refreshTypesList,
   refreshLinesList,
-  refreshStatusList,
+  refreshConditionsList,
   refreshScalesList,
 }: ModalFormMiniProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -49,7 +49,9 @@ export const ModalFormMini = ({
   const [listMarksMini, setListMarksMini] = useState<GenericGetTypes[]>([]);
   const [listTypesMini, setListTypesMini] = useState<GenericGetTypes[]>([]);
   const [listLinesMini, setListLinesMini] = useState<GenericGetTypes[]>([]);
-  const [listStatusMini, setListStatusMini] = useState<GenericGetTypes[]>([]);
+  const [listConditionsMini, setListConditionsMini] = useState<
+    GenericGetTypes[]
+  >([]);
   const [listScalesMini, setListScalesMini] = useState<GenericGetTypes[]>([]);
   const [refreshRequests, setRefreshRequests] = useState<TypeAdd | "">("");
   const { isMobile } = useTypeDevice();
@@ -81,8 +83,8 @@ export const ModalFormMini = ({
         await refreshLinesList();
         break;
 
-      case "status":
-        await refreshStatusList();
+      case "condition":
+        await refreshConditionsList();
         break;
 
       case "escala":
@@ -148,11 +150,11 @@ export const ModalFormMini = ({
     }
   };
 
-  const fetchGetAllStatusMini = async () => {
+  const fetchGetAllConditionsMini = async () => {
     showLoading();
     try {
-      const { data } = await getAllStatusMini();
-      setListStatusMini(data);
+      const { data } = await getAllConditionMini();
+      setListConditionsMini(data);
     } catch (e) {
     } finally {
       hideLoading();
@@ -184,7 +186,7 @@ export const ModalFormMini = ({
       fetchGetAllMarksMini();
       fetchGetAllTypesMini();
       fetchGetAllLinesMini();
-      fetchGetAllStatusMini();
+      fetchGetAllConditionsMini();
       fetchGetAllScalesMini();
     }
   }, [isModalOpen]);
@@ -198,7 +200,7 @@ export const ModalFormMini = ({
       linha: fetchGetAllLinesMini,
       tipos: fetchGetAllTypesMini,
       marca: fetchGetAllMarksMini,
-      status: fetchGetAllStatusMini,
+      conditions: fetchGetAllConditionsMini,
     };
 
     const key = refreshRequests as keyof typeof refreshMap;
@@ -230,7 +232,7 @@ export const ModalFormMini = ({
       brand: String(mini.marca?.id),
       types: mini.tipos?.map((t) => String(t.id)) || [],
       line: String(mini.linha?.id),
-      status: String(mini.status?.id),
+      condition: String(mini.condicao.id),
       scale: String(mini.escala?.id),
       image: mini.imagem
         ? [
@@ -516,14 +518,14 @@ export const ModalFormMini = ({
           />
 
           <Controller
-            name="status"
+            name="condition"
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
                 <Label
-                  text="Status"
+                  text="Condição"
                   required
-                  iconAdd="status"
+                  iconAdd="condition"
                   handleForceRefreshLists={handleForceRefreshLists}
                 />
                 <Select
@@ -531,14 +533,14 @@ export const ModalFormMini = ({
                   style={{ width: "100%" }}
                   // placeholder="Status"
                   onChange={field.onChange}
-                  status={errors.status ? "error" : ""}
-                  options={listStatusMini.map((mark) => ({
+                  status={errors.condition ? "error" : ""}
+                  options={listConditionsMini.map((mark) => ({
                     label: mark.nome,
                     value: String(mark.id),
                   }))}
                 />
-                {errors.status && (
-                  <MessageError message={errors.status.message as string} />
+                {errors.condition && (
+                  <MessageError message={errors.condition.message as string} />
                 )}
               </div>
             )}

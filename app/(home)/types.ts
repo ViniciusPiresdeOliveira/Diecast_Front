@@ -8,7 +8,7 @@ export interface TipoMiniatura {
   nome: string;
 }
 
-export interface StatusMiniatura {
+export interface CondicoesMiniatura {
   id: number;
   nome: string;
 }
@@ -27,7 +27,7 @@ export interface Miniatura {
   nome: string;
   marca: MarcaMiniatura;
   tipos: TipoMiniatura[];
-  status: StatusMiniatura;
+  condicao: CondicoesMiniatura;
   imagem?: string; // byte[] → array de números
   ano: number;
   escala: EscalaMiniatura;
