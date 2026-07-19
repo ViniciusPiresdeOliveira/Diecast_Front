@@ -83,7 +83,7 @@ export const ModalFormMini = ({
         await refreshLinesList();
         break;
 
-      case "condition":
+      case "condicao":
         await refreshConditionsList();
         break;
 
@@ -525,7 +525,7 @@ export const ModalFormMini = ({
                 <Label
                   text="Condição"
                   required
-                  iconAdd="condition"
+                  iconAdd="condicao"
                   handleForceRefreshLists={handleForceRefreshLists}
                 />
                 <Select

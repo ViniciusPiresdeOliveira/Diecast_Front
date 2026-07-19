@@ -1,4 +1,4 @@
-export type TypeAdd = "marca" | "tipos" | "linha" | "condition" | "escala";
+export type TypeAdd = "marca" | "tipos" | "linha" | "condicao" | "escala";
 export interface LabelProps {
   text: string;
   className?: string;

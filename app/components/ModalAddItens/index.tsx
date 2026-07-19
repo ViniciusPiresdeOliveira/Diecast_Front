@@ -148,7 +148,7 @@ export const ModalAddItens = ({
       marca: deleteMarkMiniById,
       tipos: deleteTypesMiniById,
       linha: deleteLineMiniById,
-      condition: deleteConditionMiniById,
+      condicao: deleteConditionMiniById,
       escala: deleteScaleMiniById,
     };
 
