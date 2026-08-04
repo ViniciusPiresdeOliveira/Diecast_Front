@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import { Loading } from "./components/Loading";
 import { AuthProvider } from "./contexts/AuthProvider";
 import { FilterProvider } from "./contexts/FilterContext";
+import { FilterListsProvider } from "./contexts/FilterListsContext";
 import { LoadingProvider } from "./contexts/LoagindContext";
 import { TypeDeviceProvider } from "./contexts/TypeDevice";
 import "./globals.css";
@@ -35,7 +36,9 @@ export default async function RootLayout({
           <ToastContainer />
           <TypeDeviceProvider initialIsMobile={isMobile}>
             <AuthProvider>
-              <FilterProvider>{children}</FilterProvider>
+              <FilterProvider>
+                <FilterListsProvider>{children}</FilterListsProvider>
+              </FilterProvider>
             </AuthProvider>
           </TypeDeviceProvider>
         </LoadingProvider>{" "}

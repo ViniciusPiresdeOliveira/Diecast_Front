@@ -42,7 +42,7 @@ export const Drawer = ({ isVisible, handleVisibility }: DrawerProps) => {
           </button>
         </div>
 
-        <Filter />
+        <Filter isVisible={isVisible} />
       </aside>
     </div>
   );

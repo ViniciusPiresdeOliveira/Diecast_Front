@@ -14,11 +14,11 @@ import { deleteMiniById, getFilterMiniatura } from "../api/miniatura";
 import { FilterMiniatura } from "../api/miniatura/types";
 import { useAuth } from "../hooks/useAuth";
 import { useFilter } from "../hooks/useFilter";
+import { useFilterLists } from "../hooks/useFilterLists";
 import { useLoading } from "../hooks/useLoading";
 import { getErrorMessage, toNumberArray } from "../utils";
 import { Card } from "./components/Card";
 import { Filter } from "./components/Filter";
-import { FilterLists } from "./components/Filter/types";
 import { MiniActions } from "./components/MiniActions";
 import { ModalFormMini } from "./components/ModalFormMini";
 import { TypeOfModalAction } from "./components/ModalFormMini/types";
@@ -41,6 +41,7 @@ export default function Home() {
   } = useFilter();
   const { showLoading, hideLoading } = useLoading();
   const { user } = useAuth();
+  const { filterLists, handleChangeFilterLists } = useFilterLists();
 
   const [viewMode, setViewMode] = useState<"cards" | "table">(
     user ? "table" : "cards",
@@ -55,13 +56,6 @@ export default function Home() {
   const [pageNumber, setPageNumber] = useState(PAGE_INITIAL);
   const [typeOfModalAction, setTypeOfModalAction] =
     useState<TypeOfModalAction>("add");
-  const [filterLists, setFilterLists] = useState<FilterLists>({
-    marks: [],
-    types: [],
-    lines: [],
-    conditions: [],
-    scales: [],
-  });
 
   const handleVisibleFormMini = (type: TypeOfModalAction) => {
     setTypeOfModalAction(type);
@@ -259,10 +253,7 @@ export default function Home() {
     try {
       const response = await getAllTypesMini();
 
-      setFilterLists((prev) => ({
-        ...prev,
-        types: response.data,
-      }));
+      handleChangeFilterLists({ types: response.data });
     } finally {
       hideLoading();
     }
@@ -273,10 +264,7 @@ export default function Home() {
     try {
       const response = await getAllMarksMini();
 
-      setFilterLists((prev) => ({
-        ...prev,
-        marks: response.data,
-      }));
+      handleChangeFilterLists({ marks: response.data });
     } finally {
       hideLoading();
     }
@@ -287,10 +275,7 @@ export default function Home() {
     try {
       const response = await getAllLinesMini();
 
-      setFilterLists((prev) => ({
-        ...prev,
-        lines: response.data,
-      }));
+      handleChangeFilterLists({ lines: response.data });
     } finally {
       hideLoading();
     }
@@ -300,10 +285,7 @@ export default function Home() {
     showLoading();
     try {
       const response = await getAllConditionMini();
-      setFilterLists((prev) => ({
-        ...prev,
-        conditions: response.data,
-      }));
+      handleChangeFilterLists({ conditions: response.data });
     } finally {
       hideLoading();
     }
@@ -314,10 +296,7 @@ export default function Home() {
     try {
       const response = await getAllScalesMini();
 
-      setFilterLists((prev) => ({
-        ...prev,
-        scales: response.data,
-      }));
+      handleChangeFilterLists({ scales: response.data });
     } finally {
       hideLoading();
     }
@@ -409,10 +388,7 @@ export default function Home() {
         >
           {" "}
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>
-          <Filter
-            handleFilterMiniaturas={fetchGetFilterMiniaturas}
-            lists={filterLists}
-          />
+          <Filter handleFilterMiniaturas={fetchGetFilterMiniaturas} />
         </div>
         {/* <div className="max-w-7xl w-[72.5vw] p-4 flex flex-wrap gap-4 justify-start"> */}
         {/* <div className="max-w-7xl sm:w-[80vw] md:w-[70vw] p-4"> */}

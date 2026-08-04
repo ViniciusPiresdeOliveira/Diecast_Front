@@ -1,10 +1,16 @@
 import { Label } from "@/app/components/Label";
 import { useFilter } from "@/app/hooks/useFilter";
+import { useFilterLists } from "@/app/hooks/useFilterLists";
 import { prefixExample } from "@/app/utils";
 import { Button, Divider, Input, InputNumber, Select } from "antd";
 import { FilterProps } from "./types";
+import { getLabelClassName } from "./utils";
 
-export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
+export const Filter = ({
+  handleFilterMiniaturas,
+  isVisible = false,
+}: FilterProps) => {
+  const { filterLists } = useFilterLists();
   const {
     maxPrice,
     minPrice,
@@ -44,7 +50,7 @@ export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
   return (
     <>
       <div className="mb-2 flex flex-col">
-        <Label className="max-sm:text-white" text="Nome" />
+        <Label className={getLabelClassName(isVisible)} text="Nome" />
         <Input
           placeholder={prefixExample + "Ferrari"}
           value={name ?? ""}
@@ -52,20 +58,20 @@ export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
         />
       </div>
       <div className="mb-2 flex flex-col">
-        <Label className="max-sm:text-white" text="Marcas" />
+        <Label className={getLabelClassName(isVisible)} text="Marcas" />
         <Select
           mode="multiple"
           style={{ width: "100%", cursor: "pointer" }}
           onChange={handleMark}
           value={mark}
-          options={lists?.marks.map((mark) => ({
+          options={filterLists?.marks.map((mark) => ({
             label: mark.nome,
             value: String(mark.id),
           }))}
         />
       </div>
       <div className="mb-2 flex flex-col w-full">
-        <Label className="max-sm:text-white" text="Ano" />
+        <Label className={getLabelClassName(isVisible)} text="Ano" />
         <InputNumber
           style={{ width: "100%" }}
           min={0}
@@ -75,35 +81,35 @@ export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
         />
       </div>
       <div className="mb-2 flex flex-col">
-        <Label className="max-sm:text-white" text="Tipos" />
+        <Label className={getLabelClassName(isVisible)} text="Tipos" />
         <Select
           mode="multiple"
           style={{ width: "100%", cursor: "pointer" }}
           // placeholder="Tipos"
           onChange={(e) => handleType(e)}
           value={type}
-          options={lists?.types.map((mark) => ({
+          options={filterLists?.types.map((mark) => ({
             label: mark.nome,
             value: String(mark.id),
           }))}
         />
       </div>
       <div className="mb-2 flex flex-col">
-        <Label className="max-sm:text-white" text="Linhas" />
+        <Label className={getLabelClassName(isVisible)} text="Linhas" />
         <Select
           mode="multiple"
           style={{ width: "100%", cursor: "pointer" }}
           // placeholder="Tipos"
           onChange={(e) => handleLine(e)}
           value={line}
-          options={lists?.lines.map((mark) => ({
+          options={filterLists?.lines.map((mark) => ({
             label: mark.nome,
             value: String(mark.id),
           }))}
         />
       </div>
       <div className="mb-2 flex flex-col">
-        <Label className="max-sm:text-white" text="Condição" />
+        <Label className={getLabelClassName(isVisible)} text="Condição" />
 
         <Select
           mode="multiple"
@@ -111,21 +117,21 @@ export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
           // placeholder="Status"
           onChange={(e) => handleCondition(e)}
           value={condition}
-          options={lists?.conditions.map((mark) => ({
+          options={filterLists?.conditions.map((mark) => ({
             label: mark.nome,
             value: String(mark.id),
           }))}
         />
       </div>
       <div className="mb-2 flex flex-col">
-        <Label className="max-sm:text-white" text="Escala" />
+        <Label className={getLabelClassName(isVisible)} text="Escala" />
         <Select
           mode="multiple"
           style={{ width: "100%", cursor: "pointer" }}
           // placeholder="Escala"
           onChange={(e) => handleScale(e)}
           value={scale}
-          options={lists?.scales.map((mark) => ({
+          options={filterLists?.scales.map((mark) => ({
             label: mark.nome,
             value: String(mark.id),
           }))}
@@ -133,7 +139,7 @@ export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
       </div>
 
       <div className="mb-2 flex flex-col">
-        <Label className="max-sm:text-white" text="Preço mínimo" />
+        <Label className={getLabelClassName(isVisible)} text="Preço mínimo" />
         <Input
           style={{ width: "100%" }}
           value={formatCurrency(minPrice || 0)}
@@ -146,7 +152,7 @@ export const Filter = ({ handleFilterMiniaturas, lists }: FilterProps) => {
       </div>
 
       <div className="mb-0 flex flex-col">
-        <Label className="max-sm:text-white" text="Preço máximo" />
+        <Label className={getLabelClassName(isVisible)} text="Preço máximo" />
         <Input
           style={{ width: "100%" }}
           value={formatCurrency(maxPrice || 0)}
