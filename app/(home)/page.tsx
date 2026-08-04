@@ -15,6 +15,7 @@ import { FilterMiniatura } from "../api/miniatura/types";
 import { useAuth } from "../hooks/useAuth";
 import { useFilter } from "../hooks/useFilter";
 import { useFilterLists } from "../hooks/useFilterLists";
+import { useFilterTrigger } from "../hooks/useFilterTrigger";
 import { useLoading } from "../hooks/useLoading";
 import { getErrorMessage, toNumberArray } from "../utils";
 import { Card } from "./components/Card";
@@ -41,7 +42,9 @@ export default function Home() {
   } = useFilter();
   const { showLoading, hideLoading } = useLoading();
   const { user } = useAuth();
+
   const { filterLists, handleChangeFilterLists } = useFilterLists();
+  const { filterTrigger } = useFilterTrigger();
 
   const [viewMode, setViewMode] = useState<"cards" | "table">(
     user ? "table" : "cards",
@@ -312,7 +315,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchGetFilterMiniaturas();
-  }, [pageNumber]);
+  }, [pageNumber, filterTrigger]);
 
   const renderMiniList = () => {
     if (!hasMiniInList) {

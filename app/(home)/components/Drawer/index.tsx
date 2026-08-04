@@ -1,8 +1,15 @@
+import { useFilterTrigger } from "@/app/hooks/useFilterTrigger";
 import { X } from "lucide-react";
 import { Filter } from "../Filter";
 import { DrawerProps } from "./types";
 
 export const Drawer = ({ isVisible, handleVisibility }: DrawerProps) => {
+  const { triggerFilter } = useFilterTrigger();
+
+  const handleTriggerFilter = () => {
+    triggerFilter();
+    handleVisibility();
+  };
   return (
     <div
       className={`
@@ -42,7 +49,10 @@ export const Drawer = ({ isVisible, handleVisibility }: DrawerProps) => {
           </button>
         </div>
 
-        <Filter isVisible={isVisible} />
+        <Filter
+          handleFilterMiniaturas={handleTriggerFilter}
+          isVisible={isVisible}
+        />
       </aside>
     </div>
   );

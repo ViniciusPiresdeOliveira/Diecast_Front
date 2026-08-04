@@ -29,13 +29,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser(null);
   };
 
+  const checkHasToken = async (): Promise<boolean> => {
+    try {
+      const res = await fetch("/api/has-token");
+      const { hasToken } = await res.json();
+      return hasToken;
+    } catch {
+      return false;
+    }
+  };
+
   useEffect(() => {
     async function loadUser() {
+      const hasToken = await checkHasToken();
+
+      if (!hasToken) {
+        handleClearUser();
+        return;
+      }
+
       try {
         const { data } = await getAuthMe();
         handleUser(data.login, data.role);
       } catch (err) {
         handleClearUser();
+        await fetch("/api/logout", { method: "POST" });
       }
     }
 

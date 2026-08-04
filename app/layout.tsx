@@ -5,6 +5,7 @@ import { Loading } from "./components/Loading";
 import { AuthProvider } from "./contexts/AuthProvider";
 import { FilterProvider } from "./contexts/FilterContext";
 import { FilterListsProvider } from "./contexts/FilterListsContext";
+import { FilterTriggerProvider } from "./contexts/FilterTriggerContext";
 import { LoadingProvider } from "./contexts/LoagindContext";
 import { TypeDeviceProvider } from "./contexts/TypeDevice";
 import "./globals.css";
@@ -37,7 +38,9 @@ export default async function RootLayout({
           <TypeDeviceProvider initialIsMobile={isMobile}>
             <AuthProvider>
               <FilterProvider>
-                <FilterListsProvider>{children}</FilterListsProvider>
+                <FilterListsProvider>
+                  <FilterTriggerProvider>{children}</FilterTriggerProvider>
+                </FilterListsProvider>
               </FilterProvider>
             </AuthProvider>
           </TypeDeviceProvider>
