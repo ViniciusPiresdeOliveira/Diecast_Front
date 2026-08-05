@@ -133,7 +133,8 @@ export const ModalFormMini = ({
     if (!mini) {
       setValue("availableQty", stockQty);
     }
-    if (mini && stockQty !== mini.quantidadeEstoque) {
+    if (mini) {
+      console.log(stockQty - garageQty);
       setValue("availableQty", stockQty - garageQty);
     }
   }, [stockQty]);
