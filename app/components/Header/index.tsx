@@ -45,6 +45,11 @@ export const Header = ({ handleVisibilityMenu }: HeaderProps) => {
         </p>
       </button>
       <div className="flex justify-center items-center gap-6">
+        {user?.role === "ADMIN" && (
+          <div className="hidden min-md:flex gap-6 text-gray-200 font-medium">
+            <Link href={"/clientes"}>Clientes</Link>
+          </div>
+        )}
         <div className="hidden min-md:flex gap-6 text-gray-200 font-medium">
           <Link href={"/afiliado"}>Afiliado</Link>
         </div>
