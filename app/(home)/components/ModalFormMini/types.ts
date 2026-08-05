@@ -7,9 +7,4 @@ export interface ModalFormMiniProps {
   handleVisibleFormMini: (type: TypeOfModalAction) => void;
   type: TypeOfModalAction;
   refreshMiniList: () => void;
-  refreshMarksList: () => Promise<void>;
-  refreshTypesList: () => Promise<void>;
-  refreshLinesList: () => Promise<void>;
-  refreshConditionsList: () => Promise<void>;
-  refreshScalesList: () => Promise<void>;
 }

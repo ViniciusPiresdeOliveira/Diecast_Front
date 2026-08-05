@@ -11,7 +11,7 @@ interface User {
 }
 
 type AuthContextType = {
-  user: User | null;
+  user: User | null | undefined;
   handleUser: (name: string, role: UserType) => void;
   handleClearUser: () => void;
 };
@@ -19,7 +19,7 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
 
   const handleUser = (name: string, role: UserType) => {
     setUser({ name, role });
@@ -42,6 +42,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     async function loadUser() {
       const hasToken = await checkHasToken();
+      // console.log("toke dfdfn", hasToken);
 
       if (!hasToken) {
         handleClearUser();

@@ -2,36 +2,21 @@
 
 import {
   deleteConditionMiniById,
-  getAllConditionMini,
   postConditionMini,
 } from "@/app/api/condicao_miniatura";
-import {
-  deleteScaleMiniById,
-  getAllScalesMini,
-  postScaleMini,
-} from "@/app/api/escala_miniatura";
-import {
-  deleteLineMiniById,
-  getAllLinesMini,
-  postLineMini,
-} from "@/app/api/linha_miniatura";
-import {
-  deleteMarkMiniById,
-  getAllMarksMini,
-  postMarkMini,
-} from "@/app/api/marca_miniatura";
-import {
-  deleteTypesMiniById,
-  getAllTypesMini,
-  postTypesMini,
-} from "@/app/api/tipo_miniatura";
+import { deleteScaleMiniById, postScaleMini } from "@/app/api/escala_miniatura";
+import { deleteLineMiniById, postLineMini } from "@/app/api/linha_miniatura";
+import { deleteMarkMiniById, postMarkMini } from "@/app/api/marca_miniatura";
+import { deleteTypesMiniById, postTypesMini } from "@/app/api/tipo_miniatura";
+import { useFilterLists } from "@/app/hooks/useFilterLists";
 import { useLoading } from "@/app/hooks/useLoading";
 import { GenericGetTypes } from "@/app/types";
 import { getErrorMessage } from "@/app/utils";
-import { Button, Input, Modal, Popconfirm, Space, Table } from "antd";
+import { Button, Input, Modal, Space, Table } from "antd";
 import { Trash2 } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "react-toastify";
+import { DeleteConfirmModal } from "../Modal/Delete";
 import { ModalAddItensProps } from "./types";
 
 export const ModalAddItens = ({
@@ -40,12 +25,33 @@ export const ModalAddItens = ({
   loading,
   isVisible,
   handleVisibility,
-  handleForceRefreshLists,
 }: ModalAddItensProps) => {
+  const { hideLoading, showLoading } = useLoading();
+  const { filterLists, handleChangeFilterLists } = useFilterLists();
+
   const [value, setValue] = useState("");
   const [editingId, setEditingId] = useState<string | number | null>(null);
-  const [listData, setListData] = useState<GenericGetTypes[]>([]);
-  const { hideLoading, showLoading } = useLoading();
+
+  const filterListsKeyMap = {
+    marca: "marks",
+    tipos: "types",
+    linha: "lines",
+    condicao: "conditions",
+    escala: "scales",
+  } as const;
+
+  const updateFilterListByType = (
+    type: typeof typeAdd,
+    updatedList: GenericGetTypes[],
+  ) => {
+    const key = filterListsKeyMap[type];
+
+    handleChangeFilterLists({
+      [key]: updatedList,
+    } as Partial<typeof filterLists>);
+  };
+
+  const listData = filterLists[filterListsKeyMap[typeAdd]];
 
   const handleSubmit = async () => {
     if (!value.trim()) return;
@@ -65,12 +71,13 @@ export const ModalAddItens = ({
     if (!createMethod) return;
 
     try {
-      await createMethod({ nome: value });
-
+      const { data } = await createMethod({ nome: value });
       toast.success(`${value} criado com sucesso`);
 
-      await fetchGetAllTypeAdd();
-      handleForceRefreshLists?.(typeAdd);
+      updateFilterListByType(typeAdd, [
+        ...filterLists[filterListsKeyMap[typeAdd]],
+        data,
+      ]);
     } catch (e) {
       toast.error(getErrorMessage(e));
     } finally {
@@ -78,6 +85,12 @@ export const ModalAddItens = ({
       hideLoading();
     }
   };
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const [selectedRecord, setSelectedRecord] = useState<GenericGetTypes | null>(
+    null,
+  );
 
   const columns = [
     {
@@ -99,47 +112,20 @@ export const ModalAddItens = ({
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       render: (_: any, record: any) => (
         <Space style={{ width: "100%" }} className="ml-3">
-          <Popconfirm
-            title="Deseja excluir?"
-            onConfirm={() => handleDeleteByType(record.id)}
-            okText="Sim"
-            cancelText="Não"
-          >
-            <Button
-              danger
-              className="transition-all duration-300 ease-out
-      hover:scale-110"
-              size="small"
-              icon={<Trash2 size={14} />}
-            />
-          </Popconfirm>
+          <Button
+            danger
+            size="small"
+            className="transition-all duration-300 ease-out hover:scale-110"
+            icon={<Trash2 size={14} />}
+            onClick={() => {
+              setSelectedRecord(record);
+              setIsDeleteModalOpen(true);
+            }}
+          />
         </Space>
       ),
     },
   ];
-
-  const fetchGetAllTypeAdd = async () => {
-    showLoading();
-    const apiMethods = {
-      marca: getAllMarksMini,
-      tipos: getAllTypesMini,
-      linha: getAllLinesMini,
-      condicao: getAllConditionMini,
-      escala: getAllScalesMini,
-    };
-    const fetchMethod = apiMethods[typeAdd];
-
-    if (!fetchMethod) return;
-    try {
-      const { data } = await fetchMethod();
-      setListData(data); // Supondo que seu state se chame setData
-    } catch (e) {
-      toast.error(getErrorMessage(e));
-      handleVisibility();
-    } finally {
-      hideLoading();
-    }
-  };
 
   const handleDeleteByType = async (id: number) => {
     showLoading();
@@ -158,24 +144,22 @@ export const ModalAddItens = ({
 
     try {
       await deleteMethod(id);
-      const nameDeleted = listData?.filter((e) => e.id === id)[0].nome;
+      const nameDeleted = listData?.find((e) => e.id === id)?.nome;
 
       toast.success(`${nameDeleted} excluído com sucesso`);
 
-      await fetchGetAllTypeAdd(); // 🔥 recarrega lista
-      handleForceRefreshLists?.(typeAdd); // opcional (atualiza pai)
+      updateFilterListByType(
+        typeAdd,
+        filterLists[filterListsKeyMap[typeAdd]].filter(
+          (item) => item.id !== id,
+        ),
+      );
     } catch (e) {
       toast.error(getErrorMessage(e));
     } finally {
       hideLoading();
     }
   };
-
-  useEffect(() => {
-    if (isVisible && typeAdd) {
-      fetchGetAllTypeAdd();
-    }
-  }, [typeAdd]);
 
   return (
     <Modal
@@ -203,6 +187,26 @@ export const ModalAddItens = ({
         columns={columns}
         pagination={false}
         scroll={{ y: 300 }} // 👈 altura máxima
+      />
+
+      <DeleteConfirmModal
+        open={isDeleteModalOpen}
+        title={`Excluir ${typeAdd}`}
+        message="Tem certeza que deseja excluir "
+        nameSpecific={selectedRecord?.nome}
+        onConfirm={() => {
+          if (selectedRecord) {
+            handleDeleteByType(selectedRecord.id);
+          }
+          setIsDeleteModalOpen(false);
+          setSelectedRecord(null);
+        }}
+        onCancel={() => {
+          setIsDeleteModalOpen(false);
+          setSelectedRecord(null);
+        }}
+        confirmText="Sim"
+        cancelText="Não"
       />
     </Modal>
   );

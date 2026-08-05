@@ -49,6 +49,11 @@ export default function Home() {
   const [viewMode, setViewMode] = useState<"cards" | "table">(
     user ? "table" : "cards",
   );
+
+  useEffect(() => {
+    setViewMode(user !== undefined ? "table" : "cards");
+  }, [user]);
+
   const [selectedMini, setSelectedMini] = useState<Miniatura | null>(null);
   const [visibleModalFormMini, setVisibleModalFormMini] = useState(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -195,6 +200,8 @@ export default function Home() {
       top: 0,
       behavior: "smooth", // opcional (animação)
     });
+    console.log("user?.name fetchGetFilterMiniaturas", user?.name);
+
     const filterPayload: FilterMiniatura = {
       nome: name || null,
       marcaIds: toNumberArray(mark),
@@ -228,7 +235,7 @@ export default function Home() {
       hideLoading();
     }
   };
-
+  console.log("user?.name out", user?.name);
   const handleDeleteMiniById = async (mini: Miniatura): Promise<boolean> => {
     showLoading();
     try {
@@ -314,8 +321,10 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    fetchGetFilterMiniaturas();
-  }, [pageNumber, filterTrigger]);
+    if (user !== undefined) {
+      fetchGetFilterMiniaturas();
+    }
+  }, [pageNumber, filterTrigger, user]);
 
   const renderMiniList = () => {
     if (!hasMiniInList) {
@@ -441,11 +450,6 @@ export default function Home() {
           visible={visibleModalFormMini}
           handleVisibleFormMini={handleVisibleFormMini}
           refreshMiniList={refreshMiniList}
-          refreshMarksList={fetchGetAllMarks}
-          refreshTypesList={fetchGetAllTypes}
-          refreshLinesList={fetchGetAllLines}
-          refreshConditionsList={fetchGetAllConditions}
-          refreshScalesList={fetchGetAllScales}
         />
       </div>
       <Pagination

@@ -8,7 +8,7 @@ export const buildMiniaturaFormData = (
   const formData = new FormData();
 
   const file = mini.image?.[0]?.originFileObj;
-  const payload = mapMiniaturaPayload(mini, isPost);
+  const payload = mapMiniaturaPayload(mini);
 
   formData.append(
     "miniatura",

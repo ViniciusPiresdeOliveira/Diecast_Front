@@ -1,15 +1,10 @@
-import { getAllConditionMini } from "@/app/api/condicao_miniatura";
-import { getAllScalesMini } from "@/app/api/escala_miniatura";
-import { getAllLinesMini } from "@/app/api/linha_miniatura";
-import { getAllMarksMini } from "@/app/api/marca_miniatura";
 import { postMiniatura, putMiniatura } from "@/app/api/miniatura";
-import { getAllTypesMini } from "@/app/api/tipo_miniatura";
 import { Label } from "@/app/components/Label";
-import { TypeAdd } from "@/app/components/Label/types";
 import { MessageError } from "@/app/components/MessageError";
+import { QuantitySelector } from "@/app/components/QuantitySelector";
+import { useFilterLists } from "@/app/hooks/useFilterLists";
 import { useLoading } from "@/app/hooks/useLoading";
 import { useTypeDevice } from "@/app/hooks/useTypeDevice";
-import { GenericGetTypes } from "@/app/types";
 import { getErrorMessage } from "@/app/utils";
 import { yupResolver } from "@hookform/resolvers/yup";
 import {
@@ -28,7 +23,7 @@ import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { formatImage } from "../../utils";
 import { ModalFormMiniProps } from "./types";
-import { defaultValuesForm } from "./utils";
+import { defaultValuesForm, validateQuantities } from "./utils";
 import { MiniFormValues, miniSchema } from "./validation";
 
 export const ModalFormMini = ({
@@ -37,128 +32,35 @@ export const ModalFormMini = ({
   handleVisibleFormMini,
   type,
   refreshMiniList,
-  refreshMarksList,
-  refreshTypesList,
-  refreshLinesList,
-  refreshConditionsList,
-  refreshScalesList,
 }: ModalFormMiniProps) => {
+  const { isMobile } = useTypeDevice();
+  const { showLoading, hideLoading } = useLoading();
+  const { filterLists } = useFilterLists();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-  const [listMarksMini, setListMarksMini] = useState<GenericGetTypes[]>([]);
-  const [listTypesMini, setListTypesMini] = useState<GenericGetTypes[]>([]);
-  const [listLinesMini, setListLinesMini] = useState<GenericGetTypes[]>([]);
-  const [listConditionsMini, setListConditionsMini] = useState<
-    GenericGetTypes[]
-  >([]);
-  const [listScalesMini, setListScalesMini] = useState<GenericGetTypes[]>([]);
-  const [refreshRequests, setRefreshRequests] = useState<TypeAdd | "">("");
-  const { isMobile } = useTypeDevice();
-  const { showLoading, hideLoading } = useLoading();
 
   const {
     control,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors, isDirty },
   } = useForm({
     resolver: yupResolver(miniSchema),
     defaultValues: {
       ...defaultValuesForm,
+      stockQty: 1,
+      availableQty: 1,
+      garageQty: 0,
     },
   });
-
-  const handleRefreshByType = async (type: TypeAdd | ""): Promise<void> => {
-    switch (type) {
-      case "marca":
-        await refreshMarksList();
-        break;
-
-      case "tipos":
-        await refreshTypesList();
-        break;
-
-      case "linha":
-        await refreshLinesList();
-        break;
-
-      case "condicao":
-        await refreshConditionsList();
-        break;
-
-      case "escala":
-        await refreshScalesList();
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  const handleForceRefreshLists = async (type: TypeAdd | "") => {
-    await handleRefreshByType(type);
-    setRefreshRequests(() => type);
-  };
 
   const handleCancel = () => {
     handleVisibleFormMini(type);
     reset();
-  };
-
-  const fetchGetAllScalesMini = async () => {
-    showLoading();
-    try {
-      const { data } = await getAllScalesMini();
-      setListScalesMini(data);
-    } catch (e) {
-    } finally {
-      hideLoading();
-    }
-  };
-
-  const fetchGetAllTypesMini = async () => {
-    showLoading();
-    try {
-      const { data } = await getAllTypesMini();
-      setListTypesMini(data);
-    } catch (e) {
-    } finally {
-      hideLoading();
-    }
-  };
-
-  const fetchGetAllMarksMini = async () => {
-    showLoading();
-    try {
-      const { data } = await getAllMarksMini();
-      setListMarksMini(data);
-    } catch (e) {
-    } finally {
-      hideLoading();
-    }
-  };
-
-  const fetchGetAllLinesMini = async () => {
-    showLoading();
-    try {
-      const { data } = await getAllLinesMini();
-      setListLinesMini(data);
-    } catch (e) {
-    } finally {
-      hideLoading();
-    }
-  };
-
-  const fetchGetAllConditionsMini = async () => {
-    showLoading();
-    try {
-      const { data } = await getAllConditionMini();
-      setListConditionsMini(data);
-    } catch (e) {
-    } finally {
-      hideLoading();
-    }
   };
 
   const handleRegisterMini = async (miniForm: MiniFormValues) => {
@@ -182,40 +84,9 @@ export const ModalFormMini = ({
   };
 
   useEffect(() => {
-    if (isModalOpen) {
-      fetchGetAllMarksMini();
-      fetchGetAllTypesMini();
-      fetchGetAllLinesMini();
-      fetchGetAllConditionsMini();
-      fetchGetAllScalesMini();
-    }
-  }, [isModalOpen]);
-
-  useEffect(() => {
-    if (refreshRequests.length === 0) {
-      return;
-    }
-    const refreshMap = {
-      escala: fetchGetAllScalesMini,
-      linha: fetchGetAllLinesMini,
-      tipos: fetchGetAllTypesMini,
-      marca: fetchGetAllMarksMini,
-      conditions: fetchGetAllConditionsMini,
-    };
-
-    const key = refreshRequests as keyof typeof refreshMap;
-    const executeRefresh = refreshMap[key];
-
-    if (executeRefresh) {
-      executeRefresh();
-      handleForceRefreshLists("");
-    }
-  }, [refreshRequests]);
-
-  useEffect(() => {
     setIsModalOpen(visible);
     if (!visible) {
-      reset();
+      reset(defaultValuesForm);
     }
   }, [visible, mini, type, reset]);
 
@@ -228,7 +99,9 @@ export const ModalFormMini = ({
       name: mini.nome,
       year: mini.ano,
       price: Math.round(mini.valor * 100), // converte pra centavos
-      stock: 1, // se tiver no objeto real
+      stockQty: mini.quantidadeEstoque, // se tiver no objeto real
+      availableQty: mini.quantidadeDisponivel, // se tiver no objeto real
+      garageQty: mini.quantidadeEmGaragem, // se tiver no objeto real
       brand: String(mini.marca?.id),
       types: mini.tipos?.map((t) => String(t.id)) || [],
       line: String(mini.linha?.id),
@@ -250,13 +123,39 @@ export const ModalFormMini = ({
   const classNameContainerInputs = "flex-col mb-2";
   const hasErrorInForm = Object.keys(errors).length > 0;
 
+  const stockQty = watch("stockQty");
+  const availableQty = watch("availableQty");
+  const garageQty = watch("garageQty");
+
+  const [quantityError, setQuantityError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!mini) {
+      setValue("availableQty", stockQty);
+    }
+    if (mini && stockQty !== mini.quantidadeEstoque) {
+      setValue("availableQty", stockQty - garageQty);
+    }
+  }, [stockQty]);
+
+  useEffect(() => {
+    setQuantityError(
+      validateQuantities({
+        stockQty,
+        availableQty,
+        garageQty,
+      }),
+    );
+  }, [availableQty]);
+  console.log("quantityError", quantityError);
+
   return (
     <Modal
       title={type === "add" ? "Criar Miniatura" : "Editar Miniatura"}
       open={isModalOpen}
       onOk={handleSubmit(handleRegisterMini)}
       okButtonProps={{
-        disabled: hasErrorInForm || !isDirty,
+        disabled: hasErrorInForm || !isDirty || quantityError !== null,
       }}
       onCancel={handleCancel}
       okText="Salvar"
@@ -343,29 +242,103 @@ export const ModalFormMini = ({
             }}
           />
 
-          {/* {!mini && (
-            <Controller
-              name="stock"
-              control={control}
-              render={({ field }) => (
-                <div className={classNameContainerInputs}>
-                  <Label text="Quantidade no Estoque" required />
-                  <InputNumber
-                    {...field}
-                    style={{ width: "100%" }}
-                    status={errors.stock ? "error" : ""}
-                    // placeholder="Quantidade no Estoque"
-                    min={1}
-                    type="number"
+          <div className="mb-2">
+            {/* LINHA DOS INPUTS */}
+            <div className="-xl:flex-col xl:flex gap-3 items-start">
+              {/* Qtd Estoque */}
+              <Controller
+                name="stockQty"
+                control={control}
+                render={({ field }) => (
+                  <div className="flex-1 flex flex-col">
+                    <div className="h-[22px] flex items-start">
+                      <Label text="Qtd Estoque" required />
+                    </div>
+
+                    <QuantitySelector
+                      value={field.value}
+                      onChange={field.onChange}
+                      min={
+                        mini
+                          ? mini.quantidadeEmGaragem > 0
+                            ? mini.quantidadeEmGaragem
+                            : 1
+                          : 1
+                      }
+                    />
+
+                    {errors.stockQty && (
+                      <MessageError
+                        message={errors.stockQty.message as string}
+                      />
+                    )}
+                  </div>
+                )}
+              />
+
+              {/* Qtd Disponível */}
+              {mini && (
+                <>
+                  <Controller
+                    name="availableQty"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="flex-1 flex flex-col">
+                        <div className="h-[22px] flex items-start">
+                          <Label text="Qtd Disponível" required />
+                        </div>
+
+                        <QuantitySelector
+                          value={field.value}
+                          onChange={field.onChange}
+                          min={0}
+                          disabled
+                        />
+
+                        {errors.availableQty && (
+                          <MessageError
+                            message={errors.availableQty.message as string}
+                          />
+                        )}
+                      </div>
+                    )}
                   />
 
-                  {errors.stock && (
-                    <MessageError message={errors.stock.message as string} />
-                  )}
-                </div>
+                  <Controller
+                    name="garageQty"
+                    control={control}
+                    render={({ field }) => (
+                      <div className="flex-1 flex flex-col">
+                        <div className="h-[22px] flex items-start">
+                          <Label text="Qtd Garagem" required />
+                        </div>
+
+                        <QuantitySelector
+                          value={field.value}
+                          onChange={field.onChange}
+                          min={0}
+                          disabled
+                        />
+
+                        {errors.garageQty && (
+                          <MessageError
+                            message={errors.garageQty.message as string}
+                          />
+                        )}
+                      </div>
+                    )}
+                  />
+                </>
               )}
-            />
-          )} */}
+            </div>
+
+            {/* ERRO EMBAIXO */}
+            {quantityError && (
+              <div className="mt-1">
+                <MessageError message={quantityError as string} />
+              </div>
+            )}
+          </div>
 
           <Controller
             name="image"
@@ -434,19 +407,14 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label
-                  text="Marca"
-                  required
-                  iconAdd="marca"
-                  handleForceRefreshLists={handleForceRefreshLists}
-                />
+                <Label text="Marca" required iconAdd="marca" />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
                   // placeholder="Marca"
                   onChange={field.onChange}
                   status={errors.brand ? "error" : ""}
-                  options={listMarksMini.map((mark) => ({
+                  options={filterLists.marks.map((mark) => ({
                     label: mark.nome,
                     value: String(mark.id),
                   }))}
@@ -463,12 +431,7 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label
-                  text="Tipos"
-                  required
-                  iconAdd="tipos"
-                  handleForceRefreshLists={handleForceRefreshLists}
-                />
+                <Label text="Tipos" required iconAdd="tipos" />
                 <Select
                   {...field}
                   mode="multiple"
@@ -477,7 +440,7 @@ export const ModalFormMini = ({
                   // placeholder="Tipos"
                   onChange={field.onChange}
                   status={errors.types ? "error" : ""}
-                  options={listTypesMini.map((mark) => ({
+                  options={filterLists.types.map((mark) => ({
                     label: mark.nome,
                     value: String(mark.id),
                   }))}
@@ -493,19 +456,14 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label
-                  text="Linha"
-                  required
-                  iconAdd="linha"
-                  handleForceRefreshLists={handleForceRefreshLists}
-                />
+                <Label text="Linha" required iconAdd="linha" />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
                   // placeholder="Tipos"
                   onChange={field.onChange}
                   status={errors.line ? "error" : ""}
-                  options={listLinesMini.map((mark) => ({
+                  options={filterLists.lines.map((mark) => ({
                     label: mark.nome,
                     value: String(mark.id),
                   }))}
@@ -522,19 +480,14 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label
-                  text="Condição"
-                  required
-                  iconAdd="condicao"
-                  handleForceRefreshLists={handleForceRefreshLists}
-                />
+                <Label text="Condição" required iconAdd="condicao" />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
                   // placeholder="Status"
                   onChange={field.onChange}
                   status={errors.condition ? "error" : ""}
-                  options={listConditionsMini.map((mark) => ({
+                  options={filterLists.conditions.map((mark) => ({
                     label: mark.nome,
                     value: String(mark.id),
                   }))}
@@ -550,19 +503,14 @@ export const ModalFormMini = ({
             control={control}
             render={({ field }) => (
               <div className={classNameContainerInputs}>
-                <Label
-                  text="Escala"
-                  required
-                  iconAdd="escala"
-                  handleForceRefreshLists={handleForceRefreshLists}
-                />
+                <Label text="Escala" required iconAdd="escala" />
                 <Select
                   {...field}
                   style={{ width: "100%" }}
                   // placeholder="Escala"
                   onChange={field.onChange}
                   status={errors.scale ? "error" : ""}
-                  options={listScalesMini.map((mark) => ({
+                  options={filterLists.scales.map((mark) => ({
                     label: mark.nome,
                     value: String(mark.id),
                   }))}

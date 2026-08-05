@@ -35,6 +35,7 @@ export interface Miniatura {
   valor: number; // BigDecimal → number
   quantidadeDisponivel: number;
   quantidadeEmGaragem: number;
+  quantidadeEstoque: number;
 }
 
 export interface PaginationInfo {
