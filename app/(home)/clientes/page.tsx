@@ -4,13 +4,14 @@ import { deleteClientById, getAllClientsByTerm } from "@/app/api/cliente";
 import { Cliente } from "@/app/api/cliente/types";
 import { useAuth } from "@/app/hooks/useAuth";
 import { useLoading } from "@/app/hooks/useLoading";
-import { getErrorMessage } from "@/app/utils";
+import { formatCep, formatTelefone, getErrorMessage } from "@/app/utils";
 import type { TableColumnsType } from "antd";
 import { Input, Table } from "antd";
-import { CirclePlus, Warehouse } from "lucide-react";
+import { CirclePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import { Miniatura } from "../types";
+import { ClientActions } from "./components/ClientActions";
+import { ModalFormCliente } from "./components/ModalFormClient";
 
 export default function Home() {
   const { showLoading, hideLoading } = useLoading();
@@ -18,10 +19,35 @@ export default function Home() {
 
   const [listClients, setListClients] = useState<Cliente[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [selectedClient, setSelectedClient] = useState<Cliente | null>(null);
+
+  // Controle do modal de form
+  const [isFormVisible, setIsFormVisible] = useState(false);
+  const [formType, setFormType] = useState<"add" | "edit">("add");
 
   const boldTitle = (text: string) => (
     <span className="font-bold text-lg">{text}</span>
   );
+
+  const handleSelectedClient = (client: Cliente) => {
+    setSelectedClient(client);
+  };
+
+  // Abre o modal — "add" limpa o cliente selecionado, "edit" mantém o já setado
+  const handleVisibleFormClient = (mode: "add" | "edit") => {
+    if (isFormVisible) {
+      // fechando o modal
+      setIsFormVisible(false);
+      setSelectedClient(null);
+      return;
+    }
+
+    if (mode === "add") {
+      setSelectedClient(null);
+    }
+    setFormType(mode);
+    setIsFormVisible(true);
+  };
 
   const columns: TableColumnsType<Cliente> = [
     {
@@ -29,38 +55,51 @@ export default function Home() {
       dataIndex: "nome",
       key: "nome",
       align: "center",
+      width: "30%",
     },
     {
       title: boldTitle("Telefone"),
       dataIndex: "telefone",
       key: "telefone",
       align: "center",
+      width: "15%",
+      render: (telefone: string) => formatTelefone(telefone),
     },
     {
       title: boldTitle("Cep"),
       dataIndex: "cep",
       key: "cep",
       align: "center",
+      width: "15%",
+      render: (cep: string) => formatCep(cep),
     },
     {
       title: boldTitle("Número Residência"),
       dataIndex: "numeroResidencia",
       key: "numeroResidencia",
       align: "center",
+      width: "15%",
     },
     {
       title: boldTitle("Ações"),
       key: "acoes",
       align: "center",
-      render: (_, record) => <Warehouse size={22} color="#1f3565" />,
+      width: "25%",
+      render: (_, record) => (
+        <ClientActions
+          cliente={record}
+          handleSelectedClient={handleSelectedClient}
+          handleVisibleFormClient={() => handleVisibleFormClient("edit")}
+          handleDeleteClientById={handleDeleteClientById}
+          handleOpenGaragem={(cliente) => {
+            /* navegar/abrir garagem do cliente */
+          }}
+        />
+      ),
     },
   ];
 
-  const handleSelectedMini = (mini: Miniatura | null) => {
-    // setSelectedMini(mini);
-  };
-
-  const fetchGetFilterClientsByTerm = async (termo: string) => {
+  const fetchGetFilterClientsByTerm = async () => {
     showLoading();
     window.scrollTo({
       top: 0,
@@ -68,7 +107,7 @@ export default function Home() {
     });
 
     try {
-      const { data } = await getAllClientsByTerm(termo);
+      const { data } = await getAllClientsByTerm(searchTerm);
       setListClients(data);
     } catch (error) {
       toast.error(getErrorMessage(error));
@@ -77,11 +116,11 @@ export default function Home() {
     }
   };
 
-  const handleDeleteClientById = async (mini: Miniatura): Promise<boolean> => {
+  const handleDeleteClientById = async (mini: Cliente): Promise<boolean> => {
     showLoading();
     try {
       await deleteClientById(mini.id);
-      fetchGetFilterClientsByTerm(searchTerm);
+      fetchGetFilterClientsByTerm();
       toast.success(`${mini.nome} apagado com sucesso`);
       return true;
     } catch (error) {
@@ -92,21 +131,19 @@ export default function Home() {
     }
   };
 
-  // Busca inicial ao carregar / trocar usuário
   useEffect(() => {
     if (user !== undefined) {
-      fetchGetFilterClientsByTerm(searchTerm);
+      fetchGetFilterClientsByTerm();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
-  // Debounce: dispara a busca 400ms depois que o usuário para de digitar
   useEffect(() => {
     if (user === undefined) return;
 
     const timer = setTimeout(() => {
-      fetchGetFilterClientsByTerm(searchTerm);
-    }, 500);
+      fetchGetFilterClientsByTerm();
+    }, 700);
 
     return () => clearTimeout(timer);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -121,7 +158,7 @@ export default function Home() {
             width={36}
             height={36}
             className="ml-5 hover:scale-110 transition-all duration-300 ease-out"
-            onClick={() => {}}
+            onClick={() => handleVisibleFormClient("add")}
           />
         </div>
         <div
@@ -133,7 +170,6 @@ export default function Home() {
             allowClear
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            // onSearch={(value) => fetchGetFilterClientsByTerm(value)}
             className="mb-4"
           />
 
@@ -146,6 +182,14 @@ export default function Home() {
           />
         </div>
       </div>
+
+      <ModalFormCliente
+        visible={isFormVisible}
+        cliente={selectedClient}
+        handleVisibleFormCliente={handleVisibleFormClient}
+        type={formType}
+        refreshClienteList={fetchGetFilterClientsByTerm}
+      />
     </div>
   );
 }
