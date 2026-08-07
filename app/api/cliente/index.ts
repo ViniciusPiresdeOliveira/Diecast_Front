@@ -1,4 +1,4 @@
-import { ClienteFormValues } from "@/app/(home)/clientes/components/ModalFormClient/validation";
+import { ClienteFormValues } from "@/app/(home)/clientes/components/ModalFormCliente/validation";
 import api from "..";
 
 export const getAllClientsByTerm = (term: string) => {

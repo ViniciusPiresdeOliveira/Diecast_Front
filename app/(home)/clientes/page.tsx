@@ -11,7 +11,8 @@ import { CirclePlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { ClientActions } from "./components/ClientActions";
-import { ModalFormCliente } from "./components/ModalFormClient";
+import { ModalFormCliente } from "./components/ModalFormCliente";
+import { ModalGaragemCliente } from "./components/ModalGaragemCliente";
 
 export default function Home() {
   const { showLoading, hideLoading } = useLoading();
@@ -24,6 +25,19 @@ export default function Home() {
   // Controle do modal de form
   const [isFormVisible, setIsFormVisible] = useState(false);
   const [formType, setFormType] = useState<"add" | "edit">("add");
+
+  const [isGaragemVisible, setIsGaragemVisible] = useState(false);
+  const [clienteGaragem, setClienteGaragem] = useState<Cliente | null>(null);
+
+  const handleOpenGaragem = (cliente: Cliente) => {
+    setClienteGaragem(cliente);
+    setIsGaragemVisible(true);
+  };
+
+  const handleCloseGaragem = () => {
+    setIsGaragemVisible(false);
+    setClienteGaragem(null);
+  };
 
   const boldTitle = (text: string) => (
     <span className="font-bold text-lg">{text}</span>
@@ -91,9 +105,7 @@ export default function Home() {
           handleSelectedClient={handleSelectedClient}
           handleVisibleFormClient={() => handleVisibleFormClient("edit")}
           handleDeleteClientById={handleDeleteClientById}
-          handleOpenGaragem={(cliente) => {
-            /* navegar/abrir garagem do cliente */
-          }}
+          handleOpenGaragem={handleOpenGaragem}
         />
       ),
     },
@@ -189,6 +201,12 @@ export default function Home() {
         handleVisibleFormCliente={handleVisibleFormClient}
         type={formType}
         refreshClienteList={fetchGetFilterClientsByTerm}
+      />
+
+      <ModalGaragemCliente
+        visible={isGaragemVisible}
+        cliente={clienteGaragem}
+        onClose={handleCloseGaragem}
       />
     </div>
   );

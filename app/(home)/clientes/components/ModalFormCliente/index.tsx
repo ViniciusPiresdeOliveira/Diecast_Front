@@ -11,7 +11,12 @@ import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { ModalFormClienteProps } from "./types";
-import { defaultValuesForm, maskCep, maskTelefone } from "./utils";
+import {
+  defaultValuesForm,
+  maskCep,
+  maskTelefone,
+  unmaskClienteForm,
+} from "./utils";
 import { ClienteFormValues, clienteSchema } from "./validation";
 
 export const ModalFormCliente = ({
@@ -33,40 +38,15 @@ export const ModalFormCliente = ({
     reset,
     watch,
     formState: { errors, isDirty },
-  } = useForm({
+  } = useForm<ClienteFormValues>({
     resolver: yupResolver(clienteSchema),
     defaultValues: defaultValuesForm,
   });
 
   const classNameContainerInputs = "flex-col mb-2";
   const hasErrorInForm = Object.keys(errors).length > 0;
+
   const cepValue = watch("cep");
-
-  useEffect(() => {
-    const digits = (cepValue ?? "").replace(/\D/g, "");
-
-    if (digits.length !== 8) {
-      setAddressInfo(null);
-      return;
-    }
-
-    let cancelled = false;
-
-    const search = async () => {
-      setIsLoadingCep(true);
-      const result = await fetchAddressByCep(digits);
-      if (!cancelled) {
-        setAddressInfo(result);
-        setIsLoadingCep(false);
-      }
-    };
-
-    search();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [cepValue]);
 
   const handleCancel = () => {
     handleVisibleFormCliente(type);
@@ -75,13 +55,9 @@ export const ModalFormCliente = ({
 
   const handleRegisterCliente = async (clienteForm: ClienteFormValues) => {
     showLoading();
-    const payload = {
-      ...clienteForm,
-      telefone: clienteForm.telefone.replace(/\D/g, ""),
-      cep: clienteForm.cep
-        ? clienteForm.cep.replace(/\D/g, "")
-        : clienteForm.cep,
-    };
+
+    const payload = unmaskClienteForm(clienteForm);
+
     try {
       if (cliente) {
         await putClient(payload, cliente.id);
@@ -101,6 +77,34 @@ export const ModalFormCliente = ({
       hideLoading();
     }
   };
+
+  // Busca endereço no ViaCEP sempre que o cep tiver 8 dígitos
+  useEffect(() => {
+    showLoading();
+    const digits = (cepValue ?? "").replace(/\D/g, "");
+
+    if (digits.length !== 8) {
+      setAddressInfo(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    const search = async () => {
+      setIsLoadingCep(true);
+      const result = await fetchAddressByCep(digits);
+      if (!cancelled) {
+        setAddressInfo(result);
+        setIsLoadingCep(false);
+      }
+    };
+
+    search();
+    hideLoading();
+    return () => {
+      cancelled = true;
+    };
+  }, [cepValue]);
 
   useEffect(() => {
     setIsModalOpen(visible);
@@ -127,9 +131,7 @@ export const ModalFormCliente = ({
       title={type === "add" ? "Criar Cliente" : "Editar Cliente"}
       open={isModalOpen}
       onOk={handleSubmit(handleRegisterCliente)}
-      okButtonProps={{
-        disabled: hasErrorInForm || !isDirty,
-      }}
+      okButtonProps={{ disabled: hasErrorInForm || !isDirty }}
       onCancel={handleCancel}
       okText="Salvar"
       cancelText="Cancelar"
@@ -143,11 +145,7 @@ export const ModalFormCliente = ({
         render={({ field }) => (
           <div className={classNameContainerInputs}>
             <Label text="Nome" required />
-            <Input
-              {...field}
-              status={errors.nome ? "error" : ""}
-              maxLength={50}
-            />
+            <Input {...field} status={errors.nome ? "error" : ""} />
             {errors.nome && (
               <MessageError message={errors.nome.message as string} />
             )}
@@ -208,7 +206,6 @@ export const ModalFormCliente = ({
                 {...field}
                 value={field.value ?? ""}
                 status={errors.numeroResidencia ? "error" : ""}
-                maxLength={10}
               />
               {errors.numeroResidencia && (
                 <MessageError
@@ -222,7 +219,7 @@ export const ModalFormCliente = ({
 
       {/* Campos somente leitura, não fazem parte do form/schema */}
       {addressInfo && (
-        <div className="flex flex-col gap-2 mt-2 p-3 bg-zinc-50 rounded-md border border-zinc-200">
+        <div className="flex flex-col gap-2 mt-4 p-3 bg-zinc-50 rounded-md border border-zinc-200">
           <span className="text-sm font-semibold text-zinc-500">
             Endereço encontrado
           </span>
