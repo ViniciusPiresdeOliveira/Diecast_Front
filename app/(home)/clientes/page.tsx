@@ -4,7 +4,12 @@ import { deleteClientById, getAllClientsByTerm } from "@/app/api/cliente";
 import { Cliente } from "@/app/api/cliente/types";
 import { useAuth } from "@/app/hooks/useAuth";
 import { useLoading } from "@/app/hooks/useLoading";
-import { formatCep, formatTelefone, getErrorMessage } from "@/app/utils";
+import {
+  formatCep,
+  formatTelefone,
+  getErrorMessage,
+  handleWhatsApp,
+} from "@/app/utils";
 import type { TableColumnsType } from "antd";
 import { Input, Table } from "antd";
 import { CirclePlus } from "lucide-react";
@@ -77,7 +82,15 @@ export default function Home() {
       key: "telefone",
       align: "center",
       width: "15%",
-      render: (telefone: string) => formatTelefone(telefone),
+      render: (telefone: string) => (
+        <span
+          onClick={() => handleWhatsApp(telefone)}
+          className="cursor-pointer hover:underline"
+          title="Abrir WhatsApp"
+        >
+          {formatTelefone(telefone)}
+        </span>
+      ),
     },
     {
       title: boldTitle("Cep"),

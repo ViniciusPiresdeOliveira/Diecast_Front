@@ -7,11 +7,13 @@ import {
   formatDate,
   formatTelefone,
   getErrorMessage,
+  handleWhatsApp,
 } from "@/app/utils";
 import type { TableColumnsType } from "antd";
 import { Modal, Table } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { MiniGaragemActions } from "./components/MiniGaragemActions";
 import { MiniGaragemCliente, ModalGaragemClienteProps } from "./types";
 import { calculateDaysInGarage } from "./utils";
 
@@ -64,6 +66,18 @@ export const ModalGaragemCliente = ({
         return `${dias} ${dias === 1 ? "dia" : "dias"}`;
       },
     },
+    {
+      title: boldTitle("Ações"),
+      key: "acoes",
+      align: "center",
+      width: "12%",
+      render: (_, record) => (
+        <MiniGaragemActions
+          id={record.idGaragem}
+          refreshList={fetchMinisByCliente}
+        />
+      ),
+    },
   ];
 
   const fetchMinisByCliente = async () => {
@@ -91,14 +105,22 @@ export const ModalGaragemCliente = ({
   const handleClose = () => {
     setListMinis([]);
     onClose();
+    hideLoading();
   };
 
   return (
     <Modal
       title={
-        cliente
-          ? `Miniaturas de ${cliente.nome} - ${formatTelefone(cliente.telefone)}`
-          : "Miniaturas do Cliente"
+        cliente ? (
+          <span
+            onClick={() => handleWhatsApp(cliente.telefone)}
+            className="cursor-pointer hover:underline"
+          >
+            {cliente.nome} - {formatTelefone(cliente.telefone)}
+          </span>
+        ) : (
+          "Miniaturas do Cliente"
+        )
       }
       open={visible}
       onCancel={handleClose}
@@ -109,7 +131,6 @@ export const ModalGaragemCliente = ({
         rowKey="id"
         columns={columns}
         dataSource={listMinis}
-        // loading={isLoading}
         pagination={false}
         scroll={{ x: true }}
       />

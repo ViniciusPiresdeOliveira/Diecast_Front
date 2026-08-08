@@ -2,7 +2,8 @@ import { Cliente } from "@/app/api/cliente/types";
 import { GenericGetTypes } from "@/app/types";
 
 export interface MiniGaragemCliente {
-  id: number;
+  idMiniatura: number;
+  idGaragem: number;
   nome: string;
   marca: GenericGetTypes;
   tipos: GenericGetTypes[];

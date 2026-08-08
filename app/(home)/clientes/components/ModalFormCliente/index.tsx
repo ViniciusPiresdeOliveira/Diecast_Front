@@ -30,7 +30,6 @@ export const ModalFormCliente = ({
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [addressInfo, setAddressInfo] = useState<ViaCepResponse | null>(null);
-  const [isLoadingCep, setIsLoadingCep] = useState(false);
 
   const {
     control,
@@ -78,32 +77,28 @@ export const ModalFormCliente = ({
     }
   };
 
-  // Busca endereço no ViaCEP sempre que o cep tiver 8 dígitos
-  useEffect(() => {
-    showLoading();
+  const fetchAddressByCepData = async () => {
     const digits = (cepValue ?? "").replace(/\D/g, "");
 
     if (digits.length !== 8) {
       setAddressInfo(null);
       return;
     }
-
-    let cancelled = false;
-
-    const search = async () => {
-      setIsLoadingCep(true);
+    showLoading();
+    try {
       const result = await fetchAddressByCep(digits);
-      if (!cancelled) {
-        setAddressInfo(result);
-        setIsLoadingCep(false);
-      }
-    };
+      setAddressInfo(result);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+      setAddressInfo(null);
+    } finally {
+      hideLoading();
+    }
+  };
 
-    search();
-    hideLoading();
-    return () => {
-      cancelled = true;
-    };
+  useEffect(() => {
+    fetchAddressByCepData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cepValue]);
 
   useEffect(() => {
@@ -125,6 +120,7 @@ export const ModalFormCliente = ({
       numeroResidencia: cliente.numeroResidencia ?? "",
     });
   }, [cliente, reset]);
+  console.log("addressInfo", addressInfo);
 
   return (
     <Modal

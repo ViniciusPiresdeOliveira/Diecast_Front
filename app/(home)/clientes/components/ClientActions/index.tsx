@@ -37,23 +37,17 @@ export const ClientActions = ({
     handleOpenGaragem(cliente);
   };
 
-  const deleteModal = (
-    <DeleteConfirmModal
-      open={isDeleteModalOpen}
-      title="Excluir cliente"
-      confirmText="Excluir"
-      isLoading={isDeleting}
-      onConfirm={handleConfirmDelete}
-      onCancel={() => setIsDeleteModalOpen(false)}
-      message="Tem certeza que deseja excluir "
-      nameSpecific={cliente.nome}
-    />
-  );
-
   return (
     <div className="flex items-center justify-center gap-3">
       <EditButton onClick={handleEdit} variant="table" isMobile={isMobile} />
 
+      {/* <button
+        onClick={() => handleWhatsApp(cliente.telefone)}
+        className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
+        title="WhatsApp"
+      >
+        <Image src="/whatsapp.svg" alt="WhatsApp" width={20} height={20} />
+      </button> */}
       <button
         onClick={handleGaragem}
         className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
@@ -67,7 +61,16 @@ export const ClientActions = ({
         isMobile={isMobile}
       />
 
-      {deleteModal}
+      <DeleteConfirmModal
+        open={isDeleteModalOpen}
+        title="Excluir cliente"
+        confirmText="Excluir"
+        isLoading={isDeleting}
+        onConfirm={handleConfirmDelete}
+        onCancel={() => setIsDeleteModalOpen(false)}
+        message="Tem certeza que deseja excluir "
+        nameSpecific={cliente.nome}
+      />
     </div>
   );
 };

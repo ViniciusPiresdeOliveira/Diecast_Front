@@ -78,3 +78,16 @@ export const formatDate = (data: string): string => {
 
   return date.toLocaleDateString("pt-BR");
 };
+
+export const handleWhatsApp = (tel: string) => {
+  if (!tel) return;
+
+  const telefone = tel.replace(/\D/g, "");
+
+  // Adiciona o código do Brasil caso o telefone não tenha
+  const telefoneWhatsApp = telefone.startsWith("55")
+    ? telefone
+    : `55${telefone}`;
+
+  window.open(`https://wa.me/${telefoneWhatsApp}`, "_blank");
+};
