@@ -7,6 +7,7 @@ import { Image } from "antd";
 import { Eye } from "lucide-react";
 import { useState } from "react";
 import { formatImage } from "../../utils";
+import { DeleteQuantityModal } from "../DeleteQuantityModal";
 import { MiniActionsProps } from "./types";
 
 export const MiniActions = ({
@@ -18,20 +19,34 @@ export const MiniActions = ({
   isMobile = false,
 }: MiniActionsProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
+  const [isDeleteQuantityModalOpen, setIsDeleteQuantityModalOpen] =
+    useState(false);
+
+  const quantidadeEstoque = mini.quantidadeEstoque ?? 0;
+  const quantidadeGaragem = mini.quantidadeEmGaragem ?? 0;
+  const quantidadeDisponivel = mini.quantidadeDisponivel ?? 0;
+
+  const temMaisDeUmaUnidade = quantidadeEstoque > 1;
+
+  const handleOpenDelete = () => {
+    if (temMaisDeUmaUnidade) {
+      setIsDeleteQuantityModalOpen(true);
+    } else {
+      setIsDeleteModalOpen(true);
+    }
+  };
 
   const handleEdit = () => {
     handleSelectedMini(mini);
     handleVisibleFormMini("edit");
   };
 
-  const handleConfirmDelete = async () => {
-    setIsDeleting(true);
-    const success = await handleDeleteMiniById(mini);
-    setIsDeleting(false);
+  const handleConfirmDelete = async (qtd?: number) => {
+    const success = await handleDeleteMiniById(mini, qtd);
     if (success) {
       setIsDeleteModalOpen(false);
+      setIsDeleteQuantityModalOpen(false);
     }
   };
 
@@ -48,17 +63,23 @@ export const MiniActions = ({
       open={isDeleteModalOpen}
       title="Excluir miniatura"
       confirmText="Excluir"
-      isLoading={isDeleting}
       onConfirm={handleConfirmDelete}
       onCancel={() => setIsDeleteModalOpen(false)}
       message="Tem certeza que deseja excluir "
       nameSpecific={mini.nome}
-    >
-      {/* <p className="text-lg text-zinc-700 mt-2">
-        Tem certeza que deseja excluir{" "}
-        <span className="font-bold text-zinc-900">{mini.nome}</span>?
-      </p> */}
-    </DeleteConfirmModal>
+    />
+  );
+
+  const deleteQuantityModal = (
+    <DeleteQuantityModal
+      open={isDeleteQuantityModalOpen}
+      miniNome={mini.nome}
+      quantidadeEstoque={quantidadeEstoque}
+      quantidadeGaragem={quantidadeGaragem}
+      quantidadeDisponivel={quantidadeDisponivel}
+      onConfirm={handleConfirmDelete}
+      onCancel={() => setIsDeleteQuantityModalOpen(false)}
+    />
   );
 
   const imagePreview = mini.imagem && (
@@ -86,12 +107,10 @@ export const MiniActions = ({
           <Eye size={22} color="#1f3565" />
         </button>
 
-        <DeleteButton
-          onClick={() => setIsDeleteModalOpen(true)}
-          variant="table"
-        />
+        <DeleteButton onClick={handleOpenDelete} variant="table" />
 
         {deleteModal}
+        {deleteQuantityModal}
         {imagePreview}
       </div>
     );
@@ -101,12 +120,13 @@ export const MiniActions = ({
     <>
       <EditButton onClick={handleEdit} variant="card" isMobile={isMobile} />
       <DeleteButton
-        onClick={() => setIsDeleteModalOpen(true)}
+        onClick={handleOpenDelete}
         variant="card"
         isMobile={isMobile}
       />
 
       {deleteModal}
+      {deleteQuantityModal}
     </>
   );
 };

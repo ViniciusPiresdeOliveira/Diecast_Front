@@ -10,7 +10,11 @@ import { Pagination, Segmented, Table } from "antd";
 import { CirclePlus, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { toast } from "react-toastify";
-import { deleteMiniById, getFilterMiniatura } from "../api/miniatura";
+import {
+  deleteMiniById,
+  getFilterMiniatura,
+  putAvailableQuantityMini,
+} from "../api/miniatura";
 import { FilterMiniatura } from "../api/miniatura/types";
 import { useAuth } from "../hooks/useAuth";
 import { useFilter } from "../hooks/useFilter";
@@ -236,12 +240,22 @@ export default function Home() {
     }
   };
   console.log("user?.name out", user?.name);
-  const handleDeleteMiniById = async (mini: Miniatura): Promise<boolean> => {
+  const handleDeleteMiniById = async (
+    mini: Miniatura,
+    quantidade?: number,
+  ): Promise<boolean> => {
+    const temMaisDeUmaUnidade = (mini.quantidadeEstoque ?? 0) > 1;
+
     showLoading();
     try {
-      await deleteMiniById(mini.id);
+      if (temMaisDeUmaUnidade) {
+        await putAvailableQuantityMini(mini.id, quantidade as number);
+        toast.success(`${mini.nome} com quantidade deduzida com sucesso`);
+      } else {
+        await deleteMiniById(mini.id);
+        toast.success(`${mini.nome} apagada com sucesso`);
+      }
       refreshMiniList();
-      toast.success(`${mini.nome} apagada com sucesso`);
       return true;
     } catch (error) {
       toast.error(getErrorMessage(error));

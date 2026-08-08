@@ -44,3 +44,7 @@ export const postMiniatura = (mini: MiniFormValues) => {
     },
   });
 };
+
+export const putAvailableQuantityMini = (id: number, quantity: number) => {
+  return api.patch(`/miniaturas/${id}/baixa-estoque/${quantity}`);
+};

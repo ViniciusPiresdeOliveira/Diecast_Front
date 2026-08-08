@@ -5,7 +5,10 @@ export type MiniActionsProps = {
   mini: Miniatura;
   handleSelectedMini: (mini: Miniatura | null) => void;
   handleVisibleFormMini: (type: TypeOfModalAction) => void;
-  handleDeleteMiniById: (mini: Miniatura) => Promise<boolean>;
+  handleDeleteMiniById: (
+    mini: Miniatura,
+    quantidade?: number,
+  ) => Promise<boolean>;
   variant?: "card" | "table";
   isMobile?: boolean;
 };
