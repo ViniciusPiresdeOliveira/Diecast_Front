@@ -1,23 +1,22 @@
 "use client";
 
 import { cn } from "@/app/utils";
-import { Trash2 } from "lucide-react";
-import { DeleteButtonProps } from "./types";
+import { Warehouse } from "lucide-react";
+import { GarageButtonProps } from "./types";
 
-export const DeleteButton = ({
+export const GarageButton = ({
   onClick,
   variant = "card",
   isMobile = false,
   className = "",
-}: DeleteButtonProps) => {
+}: GarageButtonProps) => {
   if (variant === "table") {
     return (
       <button
-        type="button"
         onClick={onClick}
         className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
       >
-        <Trash2 size={20} color="#f31a13" />
+        <Warehouse size={20} color="#1f3565" />
       </button>
     );
   }
@@ -31,14 +30,14 @@ export const DeleteButton = ({
       type="button"
       onClick={onClick}
       className={cn(
-        "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-6",
+        "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-15",
         "flex items-center justify-center rounded-full",
         "transition-all duration-300 hover:scale-110",
         visibilityClasses,
         className,
       )}
     >
-      <Trash2 size={24} color="#f31a13" />
+      <Warehouse size={24} color="#1f3565" />
     </button>
   );
 };
