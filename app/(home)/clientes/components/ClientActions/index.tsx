@@ -2,8 +2,8 @@
 
 import { DeleteButton } from "@/app/components/Buttons/Delete";
 import { EditButton } from "@/app/components/Buttons/Edit";
+import { GarageButton } from "@/app/components/Buttons/Garage";
 import { DeleteConfirmModal } from "@/app/components/Modal/Delete";
-import { Warehouse } from "lucide-react";
 import { useState } from "react";
 import { ClientActionsProps } from "./types";
 
@@ -48,12 +48,7 @@ export const ClientActions = ({
       >
         <Image src="/whatsapp.svg" alt="WhatsApp" width={20} height={20} />
       </button> */}
-      <button
-        onClick={handleGaragem}
-        className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
-      >
-        <Warehouse size={20} color="#1f3565" />
-      </button>
+      <GarageButton onClick={handleGaragem} variant="table" />
 
       <DeleteButton
         onClick={() => setIsDeleteModalOpen(true)}

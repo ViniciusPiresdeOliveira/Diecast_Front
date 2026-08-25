@@ -2,6 +2,7 @@
 
 import { DeleteButton } from "@/app/components/Buttons/Delete";
 import { EditButton } from "@/app/components/Buttons/Edit";
+import { GarageButton } from "@/app/components/Buttons/Garage";
 import { DeleteConfirmModal } from "@/app/components/Modal/Delete";
 import { Image } from "antd";
 import { Eye } from "lucide-react";
@@ -99,6 +100,7 @@ export const MiniActions = ({
     return (
       <div className="flex items-center justify-center gap-3">
         <EditButton onClick={handleEdit} variant="table" />
+        <GarageButton onClick={handleEdit} variant="table" />
 
         <button
           onClick={handleGetMiniImageById}
@@ -119,6 +121,8 @@ export const MiniActions = ({
   return (
     <>
       <EditButton onClick={handleEdit} variant="card" isMobile={isMobile} />
+      <GarageButton onClick={handleEdit} variant="card" isMobile={isMobile} />
+
       <DeleteButton
         onClick={handleOpenDelete}
         variant="card"
