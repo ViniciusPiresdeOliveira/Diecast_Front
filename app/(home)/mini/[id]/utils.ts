@@ -20,3 +20,18 @@ export const optionsCarousel = {
     },
   },
 };
+
+export const formatListPTBR = (items?: { nome: string }[]): string => {
+  if (!items || items.length === 0) return "";
+
+  const names = items.map((item) => item.nome);
+
+  if (names.length === 1) return names[0];
+
+  if (names.length === 2) {
+    return `${names[0]} e ${names[1]}`;
+  }
+
+  const last = names.pop();
+  return `${names.join(", ")} e ${last}`;
+};

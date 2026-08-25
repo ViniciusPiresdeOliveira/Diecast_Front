@@ -12,6 +12,8 @@
     "@hookform/resolvers": "^5.2.2",
     "@splidejs/react-splide": "^0.7.12",
     "antd": "^6.2.2",
+    "axios": "^1.14.0",
+    "cheerio": "^1.2.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.563.0",
     "next": "16.1.4",

@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import { ToastContainer } from "react-toastify";
 import { Loading } from "./components/Loading";
+import { AuthProvider } from "./contexts/AuthProvider";
 import { FilterProvider } from "./contexts/FilterContext";
+import { FilterListsProvider } from "./contexts/FilterListsContext";
+import { FilterTriggerProvider } from "./contexts/FilterTriggerContext";
 import { LoadingProvider } from "./contexts/LoagindContext";
 import { TypeDeviceProvider } from "./contexts/TypeDevice";
 import "./globals.css";
@@ -33,7 +36,13 @@ export default async function RootLayout({
           <Loading />
           <ToastContainer />
           <TypeDeviceProvider initialIsMobile={isMobile}>
-            <FilterProvider>{children}</FilterProvider>
+            <AuthProvider>
+              <FilterProvider>
+                <FilterListsProvider>
+                  <FilterTriggerProvider>{children}</FilterTriggerProvider>
+                </FilterListsProvider>
+              </FilterProvider>
+            </AuthProvider>
           </TypeDeviceProvider>
         </LoadingProvider>{" "}
       </body>

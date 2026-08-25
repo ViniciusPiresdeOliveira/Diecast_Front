@@ -1,9 +1,46 @@
+export interface MarcaMiniatura {
+  id: number;
+  nome: string;
+}
+
+export interface TipoMiniatura {
+  id: number;
+  nome: string;
+}
+
+export interface CondicoesMiniatura {
+  id: number;
+  nome: string;
+}
+
+export interface EscalaMiniatura {
+  id: number;
+  nome: string;
+}
+
+export interface LinhaMiniatura {
+  id: number;
+  nome: string;
+}
 export interface Miniatura {
   id: number;
-  name: string;
+  nome: string;
+  marca: MarcaMiniatura;
+  tipos: TipoMiniatura[];
+  condicao: CondicoesMiniatura;
+  imagem?: string; // byte[] → array de números
   ano: number;
-  preco: number;
-  marca: string;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  image?: any;
+  escala: EscalaMiniatura;
+  linha: LinhaMiniatura;
+  valor: number; // BigDecimal → number
+  quantidadeDisponivel: number;
+  quantidadeEmGaragem: number;
+  quantidadeEstoque: number;
+}
+
+export interface PaginationInfo {
+  totalPages: number;
+  totalElements: number;
+  elementsPerPage: number;
+  pageSize: number;
 }

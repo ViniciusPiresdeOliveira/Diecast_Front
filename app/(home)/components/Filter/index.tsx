@@ -1,65 +1,77 @@
 import { Label } from "@/app/components/Label";
 import { useFilter } from "@/app/hooks/useFilter";
+import { useFilterLists } from "@/app/hooks/useFilterLists";
 import { prefixExample } from "@/app/utils";
 import { Button, Divider, Input, InputNumber, Select } from "antd";
-import { brandOptions } from "./utils";
+import { FilterProps } from "./types";
+import { getLabelClassName } from "./utils";
 
-export const Filter = () => {
+export const Filter = ({
+  handleFilterMiniaturas,
+  isVisible = false,
+}: FilterProps) => {
+  const { filterLists } = useFilterLists();
   const {
     maxPrice,
-    amount,
     minPrice,
     name,
     year,
     mark,
+    line,
+    type,
+    condition,
+    scale,
     clearFilters,
     handleMinPrice,
+    handleCondition,
     handleMaxPrice,
     handleName,
     handleYear,
     handleMark,
-    handleAmount,
+    handleType,
+    handleLine,
+    handleScale,
   } = useFilter();
+
+  const formatCurrency = (value?: number) => {
+    if (!value) return "R$ 0,00";
+
+    return (value / 100).toLocaleString("pt-BR", {
+      style: "currency",
+      currency: "BRL",
+    });
+  };
+
+  const parseCurrency = (value: string | undefined) => {
+    if (!value) return 0;
+    return Number(value.replace(/\D/g, ""));
+  };
 
   return (
     <>
-      <div className="mb-4 flex flex-col">
-        <Label className="max-sm:text-white" text="Minis" />
-        <Select
-          value={amount}
-          onChange={handleAmount}
-          placeholder="Selecione"
-          className="w-full"
-          options={[
-            { value: "10", label: "10" },
-            { value: "20", label: "20" },
-            { value: "30", label: "30" },
-            { value: "40", label: "40" },
-            { value: "50", label: "50" },
-          ]}
-        />
-      </div>
-      <div className="mb-4 flex flex-col">
-        <Label className="max-sm:text-white" text="Marca" />
-        <Select
-          style={{ width: "100%" }}
-          value={mark}
-          onChange={(e) => handleMark(e)}
-          options={brandOptions}
-          // placeholder="Marca"
-        />
-      </div>
-      <div className="mb-4 flex flex-col">
-        <Label className="max-sm:text-white" text="Nome" />
+      <div className="mb-2 flex flex-col">
+        <Label className={getLabelClassName(isVisible)} text="Nome" />
         <Input
           placeholder={prefixExample + "Ferrari"}
-          value={name}
+          value={name ?? ""}
           onChange={(e) => handleName(e.target.value)}
         />
       </div>
-
-      <div className="mb-4 flex flex-col w-full">
-        <Label className="max-sm:text-white" text="Ano" />
+      <div className="mb-2 flex flex-col">
+        <Label className={getLabelClassName(isVisible)} text="Marcas" />
+        <Select
+          mode="multiple"
+          style={{ width: "100%", cursor: "pointer" }}
+          onChange={handleMark}
+          value={mark}
+          options={filterLists?.marks.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
+        />
+      </div>
+      <div className="mb-2 flex flex-col w-full">
+        <Label className={getLabelClassName(isVisible)} text="Ano" />
         <InputNumber
           style={{ width: "100%" }}
           min={0}
@@ -68,34 +80,101 @@ export const Filter = () => {
           onChange={(value) => handleYear(value)}
         />
       </div>
+      <div className="mb-2 flex flex-col">
+        <Label className={getLabelClassName(isVisible)} text="Tipos" />
+        <Select
+          mode="multiple"
+          style={{ width: "100%", cursor: "pointer" }}
+          // placeholder="Tipos"
+          onChange={(e) => handleType(e)}
+          value={type}
+          options={filterLists?.types.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
+        />
+      </div>
+      <div className="mb-2 flex flex-col">
+        <Label className={getLabelClassName(isVisible)} text="Linhas" />
+        <Select
+          mode="multiple"
+          style={{ width: "100%", cursor: "pointer" }}
+          // placeholder="Tipos"
+          onChange={(e) => handleLine(e)}
+          value={line}
+          options={filterLists?.lines.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
+        />
+      </div>
+      <div className="mb-2 flex flex-col">
+        <Label className={getLabelClassName(isVisible)} text="Condição" />
 
-      <div className="mb-4 flex flex-col">
-        <Label className="max-sm:text-white" text="Preço mínimo" />
-        <InputNumber
-          style={{ width: "100%" }}
-          min={0}
-          type="number"
-          value={minPrice ?? undefined}
-          onChange={(value) => handleMinPrice(value)}
+        <Select
+          mode="multiple"
+          style={{ width: "100%", cursor: "pointer" }}
+          // placeholder="Status"
+          onChange={(e) => handleCondition(e)}
+          value={condition}
+          options={filterLists?.conditions.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
+        />
+      </div>
+      <div className="mb-2 flex flex-col">
+        <Label className={getLabelClassName(isVisible)} text="Escala" />
+        <Select
+          mode="multiple"
+          style={{ width: "100%", cursor: "pointer" }}
+          // placeholder="Escala"
+          onChange={(e) => handleScale(e)}
+          value={scale}
+          options={filterLists?.scales.map((mark) => ({
+            label: mark.nome,
+            value: String(mark.id),
+          }))}
         />
       </div>
 
-      <div className="mb-4 flex flex-col">
-        <Label className="max-sm:text-white" text="Preço máximo" />
-        <InputNumber
+      <div className="mb-2 flex flex-col">
+        <Label className={getLabelClassName(isVisible)} text="Preço mínimo" />
+        <Input
           style={{ width: "100%" }}
-          min={0}
-          type="number"
-          value={maxPrice ?? undefined}
-          onChange={(value) => handleMaxPrice(value)}
+          value={formatCurrency(minPrice || 0)}
+          onChange={(e) => {
+            const numericValue = parseCurrency(e.target.value);
+            handleMinPrice(numericValue);
+          }}
+          inputMode="numeric"
         />
       </div>
 
-      <Divider />
-      <Button type="primary" block onClick={clearFilters}>
+      <div className="mb-0 flex flex-col">
+        <Label className={getLabelClassName(isVisible)} text="Preço máximo" />
+        <Input
+          style={{ width: "100%" }}
+          value={formatCurrency(maxPrice || 0)}
+          onChange={(e) => {
+            const numericValue = parseCurrency(e.target.value);
+            handleMaxPrice(numericValue);
+          }}
+          inputMode="numeric"
+        />
+      </div>
+
+      <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+
+      <Button type="primary" block onClick={handleFilterMiniaturas}>
         Filtrar
       </Button>
-      <Button className="mt-2" type="link" block onClick={clearFilters}>
+      <Button
+        className="mt-2 max-sm:text-white"
+        type="dashed"
+        block
+        onClick={clearFilters}
+      >
         Limpar filtros
       </Button>
     </>
