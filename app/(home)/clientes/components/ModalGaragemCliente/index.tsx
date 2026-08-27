@@ -11,12 +11,13 @@ import {
   handleWhatsApp,
 } from "@/app/utils";
 import type { TableColumnsType } from "antd";
-import { Modal, Table } from "antd";
+import { Modal, Table, Tooltip } from "antd";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { MiniGaragemActions } from "./components/MiniGaragemActions";
 import { MiniGaragemCliente, ModalGaragemClienteProps } from "./types";
-import { calculateDaysInGarage } from "./utils";
+import { buildGaragemMessage, calculateDaysInGarage } from "./utils";
+import { Copy } from "lucide-react";
 
 export const ModalGaragemCliente = ({
   visible,
@@ -102,7 +103,6 @@ export const ModalGaragemCliente = ({
     }
   };
 
-  // Busca inicial ao abrir o modal / trocar cliente
   useEffect(() => {
     if (visible && cliente) {
       fetchMinisByCliente();
@@ -120,12 +120,36 @@ export const ModalGaragemCliente = ({
     <Modal
       title={
         cliente ? (
-          <span
-            onClick={() => handleWhatsApp(cliente.telefone)}
-            className="cursor-pointer hover:underline"
-          >
-            {cliente.nome} - {formatTelefone(cliente.telefone)}
-          </span>
+          <div className="flex items-center justify-between">
+            <span
+              onClick={() => handleWhatsApp(cliente.telefone)}
+              className="cursor-pointer hover:underline"
+            >
+              {cliente.nome} - {formatTelefone(cliente.telefone)}
+            </span>
+            {listMinis.length > 0 && (
+              <Tooltip title="Copiar mensagem">
+                <Copy
+                  size={18}
+                  className="cursor-pointer hover:scale-110 transition mr-8"
+                  onClick={async () => {
+                    if (!cliente) return;
+
+                    const text = await buildGaragemMessage({
+                      nome: cliente.nome,
+                      minis: listMinis,
+                      cep: cliente.cep,
+                      numero: cliente.numeroResidencia,
+                    });
+
+                    await navigator.clipboard.writeText(text);
+
+                    toast.success("Mensagem copiada!");
+                  }}
+                />
+              </Tooltip>
+            )}
+          </div>
         ) : (
           "Miniaturas do Cliente"
         )

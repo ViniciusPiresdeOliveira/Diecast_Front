@@ -32,3 +32,15 @@ export interface ModalGaragemClienteProps {
   cliente: Cliente | null;
   onClose: () => void;
 }
+
+export interface BuildMessageParams {
+  nome: string;
+  minis: MiniGaragemCliente[];
+  cep?: string;
+  numero?: string;
+}
+
+export interface BuildEnderecoParams {
+  cep?: string;
+  numero?: string;
+}
