@@ -19,6 +19,7 @@ export const MiniActions = ({
   handleDeleteMiniById,
   variant = "card",
   isMobile = false,
+  refreshList,
 }: MiniActionsProps) => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
@@ -99,6 +100,7 @@ export const MiniActions = ({
       visible={isGarageModalOpen}
       mini={mini}
       handleVisibleModal={handleCloseGarageModal}
+      refreshList={refreshList}
     />
   );
 

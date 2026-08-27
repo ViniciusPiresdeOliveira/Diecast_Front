@@ -170,6 +170,7 @@ export default function Home() {
           handleSelectedMini={handleSelectedMini}
           handleVisibleFormMini={handleVisibleFormMini}
           handleDeleteMiniById={handleDeleteMiniById}
+          refreshList={refreshMiniList}
           variant="table"
         />
       ),
@@ -204,7 +205,6 @@ export default function Home() {
       top: 0,
       behavior: "smooth", // opcional (animação)
     });
-    console.log("user?.name fetchGetFilterMiniaturas", user?.name);
 
     const filterPayload: FilterMiniatura = {
       nome: name || null,
@@ -239,7 +239,7 @@ export default function Home() {
       hideLoading();
     }
   };
-  console.log("user?.name out", user?.name);
+
   const handleDeleteMiniById = async (
     mini: Miniatura,
     quantidade?: number,
