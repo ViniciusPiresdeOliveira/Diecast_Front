@@ -410,7 +410,7 @@ export default function Home() {
         <div ref={sentinelRef} className="h-[1px]" />{" "}
         <div
           className={`max-md:hidden left-0 mr-2 md:-mr-1.25 md:ml-2 border-blue-600 h-full lg:w-64 md:w-56 border p-4 rounded-lg sticky top-[25px] overflow-y-auto transition-all duration-500
-  ${isSticky ? " max-h-[95vh]" : " max-h-[850px] mt-[-35px]"}`}
+  ${isSticky ? " max-h-[80vh]" : " max-h-[80vh] mt-[-35px]"}`}
         >
           {" "}
           <h2 className="text-lg font-semibold mb-4">Filtros</h2>

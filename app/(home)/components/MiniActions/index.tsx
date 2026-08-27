@@ -4,12 +4,13 @@ import { DeleteButton } from "@/app/components/Buttons/Delete";
 import { EditButton } from "@/app/components/Buttons/Edit";
 import { GarageButton } from "@/app/components/Buttons/Garage";
 import { DeleteConfirmModal } from "@/app/components/Modal/Delete";
-import { Image } from "antd";
+import { Image, Tooltip } from "antd";
 import { Eye } from "lucide-react";
 import { useState } from "react";
 import { formatImage } from "../../utils";
 import { DeleteQuantityModal } from "../DeleteQuantityModal";
 import { MiniActionsProps } from "./types";
+import { ModalSetGarage } from "@/app/components/ModalSetGarage";
 
 export const MiniActions = ({
   mini,
@@ -23,12 +24,14 @@ export const MiniActions = ({
   const [isImagePreviewOpen, setIsImagePreviewOpen] = useState(false);
   const [isDeleteQuantityModalOpen, setIsDeleteQuantityModalOpen] =
     useState(false);
+  const [isGarageModalOpen, setIsGarageModalOpen] = useState(false);
 
   const quantidadeEstoque = mini.quantidadeEstoque ?? 0;
   const quantidadeGaragem = mini.quantidadeEmGaragem ?? 0;
   const quantidadeDisponivel = mini.quantidadeDisponivel ?? 0;
 
   const temMaisDeUmaUnidade = quantidadeEstoque > 1;
+  const semUnidadeDisponivel = quantidadeDisponivel === 0;
 
   const handleOpenDelete = () => {
     if (temMaisDeUmaUnidade) {
@@ -59,6 +62,14 @@ export const MiniActions = ({
     setIsImagePreviewOpen(false);
   };
 
+  const handleOpenGarageModal = () => {
+    setIsGarageModalOpen(true);
+  };
+
+  const handleCloseGarageModal = () => {
+    setIsGarageModalOpen(false);
+  };
+
   const deleteModal = (
     <DeleteConfirmModal
       open={isDeleteModalOpen}
@@ -83,6 +94,14 @@ export const MiniActions = ({
     />
   );
 
+  const garageModal = (
+    <ModalSetGarage
+      visible={isGarageModalOpen}
+      mini={mini}
+      handleVisibleModal={handleCloseGarageModal}
+    />
+  );
+
   const imagePreview = mini.imagem && (
     <Image
       style={{ display: "none" }}
@@ -100,7 +119,25 @@ export const MiniActions = ({
     return (
       <div className="flex items-center justify-center gap-3">
         <EditButton onClick={handleEdit} variant="table" />
-        <GarageButton onClick={handleEdit} variant="table" />
+        <Tooltip
+          title={
+            semUnidadeDisponivel
+              ? "Esta miniatura não possui nenhuma unidade disponível"
+              : undefined
+          }
+        >
+          <span
+            className={
+              semUnidadeDisponivel ? "opacity-50 cursor-not-allowed" : ""
+            }
+          >
+            <GarageButton
+              onClick={handleOpenGarageModal}
+              variant="table"
+              disabled={semUnidadeDisponivel}
+            />
+          </span>
+        </Tooltip>
 
         <button
           onClick={handleGetMiniImageById}
@@ -113,6 +150,7 @@ export const MiniActions = ({
 
         {deleteModal}
         {deleteQuantityModal}
+        {garageModal}
         {imagePreview}
       </div>
     );
@@ -121,7 +159,26 @@ export const MiniActions = ({
   return (
     <>
       <EditButton onClick={handleEdit} variant="card" isMobile={isMobile} />
-      <GarageButton onClick={handleEdit} variant="card" isMobile={isMobile} />
+      <Tooltip
+        title={
+          semUnidadeDisponivel
+            ? "Esta miniatura não possui nenhuma unidade disponível"
+            : undefined
+        }
+      >
+        <span
+          className={
+            semUnidadeDisponivel ? "opacity-50 cursor-not-allowed" : ""
+          }
+        >
+          <GarageButton
+            onClick={handleOpenGarageModal}
+            variant="card"
+            isMobile={isMobile}
+            disabled={semUnidadeDisponivel}
+          />
+        </span>
+      </Tooltip>
 
       <DeleteButton
         onClick={handleOpenDelete}

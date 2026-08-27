@@ -9,12 +9,14 @@ export const GarageButton = ({
   variant = "card",
   isMobile = false,
   className = "",
+  disabled = false,
 }: GarageButtonProps) => {
   if (variant === "table") {
     return (
       <button
         onClick={onClick}
         className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
+        disabled={disabled}
       >
         <Warehouse size={20} color="#1f3565" />
       </button>
@@ -36,6 +38,7 @@ export const GarageButton = ({
         visibilityClasses,
         className,
       )}
+      disabled={disabled}
     >
       <Warehouse size={24} color="#1f3565" />
     </button>
