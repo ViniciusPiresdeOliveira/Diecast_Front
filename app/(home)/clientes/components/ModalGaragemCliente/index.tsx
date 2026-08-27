@@ -6,6 +6,7 @@ import {
   formatCurrencyBRL,
   formatDate,
   formatTelefone,
+  getCodError,
   getErrorMessage,
   handleWhatsApp,
 } from "@/app/utils";
@@ -74,7 +75,11 @@ export const ModalGaragemCliente = ({
       render: (_, record) => (
         <MiniGaragemActions
           id={record.idGaragem}
-          refreshList={fetchMinisByCliente}
+          onRemove={(id: number) => {
+            setListMinis((prev) =>
+              prev.filter((item) => item.idGaragem !== id),
+            );
+          }}
         />
       ),
     },
@@ -87,6 +92,9 @@ export const ModalGaragemCliente = ({
     try {
       const { data } = await getAllMinisByClient(cliente.id);
       setListMinis(data.miniaturas);
+      if (data.miniaturas.length === 0) {
+        toast.info("Nenhuma miniatura encontrada para este cliente.");
+      }
     } catch (error) {
       toast.error(getErrorMessage(error));
     } finally {

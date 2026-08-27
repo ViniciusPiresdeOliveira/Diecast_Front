@@ -14,7 +14,7 @@ import { MiniGaragemActionsProps } from "./types";
 
 export const MiniGaragemActions = ({
   id,
-  refreshList,
+  onRemove,
 }: MiniGaragemActionsProps) => {
   const { showLoading, hideLoading } = useLoading();
 
@@ -26,7 +26,7 @@ export const MiniGaragemActions = ({
 
     try {
       await deleteMiniInGarageAndReturnToSystem(id);
-      refreshList();
+      onRemove(id);
       toast.success("Miniatura retornada ao sistema!");
       setIsReturnModalOpen(false);
     } catch (error) {
@@ -41,7 +41,7 @@ export const MiniGaragemActions = ({
 
     try {
       await deleteMiniInGarageAndSystem(id);
-      refreshList();
+      onRemove(id);
       toast.success("Miniatura marcada como entregue!");
       setIsDeleteModalOpen(false);
     } catch (error) {

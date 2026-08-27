@@ -20,6 +20,12 @@ export const getErrorMessage = (error: unknown): string => {
   return "Erro inesperado";
 };
 
+export const getCodError = (error: unknown): string | number | undefined => {
+  if (axios.isAxiosError(error)) {
+    return error ? error.response?.status : "Erro inesperado";
+  }
+};
+
 export const formatCurrencyBRL = (value?: number | string) => {
   if (value === null || value === undefined) return "";
 

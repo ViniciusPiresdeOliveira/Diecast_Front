@@ -1,4 +1,4 @@
 export interface MiniGaragemActionsProps {
   id: number;
-  refreshList: () => void;
+  onRemove: (id: number) => void;
 }
