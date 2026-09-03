@@ -29,7 +29,7 @@ export const EditButton = ({
       type="button"
       onClick={onClick}
       className={
-        "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-24 " +
+        "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-30 " +
         "flex items-center justify-center " +
         "transition-all duration-300 hover:scale-110 " +
         visibilityClasses

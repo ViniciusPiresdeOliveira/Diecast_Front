@@ -189,6 +189,7 @@ export const MiniActions = ({
       />
 
       {deleteModal}
+      {garageModal}
       {deleteQuantityModal}
     </>
   );

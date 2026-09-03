@@ -31,7 +31,7 @@ export const DeleteButton = ({
       type="button"
       onClick={onClick}
       className={cn(
-        "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-6",
+        "z-10 cursor-pointer w-8 h-8 absolute right-2 bottom-12",
         "flex items-center justify-center rounded-full",
         "transition-all duration-300 hover:scale-110",
         visibilityClasses,
