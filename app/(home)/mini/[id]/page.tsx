@@ -51,88 +51,107 @@ export default function MiniDetail() {
   }, [id]);
 
   return (
-    <div className="p-8">
-      <div className="flex flex-col items-center md:flex-row md:justify-center md:items-start gap-8">
-        <div className="w-[80%] max-w-[400px]">
-          {mini?.imagem ? (
-            <ImageANTD
-              src={formatImage(mini.imagem)}
-              alt={mini.nome}
-              rootClassName="custom-image"
-              style={{ width: "100%", height: "auto" }}
-              className="object-contain cursor-pointer z-10 transition-transform duration-300 group-hover:scale-110"
-            />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center group transition-colors">
-              <ImageNotFound className="object-contain cursor-pointer z-10 transition-transform duration-300 group-hover:scale-110" />
-            </div>
-          )}
+    <div className="p-6 md:p-10 max-w-6xl mx-auto">
+      <div className="flex flex-col md:flex-row items-center md:items-stretch gap-10 bg-white rounded-2xl shadow-sm border border-[var(--color-gray-200)] p-6">
+        {/* Bloco da Imagem */}
+        <div className="w-full md:w-1/2 flex items-center justify-center p-6 ">
+          <div className="w-full max-w-[400px]">
+            {mini?.imagem ? (
+              <ImageANTD
+                src={formatImage(mini.imagem)}
+                alt={mini.nome}
+                rootClassName="custom-image"
+                style={{ width: "100%", height: "auto" }}
+                className="object-contain cursor-pointer z-10 transition-transform duration-300 group-hover:scale-110"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center group transition-colors">
+                <ImageNotFound className="object-contain cursor-pointer z-10 transition-transform duration-300 group-hover:scale-110" />
+              </div>
+            )}
+          </div>
         </div>
-        <div className="max-w-[400px] md:max-w-[500px] ">
-          <h1 className="text-2xl font-bold mb-1">{mini?.nome}</h1>
-          <div className="space-y-1 mt-0 text-md text-gray-700">
-            <div className="flex gap-1">
-              <span className="font-bold">Marca:</span>
-              <span>{mini?.marca?.nome}</span>
-            </div>
 
-            <div className="flex gap-1">
-              <span className="font-bold">Ano:</span>
-              <span>{mini?.ano}</span>
-            </div>
+        {/* Detalhes do Produto */}
+        <div className="w-full md:w-1/2 flex flex-col justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-[var(--color-blue-primary)] mb-4">
+              {mini?.nome}
+            </h1>
 
-            <div className="flex gap-1">
-              <span className="font-bold">Escala:</span>
-              <span>{mini?.escala?.nome}</span>
-            </div>
-
-            <div className="flex gap-1">
-              <span className="font-bold">Condição:</span>
-              <span>{mini?.condicao?.nome}</span>
-            </div>
-
-            <div className="flex gap-1">
-              <span className="font-bold">Linha:</span>
-              <span>{mini?.linha?.nome}</span>
-            </div>
-
-            <div className="flex gap-1">
-              <span className="font-bold">
-                {(mini?.tipos?.length ?? 0) > 1 ? "Tipos" : "Tipo"}:
-              </span>{" "}
-              <span>{formatListPTBR(mini?.tipos)}</span>
+            <div className="divide-y divide-[var(--color-gray-200)] text-sm">
+              <div className="py-2 flex justify-between">
+                <span className="font-semibold text-gray-500">Marca</span>
+                <span className="font-bold text-gray-800">
+                  {mini?.marca?.nome}
+                </span>
+              </div>
+              <div className="py-2 flex justify-between">
+                <span className="font-semibold text-gray-500">Ano</span>
+                <span className="font-bold text-gray-800">{mini?.ano}</span>
+              </div>
+              <div className="py-2 flex justify-between">
+                <span className="font-semibold text-gray-500">Escala</span>
+                <span className="font-bold text-gray-800">
+                  {mini?.escala?.nome}
+                </span>
+              </div>
+              <div className="py-2 flex justify-between">
+                <span className="font-semibold text-gray-500">Condição</span>
+                <span className="font-bold text-gray-800">
+                  {mini?.condicao?.nome}
+                </span>
+              </div>
+              <div className="py-2 flex justify-between">
+                <span className="font-semibold text-gray-500">Linha</span>
+                <span className="font-bold text-gray-800">
+                  {mini?.linha?.nome}
+                </span>
+              </div>
+              <div className="py-2 flex justify-between">
+                <span className="font-semibold text-gray-500">
+                  {(mini?.tipos?.length ?? 0) > 1 ? "Tipos" : "Tipo"}
+                </span>
+                <span className="font-bold text-gray-800">
+                  {formatListPTBR(mini?.tipos)}
+                </span>
+              </div>
             </div>
           </div>
 
-          <p className="text-4xl font-bold mt-4">
-            {formatCurrencyBRL(mini?.valor)}
-          </p>
-          <div className="mt-4">
-            <p className="text-start md:text-left text-gray-600 mb-2">
+          <div className="mt-6 pt-4 border-t border-[var(--color-gray-200)]">
+            <p className="text-4xl font-extrabold text-[var(--color-red-primary)] mb-3">
+              {formatCurrencyBRL(mini?.valor)}
+            </p>
+
+            <p className="text-xs text-gray-500 mb-4">
               Interessado nesta miniatura? Entre em contato pelo WhatsApp e
               garanta sua reserva!
             </p>
+
             {mini && (
               <button
-                className="z-20 cursor-pointer transition-transform duration-200 ease-in-out hover:scale-105 flex items-center gap-2"
+                className="cursor-pointer w-full text-gray-500 font-semibold py-3 px-6 rounded-lg transition-transform duration-200 hover:scale-[1.02] flex items-center justify-center gap-3 shadow-md"
                 onClick={() => handleRedirectToWhatsApp(mini, link, isMobile)}
               >
                 <Image
-                  color="#eefr"
                   src="/whatsapp.svg"
                   alt="WhatsApp"
                   width={20}
                   height={20}
                 />
-                Comprar pelo WhatsApp{" "}
+                Comprar pelo WhatsApp
               </button>
             )}
           </div>
         </div>
       </div>
-      <div className="mt-16 w-full max-w-5xl mx-auto">
-        <h2 className="text-2xl font-bold mb-6 text-center">Outras minis</h2>
 
+      {/* Carrossel */}
+      <div className="mt-14 w-full">
+        <h2 className="text-2xl font-bold text-[var(--color-blue-primary)] mb-6 text-center">
+          Outras minis
+        </h2>
         <Splide key={similiarMinis.length} options={optionsCarousel}>
           {similiarMinis.map((item) => (
             <SplideSlide key={item.id}>
