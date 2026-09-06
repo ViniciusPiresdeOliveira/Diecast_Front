@@ -122,7 +122,7 @@ export const ModalSetGarage = ({
         disabled: hasErrorInForm || !isDirty || quantityError !== null,
       }}
       onCancel={handleCancel}
-      okText="Confirmar"
+      okText="Salvar"
       cancelText="Cancelar"
       width={"50%"}
     >

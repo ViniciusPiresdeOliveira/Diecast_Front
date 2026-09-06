@@ -120,7 +120,6 @@ export const ModalFormCliente = ({
       numeroResidencia: cliente.numeroResidencia ?? "",
     });
   }, [cliente, reset]);
-  console.log("addressInfo", addressInfo);
 
   return (
     <Modal

@@ -11,6 +11,7 @@ import { Trash2, Undo2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { MiniGaragemActionsProps } from "./types";
+import { DeleteButton } from "@/app/components/Buttons/Delete";
 
 export const MiniGaragemActions = ({
   id,
@@ -62,15 +63,10 @@ export const MiniGaragemActions = ({
         >
           <Undo2 size={20} color="#1f3565" />
         </button>
-
-        <button
-          type="button"
+        <DeleteButton
           onClick={() => setIsDeleteModalOpen(true)}
-          title="Marcar como entregue"
-          className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
-        >
-          <Trash2 size={20} color="#dc2626" />
-        </button>
+          variant="table"
+        />
       </div>
 
       <DeleteConfirmModal

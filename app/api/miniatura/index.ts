@@ -26,7 +26,7 @@ export const deleteMiniById = (id: number) => {
 };
 
 export const putMiniatura = (mini: MiniFormValues, idMini: number) => {
-  const { formData } = buildMiniaturaFormData(mini, false);
+  const { formData } = buildMiniaturaFormData(mini);
 
   return api.put(`/miniaturas/${idMini}`, formData, {
     headers: {
@@ -36,7 +36,7 @@ export const putMiniatura = (mini: MiniFormValues, idMini: number) => {
 };
 
 export const postMiniatura = (mini: MiniFormValues) => {
-  const { formData } = buildMiniaturaFormData(mini, true);
+  const { formData } = buildMiniaturaFormData(mini);
 
   return api.post("/miniaturas", formData, {
     headers: {

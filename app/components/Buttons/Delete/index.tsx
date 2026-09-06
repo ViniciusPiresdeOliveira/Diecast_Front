@@ -4,6 +4,8 @@ import { cn } from "@/app/utils";
 import { Trash2 } from "lucide-react";
 import { DeleteButtonProps } from "./types";
 
+const DeleteButtonBase = <Trash2 size={20} color="#f31a13" />;
+
 export const DeleteButton = ({
   onClick,
   variant = "card",
@@ -17,7 +19,7 @@ export const DeleteButton = ({
         onClick={onClick}
         className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
       >
-        <Trash2 size={20} color="#f31a13" />
+        {DeleteButtonBase}
       </button>
     );
   }
@@ -38,7 +40,7 @@ export const DeleteButton = ({
         className,
       )}
     >
-      <Trash2 size={24} color="#f31a13" />
+      {DeleteButtonBase}
     </button>
   );
 };

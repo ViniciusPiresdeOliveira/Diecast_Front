@@ -7,7 +7,7 @@ export const Loading = () => {
   return (
     <>
       {loading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 ">
+        <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 ">
           <div
             className="relative w-56 h-56"
             // style={{

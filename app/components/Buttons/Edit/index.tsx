@@ -3,6 +3,8 @@
 import { Pencil } from "lucide-react";
 import { EditButtonProps } from "./types";
 
+const EditButtonBase = <Pencil size={20} color="#07ac5a" />;
+
 export const EditButton = ({
   onClick,
   variant = "card",
@@ -15,7 +17,7 @@ export const EditButton = ({
         onClick={onClick}
         className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
       >
-        <Pencil size={20} color="#07ac5a" />
+        {EditButtonBase}
       </button>
     );
   }
@@ -35,7 +37,7 @@ export const EditButton = ({
         visibilityClasses
       }
     >
-      <Pencil size={24} color="#07ac5a" />
+      {EditButtonBase}
     </button>
   );
 };
