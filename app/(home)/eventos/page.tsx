@@ -2,48 +2,157 @@
 
 import { Splide, SplideSlide } from "@splidejs/react-splide";
 import "@splidejs/react-splide/css";
-import Image from "next/image";
-
-type Evento = {
-  id: number;
-  titulo: string;
-  data: string;
-  descricao: string;
-  imagens: string[];
-};
-
-const eventos: Evento[] = [
-  {
-    id: 1,
-    titulo: "Encontro de Colecionadores 2025",
-    data: "15 de Março de 2025",
-    descricao:
-      "Um grande encontro reunindo colecionadores apaixonados por miniaturas diecast. Tivemos exposição de modelos raros, troca de peças e muita interação entre os participantes.",
-    imagens: ["/image/car.jpeg", "/image/car.jpeg", "/image/car.jpeg"],
-  },
-  {
-    id: 2,
-    titulo: "Exposição Diecast Petrópolis",
-    data: "02 de Fevereiro de 2025",
-    descricao:
-      "Evento especial realizado em Petrópolis com destaque para lançamentos exclusivos e modelos históricos. Um momento único para os fãs do universo automotivo em miniatura.",
-    imagens: ["/image/car.jpeg", "/image/car.jpeg"],
-  },
-];
+import { Tooltip } from "antd";
+import { CirclePlus, Pencil, Trash2 } from "lucide-react";
+import { Image } from "antd";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { Evento } from "./types";
+import { useAuth } from "@/app/hooks/useAuth";
+import { useLoading } from "@/app/hooks/useLoading";
+import { deleteEventById, getAllEvents } from "@/app/api/evento";
+import { formatDate, getErrorMessage } from "@/app/utils";
+import { TypeOfModalAction } from "./components/ModalFormEvento/types";
+import { ModalFormEvento } from "./components/ModalFormEvento";
+import { formatImage } from "../utils";
+import { DeleteButton } from "@/app/components/Buttons/Delete";
+import { EditButton } from "@/app/components/Buttons/Edit";
+import { DeleteConfirmModal } from "@/app/components/Modal/Delete";
 
 export default function Eventos() {
+  const { user } = useAuth();
+  const { showLoading, hideLoading } = useLoading();
+
+  const [eventos, setEventos] = useState<Evento[]>([]);
+  const [selectedEvento, setSelectedEvento] = useState<Evento | null>(null);
+  const [visibleModalFormEvento, setVisibleModalFormEvento] = useState(false);
+  const [typeOfModalActionEvento, setTypeOfModalActionEvento] =
+    useState<TypeOfModalAction>("add");
+
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [eventoToDelete, setEventoToDelete] = useState<Evento | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleVisibleFormEvento = (type: TypeOfModalAction) => {
+    setTypeOfModalActionEvento(type);
+    setVisibleModalFormEvento((e) => !e);
+  };
+
+  const handleSelectedEvento = (evento: Evento | null) => {
+    setSelectedEvento(evento);
+  };
+
+  const fetchEventos = async () => {
+    showLoading();
+    try {
+      const { data } = await getAllEvents();
+      setEventos(data);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      hideLoading();
+    }
+  };
+
+  const handleOpenDeleteModal = (evento: Evento) => {
+    setEventoToDelete(evento);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleCloseDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setEventoToDelete(null);
+  };
+
+  const handleDeleteEvento = async () => {
+    if (!eventoToDelete) return;
+
+    setIsDeleting(true);
+    showLoading();
+    try {
+      await deleteEventById(eventoToDelete.id);
+      toast.success(`Evento "${eventoToDelete.titulo}" apagado com sucesso`);
+      await fetchEventos();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth", // opcional (animação)
+      });
+      setIsDeleteModalOpen(false);
+    } catch (error) {
+      toast.error(getErrorMessage(error));
+    } finally {
+      hideLoading();
+    }
+  };
+
+  useEffect(() => {
+    if (!visibleModalFormEvento) {
+      setTypeOfModalActionEvento("add");
+      setSelectedEvento(null);
+    }
+  }, [visibleModalFormEvento]);
+
+  useEffect(() => {
+    fetchEventos();
+  }, []);
+
   return (
-    <div className="w-full min-h-screen py-12 px-4">
+    <div className="w-full min-h-screen py-12 px-4 relative">
       <div className="max-w-5xl mx-auto">
-        <h1 className="text-4xl font-bold text-center mb-14">Nossos Eventos</h1>
+        <div className="flex items-center justify-center relative mb-14">
+          <h1 className="text-4xl font-bold text-center">
+            Conheça nossos Eventos
+          </h1>
+
+          {user?.role === "ADMIN" && (
+            <div className="absolute right-0 top-1/2 -translate-y-1/2 cursor-pointer">
+              <CirclePlus
+                color="#1f3565"
+                width={36}
+                height={36}
+                className="hover:scale-110 transition-all duration-300 ease-out"
+                onClick={() => handleVisibleFormEvento("add")}
+              />
+            </div>
+          )}
+        </div>
+
+        {eventos.length === 0 && (
+          <div className="w-full flex items-center justify-center mb-24">
+            <div className="flex flex-col items-center text-center">
+              <span className="text-5xl mb-4">📅</span>
+              <p className="text-2xl font-semibold text-gray-700">
+                Nenhum evento cadastrado
+              </p>
+            </div>
+          </div>
+        )}
 
         <div className="flex flex-col gap-16">
           {eventos.map((evento) => (
-            <div key={evento.id} className="bg-white rounded-3xl shadow-lg p-8">
-              {/* Header */}
+            <div
+              key={evento.id}
+              className="bg-white rounded-3xl shadow-lg p-8 relative"
+            >
+              {user?.role === "ADMIN" && (
+                <div className="absolute top-6 right-6 flex items-center gap-1.5 z-10">
+                  <EditButton
+                    onClick={() => {
+                      handleSelectedEvento(evento);
+                      handleVisibleFormEvento("edit");
+                    }}
+                    variant="table"
+                  />
+                  <DeleteButton
+                    onClick={() => handleOpenDeleteModal(evento)}
+                    variant="table"
+                  />
+                </div>
+              )}
+
               <div className="mb-6 text-center">
                 <h2 className="text-3xl font-semibold mb-2">{evento.titulo}</h2>
-                <p className="text-gray-500">{evento.data}</p>
+                <p className="text-gray-500">{formatDate(evento.dataEvento)}</p>
               </div>
 
               <p className="text-gray-700 text-lg leading-relaxed mb-8 text-center max-w-3xl mx-auto">
@@ -60,15 +169,15 @@ export default function Eventos() {
                   pagination: true,
                 }}
               >
-                {evento.imagens.map((img, index) => (
-                  <SplideSlide key={index}>
+                {evento.imagens.map((i) => (
+                  <SplideSlide key={i.id}>
                     <div className="relative w-full h-[400px] md:h-[500px] rounded-2xl overflow-hidden">
                       <Image
-                        src={img}
-                        alt={`Imagem ${index + 1} do ${evento.titulo}`}
-                        fill
-                        className="object-contain"
-                        priority
+                        src={formatImage(i.imagem) as string}
+                        alt={`Imagem ${i.id} do ${evento.titulo}`}
+                        className="object-contain cursor-pointer z-10 transition-transform duration-300 hover:scale-110"
+                        width="100%"
+                        height="100%"
                       />
                     </div>
                   </SplideSlide>
@@ -78,6 +187,24 @@ export default function Eventos() {
           ))}
         </div>
       </div>
+
+      <ModalFormEvento
+        type={typeOfModalActionEvento}
+        evento={selectedEvento}
+        visible={visibleModalFormEvento}
+        handleVisibleFormEvento={handleVisibleFormEvento}
+        refreshEventoList={fetchEventos}
+      />
+
+      <DeleteConfirmModal
+        open={isDeleteModalOpen}
+        title="Excluir evento"
+        confirmText="Excluir"
+        onConfirm={handleDeleteEvento}
+        onCancel={handleCloseDeleteModal}
+        message="Tem certeza que deseja excluir "
+        nameSpecific={eventoToDelete?.titulo}
+      />
     </div>
   );
 }
