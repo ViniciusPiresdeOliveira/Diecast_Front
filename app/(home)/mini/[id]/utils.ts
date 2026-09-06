@@ -1,5 +1,5 @@
 export const optionsCarousel = {
-  type: "loop",
+  type: "slide",
   perPage: 4,
   perMove: 1,
   gap: "20px",
