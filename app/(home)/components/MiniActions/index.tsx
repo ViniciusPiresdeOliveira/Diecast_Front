@@ -4,13 +4,13 @@ import { DeleteButton } from "@/app/components/Buttons/Delete";
 import { EditButton } from "@/app/components/Buttons/Edit";
 import { GarageButton } from "@/app/components/Buttons/Garage";
 import { DeleteConfirmModal } from "@/app/components/Modal/Delete";
+import { ModalSetGarage } from "@/app/components/ModalSetGarage";
 import { Image, Tooltip } from "antd";
 import { Eye } from "lucide-react";
 import { useState } from "react";
 import { formatImage } from "../../utils";
 import { DeleteQuantityModal } from "../DeleteQuantityModal";
 import { MiniActionsProps } from "./types";
-import { ModalSetGarage } from "@/app/components/ModalSetGarage";
 
 export const MiniActions = ({
   mini,
@@ -117,7 +117,7 @@ export const MiniActions = ({
     />
   );
 
-  if (variant === "table") {
+  if (variant === "table" || variant === "detail") {
     return (
       <div className="flex items-center justify-center gap-3">
         <EditButton onClick={handleEdit} variant="table" />
@@ -141,14 +141,16 @@ export const MiniActions = ({
           </span>
         </Tooltip>
 
-        <button
-          onClick={handleGetMiniImageById}
-          className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
-        >
-          <Eye size={22} color="#1f3565" />
-        </button>
+        {variant === "table" && (
+          <button
+            onClick={handleGetMiniImageById}
+            className="cursor-pointer flex items-center justify-center transition-all duration-300 hover:scale-110"
+          >
+            <Eye size={22} color="#1f3565" />
+          </button>
+        )}
 
-        <DeleteButton onClick={handleOpenDelete} variant="table" />
+        <DeleteButton onClick={handleOpenDelete} variant={"table"} />
 
         {deleteModal}
         {deleteQuantityModal}

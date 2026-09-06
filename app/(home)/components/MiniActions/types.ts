@@ -10,6 +10,6 @@ export type MiniActionsProps = {
     mini: Miniatura,
     quantidade?: number,
   ) => Promise<boolean>;
-  variant?: "card" | "table";
+  variant?: "card" | "table" | "detail";
   isMobile?: boolean;
 };
