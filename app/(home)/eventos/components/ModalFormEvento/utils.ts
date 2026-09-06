@@ -1,4 +1,4 @@
-import { UploadFile } from "antd/es/upload/interface";
+import { RcFile, UploadFile } from "antd/es/upload/interface";
 import { EventoFormValues } from "./validation";
 
 export const mapEventoPayload = (evento: EventoFormValues) => ({
@@ -12,7 +12,7 @@ export const buildEventoFormData = (evento: EventoFormValues) => {
 
   const files = (evento.imagens ?? [])
     .map((fileItem: UploadFile) => fileItem.originFileObj)
-    .filter((file): file is File => !!file);
+    .filter((file): file is RcFile => !!file);
 
   const payload = mapEventoPayload(evento);
 

@@ -8,7 +8,7 @@ export const deleteEventById = (id: number) => {
   return api.delete(`/eventos/${id}`);
 };
 
-export const postEvent = (event: any) => {
+export const postEvent = (event: FormData) => {
   return api.post("/eventos", event, {
     headers: { "Content-Type": "multipart/form-data" },
   });
