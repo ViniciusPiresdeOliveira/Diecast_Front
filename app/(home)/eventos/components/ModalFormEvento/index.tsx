@@ -1,21 +1,21 @@
 "use client";
 
-import { getErrorMessage } from "@/app/utils";
+import { formatImage } from "@/app/(home)/utils";
+import { postEvent, putEvent } from "@/app/api/evento";
+import { Label } from "@/app/components/Label";
+import { MessageError } from "@/app/components/MessageError";
 import { useLoading } from "@/app/hooks/useLoading";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, DatePicker, Divider, Input, Modal, Upload } from "antd";
+import { getErrorMessage } from "@/app/utils";
 import { UploadOutlined } from "@ant-design/icons";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { DatePicker, Divider, Input, Modal, Upload } from "antd";
 import dayjs from "dayjs";
 import { useEffect } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "react-toastify";
-import { Label } from "@/app/components/Label";
-import { MessageError } from "@/app/components/MessageError";
 import { ModalFormEventoProps } from "./types";
-import { EventoFormValues, eventSchema } from "./validation";
-import { postEvent } from "@/app/api/evento";
 import { buildEventoFormData } from "./utils";
-import { formatImage } from "@/app/(home)/utils";
+import { EventoFormValues, eventSchema } from "./validation";
 
 const { TextArea } = Input;
 
@@ -73,14 +73,17 @@ export function ModalFormEvento({
       const { formData } = buildEventoFormData(values);
 
       if (type === "edit" && evento) {
-        // await updateEvento(evento.id, formData);
+        await putEvent(evento.id, formData);
         toast.success("Evento atualizado com sucesso");
       } else {
         await postEvent(formData);
         toast.success("Evento criado com sucesso");
       }
-
-      refreshEventoList();
+      await refreshEventoList();
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
       handleClose();
     } catch (error) {
       toast.error(getErrorMessage(error));

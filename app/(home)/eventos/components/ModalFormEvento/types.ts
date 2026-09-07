@@ -7,5 +7,5 @@ export interface ModalFormEventoProps {
   evento: Evento | null;
   visible: boolean;
   handleVisibleFormEvento: (type: TypeOfModalAction) => void;
-  refreshEventoList: () => void;
+  refreshEventoList: () => Promise<void>;
 }

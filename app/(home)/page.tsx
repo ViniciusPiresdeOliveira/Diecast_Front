@@ -203,7 +203,7 @@ export default function Home() {
     showLoading();
     window.scrollTo({
       top: 0,
-      behavior: "smooth", // opcional (animação)
+      behavior: "smooth",
     });
 
     const filterPayload: FilterMiniatura = {

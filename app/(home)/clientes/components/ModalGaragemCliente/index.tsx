@@ -4,20 +4,19 @@ import { getAllMinisByClient } from "@/app/api/garagem";
 import { useLoading } from "@/app/hooks/useLoading";
 import {
   formatCurrencyBRL,
-  formatDate,
+  formatDateTimeToPtBR,
   formatTelefone,
-  getCodError,
   getErrorMessage,
   handleWhatsApp,
 } from "@/app/utils";
 import type { TableColumnsType } from "antd";
 import { Modal, Table, Tooltip } from "antd";
+import { Copy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { MiniGaragemActions } from "./components/MiniGaragemActions";
 import { MiniGaragemCliente, ModalGaragemClienteProps } from "./types";
 import { buildGaragemMessage, calculateDaysInGarage } from "./utils";
-import { Copy } from "lucide-react";
 
 export const ModalGaragemCliente = ({
   visible,
@@ -56,7 +55,7 @@ export const ModalGaragemCliente = ({
       dataIndex: "dataCadastro",
       key: "dataCadastro",
       align: "center",
-      render: (data: string) => formatDate(data),
+      render: (data: string) => formatDateTimeToPtBR(data),
     },
     {
       title: boldTitle("Dias na Garagem"),

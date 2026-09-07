@@ -74,15 +74,16 @@ export const formatTelefone = (telefone?: string | null): string => {
   return telefone;
 };
 
-export const formatDate = (data: string): string => {
-  // Trunca frações de segundo com mais de 3 dígitos (ex: microssegundos) para o padrão ISO (ms)
+export const formatDateTimeToPtBR = (data: string): string => {
   const normalized = data.replace(/(\.\d{3})\d*Z$/, "$1Z");
-
   const date = new Date(normalized);
-
   if (isNaN(date.getTime())) return "";
-
   return date.toLocaleDateString("pt-BR");
+};
+
+export const formatSimpleDate = (date: string): string => {
+  const [ano, mes, dia] = date.split("-");
+  return `${dia}/${mes}/${ano}`;
 };
 
 export const handleWhatsApp = (tel: string) => {

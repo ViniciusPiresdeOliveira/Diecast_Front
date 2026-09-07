@@ -1,23 +1,22 @@
 "use client";
 
-import { Splide, SplideSlide } from "@splidejs/react-splide";
-import "@splidejs/react-splide/css";
-import { Tooltip } from "antd";
-import { CirclePlus, Pencil, Trash2 } from "lucide-react";
-import { Image } from "antd";
-import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
-import { Evento } from "./types";
-import { useAuth } from "@/app/hooks/useAuth";
-import { useLoading } from "@/app/hooks/useLoading";
 import { deleteEventById, getAllEvents } from "@/app/api/evento";
-import { formatDate, getErrorMessage } from "@/app/utils";
-import { TypeOfModalAction } from "./components/ModalFormEvento/types";
-import { ModalFormEvento } from "./components/ModalFormEvento";
-import { formatImage } from "../utils";
 import { DeleteButton } from "@/app/components/Buttons/Delete";
 import { EditButton } from "@/app/components/Buttons/Edit";
 import { DeleteConfirmModal } from "@/app/components/Modal/Delete";
+import { useAuth } from "@/app/hooks/useAuth";
+import { useLoading } from "@/app/hooks/useLoading";
+import { formatSimpleDate, getErrorMessage } from "@/app/utils";
+import { Splide, SplideSlide } from "@splidejs/react-splide";
+import "@splidejs/react-splide/css";
+import { Image } from "antd";
+import { CirclePlus } from "lucide-react";
+import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { formatImage } from "../utils";
+import { ModalFormEvento } from "./components/ModalFormEvento";
+import { TypeOfModalAction } from "./components/ModalFormEvento/types";
+import { Evento } from "./types";
 
 export default function Eventos() {
   const { user } = useAuth();
@@ -31,7 +30,6 @@ export default function Eventos() {
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [eventoToDelete, setEventoToDelete] = useState<Evento | null>(null);
-  const [isDeleting, setIsDeleting] = useState(false);
 
   const handleVisibleFormEvento = (type: TypeOfModalAction) => {
     setTypeOfModalActionEvento(type);
@@ -67,7 +65,6 @@ export default function Eventos() {
   const handleDeleteEvento = async () => {
     if (!eventoToDelete) return;
 
-    setIsDeleting(true);
     showLoading();
     try {
       await deleteEventById(eventoToDelete.id);
@@ -75,7 +72,7 @@ export default function Eventos() {
       await fetchEventos();
       window.scrollTo({
         top: 0,
-        behavior: "smooth", // opcional (animação)
+        behavior: "smooth",
       });
       setIsDeleteModalOpen(false);
     } catch (error) {
@@ -152,7 +149,9 @@ export default function Eventos() {
 
               <div className="mb-6 text-center">
                 <h2 className="text-3xl font-semibold mb-2">{evento.titulo}</h2>
-                <p className="text-gray-500">{formatDate(evento.dataEvento)}</p>
+                <p className="text-gray-500">
+                  {formatSimpleDate(evento.dataEvento)}
+                </p>
               </div>
 
               <p className="text-gray-700 text-lg leading-relaxed mb-8 text-center max-w-3xl mx-auto">

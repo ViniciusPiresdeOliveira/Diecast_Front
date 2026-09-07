@@ -13,3 +13,9 @@ export const postEvent = (event: FormData) => {
     headers: { "Content-Type": "multipart/form-data" },
   });
 };
+
+export const putEvent = (id: number, event: FormData) => {
+  return api.put(`/eventos/${id}`, event, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+};
