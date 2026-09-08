@@ -48,7 +48,6 @@ export const Drawer = ({ isVisible, handleVisibility }: DrawerProps) => {
             <X width={30} height={30} />
           </button>
         </div>
-
         <Filter
           handleFilterMiniaturas={handleTriggerFilter}
           isVisible={isVisible}

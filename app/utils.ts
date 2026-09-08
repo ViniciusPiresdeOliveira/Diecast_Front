@@ -39,8 +39,10 @@ export const formatCurrencyBRL = (value?: number | string) => {
   }).format(number);
 };
 
-export const toNumberArray = (arr?: string[] | null) =>
-  arr?.map(Number).filter((n) => !isNaN(n)) || null;
+export const toNumberArray = (arr?: string[] | null) => {
+  const result = arr?.map(Number).filter((n) => !isNaN(n));
+  return result && result.length > 0 ? result : null;
+};
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));

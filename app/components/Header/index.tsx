@@ -3,13 +3,15 @@ import { useAuth } from "@/app/hooks/useAuth";
 import { useLoading } from "@/app/hooks/useLoading";
 import { LogOut, Menu } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { HeaderProps } from "./types";
+import { OptionsOfNavigate } from "./utils";
 export const Header = ({ handleVisibilityMenu }: HeaderProps) => {
   const router = useRouter();
   const { showLoading, hideLoading } = useLoading();
   const { user, handleClearUser } = useAuth();
+  const pathname = usePathname();
+  const isHome = pathname === "/";
 
   const handleNavigateToHome = () => {
     router.push(`/`);
@@ -45,17 +47,7 @@ export const Header = ({ handleVisibilityMenu }: HeaderProps) => {
         </p>
       </button>
       <div className="flex justify-center items-center gap-6">
-        {user?.role === "ADMIN" && (
-          <div className="hidden min-md:flex gap-6 text-gray-200 font-medium">
-            <Link href={"/clientes"}>Clientes</Link>
-          </div>
-        )}
-        <div className="hidden min-md:flex gap-6 text-gray-200 font-medium">
-          <Link href={"/afiliado"}>Afiliado</Link>
-        </div>
-        <div className="hidden min-md:flex gap-6 text-gray-200 font-medium">
-          <Link href={"/eventos"}>Eventos</Link>
-        </div>
+        {OptionsOfNavigate({ isAdmin: !!user && user.role === "ADMIN" })}
         {user?.role === "ADMIN" && (
           <button
             onClick={handleLogout}
@@ -64,12 +56,14 @@ export const Header = ({ handleVisibilityMenu }: HeaderProps) => {
             <LogOut size={24} color="white" />
           </button>
         )}
-        <button
-          className="p-2 cursor-pointer min-md:hidden"
-          onClick={handleVisibilityMenu}
-        >
-          <Menu color="white" />
-        </button>
+        {isHome && (
+          <button
+            className="p-2 cursor-pointer min-md:hidden"
+            onClick={handleVisibilityMenu}
+          >
+            <Menu color="white" />
+          </button>
+        )}
       </div>
     </div>
   );
