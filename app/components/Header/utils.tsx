@@ -37,7 +37,7 @@ export const OptionsOfNavigate = ({ isAdmin }: { isAdmin: boolean }) => {
   }
 
   return (
-    <Dropdown menu={{ items: buildItems(isAdmin) }} trigger={["click"]}>
+    <Dropdown menu={{ items: buildItems(isAdmin) }} trigger={["hover"]}>
       <Button type="text" icon={<Navigation color="white" />} />
     </Dropdown>
   );
