@@ -15,6 +15,7 @@ const config: Config = {
     "^@splidejs/react-splide/css$": "identity-obj-proxy",
   },
   testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
+  collectCoverage: true,
   collectCoverageFrom: [
     "app/**/*.{ts,tsx}",
     "!app/**/*.d.ts",
@@ -24,6 +25,14 @@ const config: Config = {
     "!app/**/layout.tsx",
     "!app/**/page.tsx",
   ],
+  coverageThreshold: {
+    global: {
+      branches: 85,
+      functions: 85,
+      lines: 85,
+      statements: 85,
+    },
+  },
 };
 
 export default createJestConfig(config);
