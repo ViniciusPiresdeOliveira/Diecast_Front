@@ -1,4 +1,8 @@
 import "@testing-library/jest-dom";
+import { MessageChannel } from "worker_threads";
+
+// MessageChannel polyfill (rc-component/antd usa isso internamente para agendar tasks)
+global.MessageChannel = MessageChannel as any;
 
 // matchMedia mock (antd / responsive components costumam depender disso)
 Object.defineProperty(window, "matchMedia", {
